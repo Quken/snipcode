@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { NavItemConfig } from './models';
+import { NavItemConfig } from '../models';
 
 @Component({
     selector: 'app-nav-item',
