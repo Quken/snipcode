@@ -6,4 +6,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     styleUrls: ['./nav.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppNavComponent {}
+export class AppNavComponent {
+    public navItems = [
+        { title: 'Profile', route: '/profile' },
+        { title: 'Trending', route: '/trending' },
+    ];
+}

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NavItemConfig } from './models';
 
 @Component({
     selector: 'app-nav-item',
@@ -6,4 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     styleUrls: ['./nav-item.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppNavItemComponent {}
+export class AppNavItemComponent {
+    @Input()
+    public config!: NavItemConfig;
+}
