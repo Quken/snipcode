@@ -7,7 +7,7 @@ import { NavItemConfig } from '../models';
     styleUrls: ['./nav-item.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppNavItemComponent {
+export class NavItemComponent {
     @Input()
     public config!: NavItemConfig;
 }
