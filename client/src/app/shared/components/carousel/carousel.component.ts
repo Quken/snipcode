@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CarouselImageSrc } from './models';
+import { CarouselImage } from './models';
 
 @Component({
     selector: 'app-carousel',
@@ -9,5 +9,5 @@ import { CarouselImageSrc } from './models';
 })
 export class CarouselComponent {
     @Input()
-    public images!: CarouselImageSrc[];
+    public images!: CarouselImage[];
 }

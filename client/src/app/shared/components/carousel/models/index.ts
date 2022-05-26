@@ -1,1 +1,1 @@
-export * from './carousel-image-src.model';
+export * from './carousel-image.model';
