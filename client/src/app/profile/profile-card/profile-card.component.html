@@ -5,6 +5,14 @@
             src="https://picsum.photos/id/100/1500/500"
         />
         <div class="profile-card__info">
+            <div class="profile-card__title">
+                <div class="profile-card__fullname">
+                    {{ fullName }}
+                </div>
+                <div *ngIf="userMock.position" class="profile-card__position">
+                    {{ userMock.position }}
+                </div>
+            </div>
             <div class="profile-card__summary"></div>
         </div>
     </div>
