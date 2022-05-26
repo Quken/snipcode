@@ -1,0 +1,13 @@
+.profile-card {
+    display: flex;
+    justify-content: center;
+
+    &__content {
+        width: 60%;
+    }
+
+    &__image {
+        width: 100px;
+        height: 100px;
+    }
+}
