@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CarouselImageSrc } from './models';
 
 @Component({
     selector: 'app-carousel',
@@ -7,7 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarouselComponent {
-    public images = [944, 1011, 984].map(
-        (n) => `https://picsum.photos/id/${n}/900/500`
-    );
+    @Input()
+    public images!: CarouselImageSrc[];
 }
