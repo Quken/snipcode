@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { User } from '@core/user/models';
+import { UserService } from '@core/user/user.service';
 import { Observable } from 'rxjs';
 
-import { UserService } from 'src/app/core/user/user.service';
-
 @Component({
-    selector: 'app-profile-card',
-    templateUrl: './profile-card.component.html',
-    styleUrls: ['./profile-card.component.scss'],
+    selector: 'app-profile-summary',
+    templateUrl: './summary.component.html',
+    styleUrls: ['./summary.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileCardComponent {
+export class ProfileSummaryComponent {
     public user$: Observable<User> = this._userService.user$;
 
     constructor(private readonly _userService: UserService) {}

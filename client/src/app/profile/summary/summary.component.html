@@ -1,0 +1,12 @@
+<ngb-accordion
+    *ngIf="user$ | async as user"
+    #acc="ngbAccordion"
+    class="profile-summary"
+    type="'primary'"
+>
+    <ngb-panel title="Summary">
+        <ng-template ngbPanelContent>
+            <div [style.textAlign]="'left'">{{ user.summary }}</div>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>

@@ -2,13 +2,18 @@
     display: flex;
     justify-content: center;
 
+    &__image-container {
+        width: 200px;
+        margin: 0 auto;
+    }
+
     &__content {
         width: 60%;
     }
 
     &__image {
-        width: 150px;
-        height: 150px;
+        width: 200px;
+        height: 200px;
         border-radius: 50%;
     }
 }

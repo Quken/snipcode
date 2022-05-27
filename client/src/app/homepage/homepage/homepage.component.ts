@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CarouselImage } from 'src/app/shared/components/carousel/models';
+import { CarouselImage } from '@shared/components/carousel/models';
 
 @Component({
     selector: 'app-homepage',
