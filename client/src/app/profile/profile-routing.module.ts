@@ -1,10 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ProfileCardComponent } from './profile-card/profile-card.component';
+import { Routes, RouterModule } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
-import { ProfileSummaryComponent } from './summary/summary.component';
 
 const routes: Routes = [
     {
@@ -15,12 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [
-        ProfileComponent,
-        ProfileCardComponent,
-        ProfileSummaryComponent,
-    ],
-    imports: [CommonModule, RouterModule.forChild(routes), NgbModule],
-    exports: [RouterModule, ProfileComponent],
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
 export class ProfileRoutingModule {}

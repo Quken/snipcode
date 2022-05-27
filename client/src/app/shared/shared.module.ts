@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselModule } from './components/carousel/carousel.module';
+import { CarouselModule, SnippetsListModule } from './components';
 
 @NgModule({
-    imports: [CommonModule, CarouselModule],
+    imports: [CommonModule, CarouselModule, SnippetsListModule],
+    exports: [CarouselModule, SnippetsListModule],
 })
 export class SharedModule {}

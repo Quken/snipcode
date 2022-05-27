@@ -18,6 +18,12 @@
                 </div>
             </div>
             <app-profile-summary></app-profile-summary>
+            <ng-container *ngIf="snippets$ | async as snippets">
+                <app-snippets-list
+                    *ngIf="snippets?.length"
+                    [snippets]="snippets"
+                ></app-snippets-list>
+            </ng-container>
         </div>
     </div>
 </div>

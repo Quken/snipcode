@@ -3,6 +3,7 @@ import { Observable, of, shareReplay } from 'rxjs';
 import { User } from './models';
 
 const userMock: User = {
+    id: '12345',
     name: 'John',
     surname: 'Doe',
     age: 29,
