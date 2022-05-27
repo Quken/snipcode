@@ -6,6 +6,7 @@ import { Snippet } from './models';
 const snippetsMock: Snippet[] = [
     {
         id: '1',
+        name: '1',
         createdBy: {
             id: '1',
             name: 'John',
@@ -18,6 +19,7 @@ const snippetsMock: Snippet[] = [
     },
     {
         id: '2',
+        name: '2',
         createdBy: {
             id: '1',
             name: 'John',
@@ -30,6 +32,7 @@ const snippetsMock: Snippet[] = [
     },
     {
         id: '3',
+        name: '3',
         createdBy: {
             id: '1',
             name: 'John',

@@ -7,6 +7,7 @@ export interface Snippet {
     id: GUID;
     createdAt: DateUTC;
     createdBy: User;
+    name: string;
     modifiedAt?: DateUTC;
     modifiedBy?: User;
     srcRaw: string;

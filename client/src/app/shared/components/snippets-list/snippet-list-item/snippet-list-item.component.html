@@ -1,0 +1,16 @@
+<div class="snippet-list-item container-fluid">
+    <div class="row snippet">
+        <div class="snippet__name">
+            {{ snippet.name }}
+        </div>
+        <div class="snippet__short-info">
+            <div class="snippet__created-at">
+                {{ snippet.createdAt | date }}
+            </div>
+            <div *ngIf="snippet.modifiedAt" class="snippet__modified-at">
+                {{ snippet.modifiedAt | date }}
+            </div>
+            <button (click)="onClick()">Open</button>
+        </div>
+    </div>
+</div>

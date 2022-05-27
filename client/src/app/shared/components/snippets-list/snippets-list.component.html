@@ -1,3 +1,7 @@
-<div class="snippets-list">
-    <div *ngFor="let snippet of snippets">{{ snippet.srcRaw }}</div>
+<div class="snippets-list text-left" *ngIf="snippets.length">
+    <app-snippet-list-item
+        *ngFor="let snippet of snippets; trackBy: trackByFn"
+        [snippet]="snippet"
+        (openSnippetEventEmitter)="onOpenSnippet($event)"
+    ></app-snippet-list-item>
 </div>
