@@ -28,7 +28,11 @@ export class SnippetsListComponent {
     public onOpenSnippet(snippetId: GUID): void {
         const snippetModal = this._modalService.open(SnippetModalComponent, {
             ariaLabelledBy: 'snippet-modal',
-            fullscreen: true,
+            animation: true,
+            backdrop: true,
+            centered: true,
+            fullscreen: 'md',
+            size: 'lg',
         });
         const snippet = this.snippets.find(({ id }) => id === snippetId);
         snippetModal.componentInstance.snippet = snippet;

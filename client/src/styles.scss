@@ -1,2 +1,4 @@
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
+@import "~prismjs/themes/prism-tomorrow.css";
+@import "./app/shared/styles/modal.scss";

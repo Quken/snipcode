@@ -8,6 +8,11 @@ import { FooterModule } from './footer/footer.module';
 import { HeaderModule } from './header/header.module';
 import { SharedModule } from '@shared/shared.module';
 
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-scss';
+
 @NgModule({
     declarations: [AppComponent],
     imports: [

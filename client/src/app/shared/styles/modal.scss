@@ -1,0 +1,16 @@
+$modal-border-line-color: #80808026;
+
+.app-modal {
+    &__header,
+    &__footer,
+    &__content {
+        padding: 10px;
+    }
+
+    &__header {
+        border-bottom: 2px solid #{$modal-border-line-color};
+    }
+    &__footer {
+        border-top: 2px solid #{$modal-border-line-color};
+    }
+}

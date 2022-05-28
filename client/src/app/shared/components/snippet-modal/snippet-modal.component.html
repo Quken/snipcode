@@ -1,7 +1,24 @@
-<div class="snippet-modal snippet">
-    <div class="snippet__title d-flex justify-content-between container-fluid">
-        <div class="snippet__name">Snippet "{{ snippet.name }}"</div>
+<div class="snippet-modal snippet app-modal">
+    <div class="app-modal__header">
+        <div class="snippet__title d-flex justify-content-between">
+            <div class="snippet__name">{{ snippetFullName }}</div>
+            <button
+                type="button"
+                class="snippet__close btn-close"
+                aria-label="Close"
+                (click)="onClose()"
+            ></button>
+        </div>
+    </div>
+    <div class="snippet__content app-modal__content">
+        <pre
+            prism
+            class="p-4 dark"
+            [code]="snippet.srcRaw"
+            [language]="snippet.language"
+        ></pre>
+    </div>
+    <div class="app-modal__footer d-flex justify-content-end">
         <button class="snippet__close" (click)="onClose()">Close</button>
     </div>
-    <div class="snippet__content"></div>
 </div>

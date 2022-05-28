@@ -1,14 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Snippet } from '@core/snippets';
+import { SnippetExtensionsEnum } from '@core/snippets/enums/snippets-extensions.enum';
 import { User } from '@core/user';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { SnippetModalComponent } from '../snippet-modal/snippet-modal.component';
 
 import { SnippetsListComponent } from './snippets-list.component';
 
-const snippetMock: Snippet = {
+const snippetMock = new Snippet({
     id: '12345',
     name: 'snippet name',
+    language: 'javascript',
     createdAt: new Date().toUTCString(),
     createdBy: new User({
         id: '12345',
@@ -18,7 +20,8 @@ const snippetMock: Snippet = {
     }),
     srcRaw: 'console.log()',
     likes: 1,
-};
+    extension: SnippetExtensionsEnum.javascript,
+});
 
 describe('SnippetsListComponent', () => {
     let component: SnippetsListComponent;

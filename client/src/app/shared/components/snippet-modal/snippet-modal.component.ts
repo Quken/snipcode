@@ -17,4 +17,8 @@ export class SnippetModalComponent {
     public onClose() {
         this.activeModal.dismiss();
     }
+
+    public get snippetFullName(): string {
+        return `Snippet "${this.snippet.fullSnippetName}"`;
+    }
 }
