@@ -9,6 +9,7 @@ describe('SnippetModalComponent', () => {
     let fixture: ComponentFixture<SnippetModalComponent>;
 
     const snippetMock = _.cloneDeep(Mocks.snippetMock);
+    const activeModalMock = new NgbActiveModal();
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SnippetModalComponent],
@@ -20,10 +21,27 @@ describe('SnippetModalComponent', () => {
         fixture = TestBed.createComponent(SnippetModalComponent);
         component = fixture.componentInstance;
         component.snippet = snippetMock;
+        component.activeModal = activeModalMock;
         fixture.detectChanges();
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    describe('onClose', () => {
+        it('should dismiss modal', () => {
+            const spy = spyOn(component.activeModal, 'dismiss');
+            component.onClose();
+            expect(spy).toHaveBeenCalledWith();
+        });
+    });
+
+    describe('snippetFullName', () => {
+        it('should get snippet full name', () => {
+            expect(component.snippetFullName).toEqual(
+                `Snippet "${snippetMock.fullSnippetName}"`
+            );
+        });
     });
 });
