@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '@shared/shared.module';
 import { ProfileSummaryComponent } from './summary.component';
 
 describe('ProfileSummaryComponent', () => {
@@ -8,6 +10,7 @@ describe('ProfileSummaryComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ProfileSummaryComponent],
+            imports: [NgbModule, SharedModule],
         }).compileComponents();
     });
 

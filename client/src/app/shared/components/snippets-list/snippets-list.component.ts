@@ -1,9 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    TrackByFunction,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Snippet } from '@core/snippets';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GUID } from '@shared/models';

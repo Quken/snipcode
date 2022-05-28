@@ -1,25 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { snippetMock } from '@mocks/snippet';
 import { SnippetListItemComponent } from './snippet-list-item.component';
+import * as _ from 'lodash';
+import * as Mocks from '@mocks/snippet';
 
 describe('SnippetListItemComponent', () => {
-  let component: SnippetListItemComponent;
-  let fixture: ComponentFixture<SnippetListItemComponent>;
+    let component: SnippetListItemComponent;
+    let fixture: ComponentFixture<SnippetListItemComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ SnippetListItemComponent ]
-    })
-    .compileComponents();
-  });
+    const snippetMock = _.cloneDeep(Mocks.snippetMock);
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SnippetListItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [SnippetListItemComponent],
+        }).compileComponents();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SnippetListItemComponent);
+        component = fixture.componentInstance;
+        component.snippet = snippetMock;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
