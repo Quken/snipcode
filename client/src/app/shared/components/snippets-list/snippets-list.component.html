@@ -1,7 +1,11 @@
 <div class="snippets-list text-left" *ngIf="snippets.length">
-    <app-snippet-list-item
+    <div
+        class="snippets-list__item m-4"
         *ngFor="let snippet of snippets; trackBy: trackByFn"
-        [snippet]="snippet"
-        (openSnippetEventEmitter)="onOpenSnippet($event)"
-    ></app-snippet-list-item>
+    >
+        <app-snippet-list-item
+            [snippet]="snippet"
+            (openSnippetEventEmitter)="onOpenSnippet($event)"
+        ></app-snippet-list-item>
+    </div>
 </div>

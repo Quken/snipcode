@@ -17,7 +17,9 @@
                     </div>
                 </div>
             </div>
-            <app-profile-summary></app-profile-summary>
+            <div class="profile-card__summary">
+                <app-profile-summary></app-profile-summary>
+            </div>
             <ng-container *ngIf="snippets$ | async as snippets">
                 <app-snippets-list
                     *ngIf="snippets?.length"

@@ -1,0 +1,11 @@
+.snippets-list {
+    flex-direction: row;
+    align-items: stretch;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+
+    &__item {
+        width: calc(100% / (33% + 10px));
+    }
+}

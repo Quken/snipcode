@@ -62,6 +62,21 @@ function debounce(fn, delay) {
 }`,
         likes: 3,
     }),
+    new Snippet({
+        id: '4',
+        name: '4',
+        language: 'javascript',
+        createdBy: {
+            id: '1',
+            name: 'John',
+            surname: 'Doe',
+            summary: 'Software engineer',
+        },
+        extension: SnippetExtensionsEnum.javascript,
+        createdAt: new Date().toUTCString(),
+        srcRaw: `console.log(4)`,
+        likes: 4,
+    }),
 ];
 
 @Injectable({
