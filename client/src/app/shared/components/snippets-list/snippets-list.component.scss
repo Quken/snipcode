@@ -1,3 +1,5 @@
+$item-width: calc(100% / (3 + 0.6));
+
 .snippets-list {
     flex-direction: row;
     align-items: stretch;
@@ -6,6 +8,6 @@
     justify-content: center;
 
     &__item {
-        width: calc(100% / (33% + 10px));
+        width: #{$item-width};
     }
 }

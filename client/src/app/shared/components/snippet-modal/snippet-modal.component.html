@@ -13,12 +13,18 @@
     <div class="snippet__content app-modal__content">
         <pre
             prism
-            class="p-4 dark"
+            class="p-4 dark snippet__code"
             [code]="snippet.srcRaw"
             [language]="snippet.language"
         ></pre>
     </div>
     <div class="app-modal__footer d-flex justify-content-end">
-        <button class="snippet__close" (click)="onClose()">Close</button>
+        <button
+            type="button"
+            class="snippet__close btn btn-danger"
+            (click)="onClose()"
+        >
+            Close
+        </button>
     </div>
 </div>

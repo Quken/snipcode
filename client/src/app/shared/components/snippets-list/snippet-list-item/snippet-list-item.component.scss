@@ -1,7 +1,29 @@
-$border-color: rgba(44, 29, 29, 0.596);
+$list-item-border-color: rgba(44, 29, 29, 0.596);
+$likes-icon-color: #f94a4a;
 
 .snippet-list-item {
     height: 350px;
-    border: 3px solid #{$border-color};
+    border: 3px solid #{$list-item-border-color};
     border-radius: 10px;
+}
+
+.snippet {
+    height: 100%;
+
+    &__name {
+        font-weight: bold;
+    }
+
+    &__likes {
+        display: flex;
+        align-items: center;
+
+        & > i {
+            color: #{$likes-icon-color};
+        }
+
+        & > span {
+            padding-left: 5px;
+        }
+    }
 }

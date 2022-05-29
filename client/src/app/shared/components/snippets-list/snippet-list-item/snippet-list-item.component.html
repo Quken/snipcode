@@ -1,20 +1,31 @@
-<div class="snippet-list-item container-fluid p-5">
+<div class="snippet-list-item container-fluid p-3">
     <div class="snippet d-flex flex-column justify-content-between">
         <div class="snippet__content">
-            <div class="snippet__name">
+            <p class="snippet__name">
                 {{ snippet.fullSnippetName }}
-            </div>
+            </p>
             <div class="snippet__short-info">
+                <div class="snippet__language">
+                    Language: {{ snippet.language }}
+                </div>
                 <div class="snippet__created-at">
-                    {{ snippet.createdAt | date }}
+                    Created: {{ snippet.createdAt | date }}
                 </div>
                 <div *ngIf="snippet.modifiedAt" class="snippet__modified-at">
-                    {{ snippet.modifiedAt | date }}
+                    Modified: {{ snippet.modifiedAt | date }}
                 </div>
             </div>
         </div>
-        <div class="snippet__open">
-            <button (click)="onClick()">Open</button>
+        <div
+            class="snippet__footer d-flex justify-content-between align-items-center mx-2"
+        >
+            <div class="snippet__likes">
+                <i class="fa-solid fa-heart"></i>
+                <span>{{ snippet.likes }}</span>
+            </div>
+            <button type="button" (click)="onClick()" class="btn btn-success">
+                Open
+            </button>
         </div>
     </div>
 </div>
