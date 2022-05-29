@@ -1,7 +1,12 @@
 import { Observable, switchMap } from 'rxjs';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Snippet, SnippetsService } from '@core/snippets';
+import {
+    CreateSnippetModalComponent,
+    Snippet,
+    SnippetsService,
+} from '@core/snippets';
 import { User, UserService } from '@core/user';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-profile-card',
@@ -17,6 +22,19 @@ export class ProfileCardComponent {
 
     constructor(
         private readonly _userService: UserService,
-        private readonly _snippetsService: SnippetsService
+        private readonly _snippetsService: SnippetsService,
+        private readonly _modalService: NgbModal
     ) {}
+
+    public onCreate(): void {
+        const modal = this._modalService.open(CreateSnippetModalComponent, {
+            ariaLabelledBy: 'create-snippet-modal',
+            animation: true,
+            backdrop: true,
+            centered: true,
+            fullscreen: true,
+            size: 'lg',
+        });
+        // modal.componentInstance.snippet = snippet;
+    }
 }

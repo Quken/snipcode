@@ -21,6 +21,12 @@
                 <app-profile-summary></app-profile-summary>
             </div>
             <ng-container *ngIf="snippets$ | async as snippets">
+                <div class="my-3 d-flex justify-content-between">
+                    <h3>Your snippets</h3>
+                    <button type="button" class="btn btn-success" (click)="onCreate()">
+                        Create a new one
+                    </button>
+                </div>
                 <app-snippets-list
                     *ngIf="snippets?.length"
                     [snippets]="snippets"

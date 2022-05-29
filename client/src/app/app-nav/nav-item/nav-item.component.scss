@@ -1,0 +1,15 @@
+.nav-item {
+    &__link {
+        text-decoration: none;
+        color: lightslategray;
+        font-weight: 600;
+        font-size: 1.2rem;
+        transition: all 0.2s ease-in;
+
+        &:hover {
+            color: black;
+            text-decoration: underline;
+            transition: all 0.2s ease-in;
+        }
+    }
+}
