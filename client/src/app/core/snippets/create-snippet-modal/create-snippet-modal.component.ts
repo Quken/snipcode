@@ -10,8 +10,11 @@ import {
 } from '@angular/core';
 import { AceService } from '@core/ace';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { SnippetLanguage, snippetLanguages } from '../models';
+import { Snippet, SnippetLanguage, snippetLanguages } from '../models';
 import { TitleCasePipe } from '@angular/common';
+import { SnippetsService } from '../snippets.service';
+import { ToastService } from '@core/toast/toast.service';
+import { Toast } from '@core/toast/models';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -46,7 +49,9 @@ export class CreateSnippetModalComponent implements AfterViewInit {
         public activeModal: NgbActiveModal,
         private readonly _aceService: AceService,
         private readonly _titleCasePipe: TitleCasePipe,
-        private readonly _cdr: ChangeDetectorRef
+        private readonly _cdr: ChangeDetectorRef,
+        private readonly _snippetsService: SnippetsService,
+        private readonly _toastService: ToastService
     ) {}
 
     public ngAfterViewInit(): void {
@@ -54,7 +59,7 @@ export class CreateSnippetModalComponent implements AfterViewInit {
             this.editorElementRef.nativeElement
         );
         this._aceEditor.session.setValue('Write your code here');
-        this._aceEditor.on('change', (e) => {
+        this._aceEditor.on('change', () => {
             this._cdr.detectChanges();
         });
         this._cdr.detectChanges();
@@ -65,7 +70,28 @@ export class CreateSnippetModalComponent implements AfterViewInit {
     }
 
     public onSave(): void {
-        console.log(this._code);
+        const language = this.selectedLanguage;
+        const snippet: Partial<Snippet> = {
+            srcRaw: this._code,
+            language: language as SnippetLanguage,
+            likes: 0,
+        };
+        this._snippetsService.save(snippet as Snippet).subscribe(
+            () => {
+                this.activeModal.close('Success');
+                const toast: Toast = {
+                    textOrTemplate: 'Successfully saved',
+                };
+                this._toastService.showSuccess(toast);
+            },
+            (e) => {
+                console.error(e);
+                const toast: Toast = {
+                    textOrTemplate: 'Saving failed',
+                };
+                this._toastService.showDanger(toast);
+            }
+        );
     }
 
     public onLanguageSelect(language: string): void {

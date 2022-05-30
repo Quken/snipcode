@@ -7,6 +7,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FooterModule } from './footer/footer.module';
 import { HeaderModule } from './header/header.module';
 import { SharedModule } from '@shared/shared.module';
+import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from '@core/core.module';
 
 @NgModule({
     declarations: [AppComponent],
@@ -17,6 +19,8 @@ import { SharedModule } from '@shared/shared.module';
         FooterModule,
         HeaderModule,
         SharedModule,
+        CoreModule,
+        HttpClientModule,
     ],
     bootstrap: [AppComponent],
 })

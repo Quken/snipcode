@@ -1,0 +1,15 @@
+<div class="toast-container" *ngIf="toasts$ | async as toasts">
+    <ngb-toast
+        *ngFor="let toast of toasts"
+        [class]="toast?.options?.className"
+        (hidden)="remove(toast)"
+    >
+        <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
+            <ng-template
+                [ngTemplateOutlet]="getTemplateOutlet(toast)"
+            ></ng-template>
+        </ng-template>
+
+        <ng-template #text>{{ toast.textOrTemplate }}</ng-template>
+    </ngb-toast>
+</div>

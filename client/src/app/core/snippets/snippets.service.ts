@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
-import { Observable, of, shareReplay } from 'rxjs';
+import { mapTo, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
 import { Snippet } from './models';
+import { HttpClient } from '@angular/common/http';
+import { User, UserService } from '@core/user';
 
 const snippetsMock: Snippet[] = [
     new Snippet({
@@ -83,7 +85,22 @@ function debounce(fn, delay) {
     providedIn: 'root',
 })
 export class SnippetsService {
+    constructor(
+        private readonly _httpClient: HttpClient,
+        private readonly _userService: UserService
+    ) {}
+
     public getSnippets(userId: GUID): Observable<Snippet[]> {
         return of(snippetsMock).pipe(shareReplay(1));
+    }
+
+    public save(snippet: Snippet): Observable<void> {
+        return this._userService.user$.pipe(
+            switchMap((user: User) => {
+                const body = snippet;
+                return of(null);
+            }),
+            mapTo(void 0)
+        );
     }
 }
