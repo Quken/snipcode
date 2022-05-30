@@ -11,17 +11,37 @@
         </div>
     </div>
     <div class="app-modal__content">
-        <div
-            class="app-ace-editor"
-            #editor
-            style="width: 500px; height: 250px"
-        ></div>
+        <div ngbDropdown class="my-2">
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="language-dropdown"
+                ngbDropdownToggle
+            >
+                {{ dropdownTitle }}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="language-dropdown">
+                <button
+                    ngbDropdownItem
+                    *ngFor="let language of snippetLanguages"
+                    (click)="onLanguageSelect(language)"
+                >
+                    {{ language }}
+                </button>
+            </div>
+        </div>
+        <div class="app-ace-editor" #editor></div>
     </div>
     <div class="app-modal__footer d-flex justify-content-between">
         <button type="button" class="btn btn-danger" (click)="onClose()">
             Close
         </button>
-        <button type="button" class="btn btn-success" (click)="onSave()">
+        <button
+            type="button"
+            class="btn btn-success"
+            (click)="onSave()"
+            [disabled]="isDisabled"
+        >
             Save
         </button>
     </div>

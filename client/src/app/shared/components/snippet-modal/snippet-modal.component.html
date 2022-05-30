@@ -11,12 +11,7 @@
         </div>
     </div>
     <div class="snippet__content app-modal__content">
-        <pre
-            prism
-            class="p-4 dark snippet__code"
-            [code]="snippet.srcRaw"
-            [language]="snippet.language"
-        ></pre>
+        <div class="snippet__code" #editor></div>
     </div>
     <div class="app-modal__footer d-flex justify-content-end">
         <button
