@@ -1,7 +1,7 @@
 <div class="snippet-list-item container-fluid p-3">
     <div class="snippet d-flex flex-column justify-content-between">
         <div class="snippet__content">
-            <p class="snippet__name">
+            <p class="snippet__name pb-1">
                 {{ snippet.fullSnippetName }}
             </p>
             <div class="snippet__short-info">
@@ -15,7 +15,7 @@
                     Modified: {{ snippet.modifiedAt | date }}
                 </div>
             </div>
-            <div class="snippet__shortened-source d-flex">
+            <div class="snippet__shortened-source d-flex my-2">
                 <div class="app-ace-editor" #editor></div>
             </div>
         </div>
