@@ -16,7 +16,7 @@ import { SnippetsService } from '../snippets.service';
 import { ToastService } from '@core/toast/toast.service';
 import { Toast } from '@core/toast/models';
 import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -55,6 +55,14 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
         return null;
     }
 
+    public get isNameInvalid(): boolean {
+        return (
+            this.formGroup.controls['name'].invalid &&
+            (this.formGroup.controls['name'].dirty ||
+                this.formGroup.controls['name'].touched)
+        );
+    }
+
     private get _code(): string {
         return this._aceEditor?.getValue();
     }
@@ -65,14 +73,18 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
         private readonly _titleCasePipe: TitleCasePipe,
         private readonly _cdr: ChangeDetectorRef,
         private readonly _snippetsService: SnippetsService,
-        private readonly _toastService: ToastService
+        private readonly _toastService: ToastService,
+        private readonly _formBuilder: FormBuilder
     ) {}
 
     private _initForm(): void {
-        this.formGroup = new FormGroup({
-            name: new FormControl('', {
-                validators: [Validators.required, Validators.minLength(4)],
-            }),
+        this.formGroup = this._formBuilder.group({
+            name: [
+                '',
+                {
+                    validators: [Validators.required, Validators.minLength(4)],
+                },
+            ],
         });
     }
 
@@ -87,7 +99,7 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
         this._cdr.detectChanges();
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this._initForm();
     }
 
@@ -103,22 +115,22 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
             likes: 0,
             extension: SnippetExtensionsEnum[language],
         };
-        this._snippetsService.create(snippet).subscribe(
-            () => {
+        this._snippetsService.create(snippet).subscribe({
+            next: () => {
                 this.activeModal.close('Success');
                 const toast: Toast = {
                     textOrTemplate: 'Successfully saved',
                 };
                 this._toastService.showSuccess(toast);
             },
-            (e) => {
+            error: (e) => {
                 console.error(e);
                 const toast: Toast = {
                     textOrTemplate: 'Saving failed',
                 };
                 this._toastService.showDanger(toast);
-            }
-        );
+            },
+        });
     }
 
     public onLanguageSelect(language: string): void {

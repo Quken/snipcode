@@ -32,19 +32,38 @@
                     </button>
                 </div>
             </div>
-            <div class="input-group mb-3" *ngIf="selectedLanguage">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Snippet name"
-                    aria-label="name"
-                    aria-describedby="name"
-                    formControlName="name"
-                />
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="name"
-                        >.{{ extension }}</span
+            <div class="input-group mb-3 flex-column" *ngIf="selectedLanguage">
+                <div class="d-flex mx-2">
+                    <input
+                        type="text"
+                        class="form-control"
+                        [ngClass]="{ 'is-invalid': isNameInvalid }"
+                        placeholder="Snippet name"
+                        aria-label="name"
+                        aria-describedby="name"
+                        formControlName="name"
+                    />
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="name"
+                            >.{{ extension }}</span
+                        >
+                    </div>
+                </div>
+                <div
+                    *ngIf="isNameInvalid"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['name'].errors?.['required']"
                     >
+                        Name is required.
+                    </div>
+                    <div
+                        *ngIf="formGroup.controls['name'].errors?.['minlength']"
+                    >
+                        Name must be at least 4 characters long.
+                    </div>
                 </div>
             </div>
             <div class="app-ace-editor" #editor></div>
