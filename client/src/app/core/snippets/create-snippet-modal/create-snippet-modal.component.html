@@ -32,8 +32,8 @@
                     </button>
                 </div>
             </div>
-            <div class="input-group mb-3 flex-column" *ngIf="selectedLanguage">
-                <div class="d-flex mx-2">
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
                     <input
                         type="text"
                         class="form-control"
@@ -44,9 +44,14 @@
                         formControlName="name"
                     />
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="name"
-                            >.{{ extension }}</span
+                        <ng-template
+                            *ngIf="
+                                selectedLanguage;
+                                then selectedExtension;
+                                else emptyExtension
+                            "
                         >
+                        </ng-template>
                     </div>
                 </div>
                 <div
@@ -85,3 +90,12 @@
         </div>
     </form>
 </div>
+
+<ng-template #selectedExtension>
+    <span class="input-group-text" id="name"
+        >.{{ extension }}</span
+    ></ng-template
+>
+<ng-template #emptyExtension>
+    <span class="input-group-text" id="name">.extension</span>
+</ng-template>

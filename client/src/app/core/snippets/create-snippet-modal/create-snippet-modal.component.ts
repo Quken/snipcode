@@ -124,14 +124,14 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
             next: () => {
                 this.activeModal.close('Success');
                 const toast: Toast = {
-                    textOrTemplate: 'Successfully saved',
+                    textOrTemplate: `Snippet ${snippet.name}.${snippet.extension} successfully saved`,
                 };
                 this._toastService.showSuccess(toast);
             },
             error: (e) => {
                 console.error(e);
                 const toast: Toast = {
-                    textOrTemplate: 'Saving failed',
+                    textOrTemplate: `Unable to save snippet ${snippet.name}.${snippet.extension}`,
                 };
                 this._toastService.showDanger(toast);
             },

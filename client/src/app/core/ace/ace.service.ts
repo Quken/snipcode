@@ -9,6 +9,7 @@ export class AceService {
     private _ace: any;
 
     constructor() {
+        ace.config.set('fontFamily', 'Roboto Mono');
         ace.config.set('fontSize', '14px');
         ace.config.set(
             'basePath',
@@ -19,7 +20,7 @@ export class AceService {
 
     public getAceEditor(element: HTMLElement): ace.Ace.Editor {
         const aceEditor = this._ace.edit(element);
-        aceEditor.setTheme('ace/theme/twilight');
+        aceEditor.setTheme('ace/theme/dracula');
         return aceEditor;
     }
 }
