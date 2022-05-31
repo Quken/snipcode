@@ -64,6 +64,9 @@
                     >
                         Name must be at least 4 characters long.
                     </div>
+                    <div *ngIf="formGroup.controls['name'].errors?.['pattern']">
+                        Unsupported characters for snippet name.
+                    </div>
                 </div>
             </div>
             <div class="app-ace-editor" #editor></div>

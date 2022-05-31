@@ -82,7 +82,11 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
             name: [
                 '',
                 {
-                    validators: [Validators.required, Validators.minLength(4)],
+                    validators: [
+                        Validators.required,
+                        Validators.minLength(4),
+                        Validators.pattern(/\w/gim),
+                    ],
                 },
             ],
         });
@@ -114,6 +118,7 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
             language,
             likes: 0,
             extension: SnippetExtensionsEnum[language],
+            name: this.formGroup.controls['name'].value,
         };
         this._snippetsService.create(snippet).subscribe({
             next: () => {
