@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     Input,
@@ -28,8 +29,13 @@ export class SnippetModalComponent implements AfterViewInit {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private readonly _aceService: AceService
+        private readonly _aceService: AceService,
+        private readonly _cdr: ChangeDetectorRef
     ) {}
+
+    public get hasDiff(): boolean {
+        return this._aceEditor?.getValue() !== this.snippet.srcRaw;
+    }
 
     public get snippetFullName(): string {
         return `Snippet "${this.snippet.fullSnippetName}"`;
@@ -42,6 +48,10 @@ export class SnippetModalComponent implements AfterViewInit {
         this._aceEditor.session.setValue(this.snippet.srcRaw);
         this._aceEditor.session.setMode(`ace/mode/${this.snippet.language}`);
         this._aceEditor.setReadOnly(!this.isEdit);
+        this._aceEditor.on('change', () => {
+            this._cdr.detectChanges();
+        });
+        this._cdr.detectChanges();
     }
 
     public onClose(): void {

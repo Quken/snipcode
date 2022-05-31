@@ -2,12 +2,13 @@
     <div class="app-modal__header">
         <div class="snippet__title d-flex justify-content-between">
             <h3 class="snippet__name">{{ snippetFullName }}</h3>
-            <div>
+            <div class="d-flex align-items-center">
                 <button
                     type="button"
-                    class="btn btn-info mx-2"
+                    class="btn btn-primary mx-2"
                     aria-label="Edit"
                     [style.color]="'white'"
+                    [disabled]="isEdit"
                     (click)="onEdit()"
                 >
                     Edit
@@ -36,6 +37,12 @@
             >
                 Close
             </button>
+            <h5 *ngIf="hasDiff">
+                <i
+                    class="snippet__warning-icon fas fa-lg fa-exclamation-triangle mx-1"
+                ></i>
+                Changes were made.
+            </h5>
             <button type="button" class="btn btn-success" (click)="onSave()">
                 Save
             </button>

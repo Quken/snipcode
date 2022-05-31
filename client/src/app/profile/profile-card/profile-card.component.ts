@@ -30,9 +30,10 @@ export class ProfileCardComponent {
         const modal = this._modalService.open(CreateSnippetModalComponent, {
             ariaLabelledBy: 'create-snippet-modal',
             animation: true,
-            backdrop: true,
+            backdrop: 'static',
             centered: true,
             fullscreen: true,
+            keyboard: false,
             size: 'lg',
         });
         // modal.componentInstance.snippet = snippet;

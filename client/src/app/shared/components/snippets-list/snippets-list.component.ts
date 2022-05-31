@@ -24,7 +24,8 @@ export class SnippetsListComponent {
         const snippetModal = this._modalService.open(SnippetModalComponent, {
             ariaLabelledBy: 'snippet-modal',
             animation: true,
-            backdrop: true,
+            backdrop: 'static',
+            keyboard: false,
             centered: true,
             fullscreen: 'md',
             size: 'lg',
