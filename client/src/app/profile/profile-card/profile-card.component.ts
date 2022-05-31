@@ -17,7 +17,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class ProfileCardComponent {
     public user$: Observable<User> = this._userService.user$;
     public snippets$: Observable<Snippet[]> = this.user$.pipe(
-        switchMap(({ id }: User) => this._snippetsService.getSnippets(id))
+        switchMap(({ id }: User) => this._snippetsService.getById(id))
     );
 
     constructor(

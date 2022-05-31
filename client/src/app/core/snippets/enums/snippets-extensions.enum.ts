@@ -1,4 +1,5 @@
 export enum SnippetExtensionsEnum {
+    'html' = 'html',
     'javascript' = 'js',
     'typescript' = 'ts',
     'css' = 'css',

@@ -90,14 +90,15 @@ export class SnippetsService {
         private readonly _userService: UserService
     ) {}
 
-    public getSnippets(userId: GUID): Observable<Snippet[]> {
+    public getById(userId: GUID): Observable<Snippet[]> {
         return of(snippetsMock).pipe(shareReplay(1));
     }
 
-    public save(snippet: Snippet): Observable<void> {
+    public create(snippet: Partial<Snippet>): Observable<void> {
         return this._userService.user$.pipe(
             switchMap((user: User) => {
-                const body = snippet;
+                const body = { snippet, user };
+                console.log(body);
                 return of(null);
             }),
             mapTo(void 0)

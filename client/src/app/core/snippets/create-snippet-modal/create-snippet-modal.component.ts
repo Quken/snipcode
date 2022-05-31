@@ -5,7 +5,7 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Inject,
+    OnInit,
     ViewChild,
 } from '@angular/core';
 import { AceService } from '@core/ace';
@@ -15,6 +15,8 @@ import { TitleCasePipe } from '@angular/common';
 import { SnippetsService } from '../snippets.service';
 import { ToastService } from '@core/toast/toast.service';
 import { Toast } from '@core/toast/models';
+import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -23,11 +25,12 @@ import { Toast } from '@core/toast/models';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [TitleCasePipe],
 })
-export class CreateSnippetModalComponent implements AfterViewInit {
+export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
     @ViewChild('editor', { static: true })
     public editorElementRef!: ElementRef<HTMLElement>;
     public readonly snippetLanguages = snippetLanguages;
     public selectedLanguage: SnippetLanguage | null = null;
+    public formGroup!: FormGroup;
 
     private _aceEditor!: ace.Ace.Editor;
 
@@ -38,7 +41,18 @@ export class CreateSnippetModalComponent implements AfterViewInit {
     }
 
     public get isDisabled(): boolean {
-        return !this.selectedLanguage || !this._code?.length;
+        return (
+            !this.selectedLanguage ||
+            !this._code?.length ||
+            !this.formGroup.valid
+        );
+    }
+
+    public get extension(): SnippetExtensionsEnum | null {
+        if (this.selectedLanguage) {
+            return SnippetExtensionsEnum[this.selectedLanguage];
+        }
+        return null;
     }
 
     private get _code(): string {
@@ -54,6 +68,14 @@ export class CreateSnippetModalComponent implements AfterViewInit {
         private readonly _toastService: ToastService
     ) {}
 
+    private _initForm(): void {
+        this.formGroup = new FormGroup({
+            name: new FormControl('', {
+                validators: [Validators.required, Validators.minLength(4)],
+            }),
+        });
+    }
+
     public ngAfterViewInit(): void {
         this._aceEditor = this._aceService.getAceEditor(
             this.editorElementRef.nativeElement
@@ -65,18 +87,23 @@ export class CreateSnippetModalComponent implements AfterViewInit {
         this._cdr.detectChanges();
     }
 
+    public ngOnInit() {
+        this._initForm();
+    }
+
     public onClose(): void {
         this.activeModal.dismiss();
     }
 
-    public onSave(): void {
-        const language = this.selectedLanguage;
+    public onSubmit(): void {
+        const language = <SnippetLanguage>this.selectedLanguage;
         const snippet: Partial<Snippet> = {
             srcRaw: this._code,
-            language: language as SnippetLanguage,
+            language,
             likes: 0,
+            extension: SnippetExtensionsEnum[language],
         };
-        this._snippetsService.save(snippet as Snippet).subscribe(
+        this._snippetsService.create(snippet).subscribe(
             () => {
                 this.activeModal.close('Success');
                 const toast: Toast = {

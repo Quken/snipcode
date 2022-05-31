@@ -12,7 +12,7 @@ class UserServiceMock extends UserService {
 }
 
 class SnippetsServiceMock extends SnippetsService {
-    public override getSnippets(): Observable<Snippet[]> {
+    public override getById(): Observable<Snippet[]> {
         return of([snippetMock]).pipe(shareReplay(1));
     }
 }
