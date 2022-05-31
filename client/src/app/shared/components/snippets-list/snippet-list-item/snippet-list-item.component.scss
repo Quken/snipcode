@@ -26,4 +26,10 @@ $likes-icon-color: #f94a4a;
             padding-left: 5px;
         }
     }
+
+    &__shortened-source > .app-ace-editor {
+        height: 150px;
+        max-height: 170px;
+        width: 100%;
+    }
 }
