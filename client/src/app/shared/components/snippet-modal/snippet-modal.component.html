@@ -2,24 +2,54 @@
     <div class="app-modal__header">
         <div class="snippet__title d-flex justify-content-between">
             <h3 class="snippet__name">{{ snippetFullName }}</h3>
-            <button
-                type="button"
-                class="snippet__close btn-close"
-                aria-label="Close"
-                (click)="onClose()"
-            ></button>
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-info mx-2"
+                    aria-label="Edit"
+                    [style.color]="'white'"
+                    (click)="onEdit()"
+                >
+                    Edit
+                </button>
+                <button
+                    type="button"
+                    class="snippet__close btn-close"
+                    aria-label="Close"
+                    (click)="onClose()"
+                ></button>
+            </div>
         </div>
     </div>
     <div class="snippet__content app-modal__content">
         <div class="snippet__code" #editor></div>
     </div>
-    <div class="app-modal__footer d-flex justify-content-end">
-        <button
-            type="button"
-            class="snippet__close btn btn-danger"
-            (click)="onClose()"
-        >
-            Close
-        </button>
-    </div>
+    <ng-container
+        *ngIf="isEdit; then editTemplate; else readonlyTemplate"
+    ></ng-container>
+    <ng-template #editTemplate>
+        <div class="app-modal__footer d-flex justify-content-between">
+            <button
+                type="button"
+                class="snippet__close btn btn-danger"
+                (click)="onClose()"
+            >
+                Close
+            </button>
+            <button type="button" class="btn btn-success" (click)="onSave()">
+                Save
+            </button>
+        </div>
+    </ng-template>
+    <ng-template #readonlyTemplate>
+        <div class="app-modal__footer d-flex justify-content-end">
+            <button
+                type="button"
+                class="snippet__close btn btn-danger"
+                (click)="onClose()"
+            >
+                Close
+            </button>
+        </div>
+    </ng-template>
 </div>

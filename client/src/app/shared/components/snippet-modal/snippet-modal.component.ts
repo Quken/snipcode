@@ -18,11 +18,13 @@ import * as ace from 'ace-builds';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SnippetModalComponent implements AfterViewInit {
-    @Input()
-    snippet!: Snippet;
-
     @ViewChild('editor', { static: true })
     public editorElementRef!: ElementRef<HTMLElement>;
+    @Input()
+    public snippet!: Snippet;
+    public isEdit: boolean = false;
+
+    private _aceEditor!: ace.Ace.Editor;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -34,15 +36,24 @@ export class SnippetModalComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        const aceEditor = this._aceService.getAceEditor(
+        this._aceEditor = this._aceService.getAceEditor(
             this.editorElementRef.nativeElement
         );
-        aceEditor.session.setValue(this.snippet.srcRaw);
-        aceEditor.session.setMode(`ace/mode/${this.snippet.language}`);
-        aceEditor.setReadOnly(true);
+        this._aceEditor.session.setValue(this.snippet.srcRaw);
+        this._aceEditor.session.setMode(`ace/mode/${this.snippet.language}`);
+        this._aceEditor.setReadOnly(!this.isEdit);
     }
 
-    public onClose() {
+    public onClose(): void {
         this.activeModal.dismiss();
+    }
+
+    public onEdit(): void {
+        this.isEdit = true;
+        this._aceEditor.setReadOnly(!this.isEdit);
+    }
+
+    public onSave(): void {
+        console.log(this._aceEditor?.getValue());
     }
 }
