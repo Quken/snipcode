@@ -1,4 +1,4 @@
-<div class="profile-card" *ngIf="user$ | async as user">
+<div class="profile-card py-3" *ngIf="user$ | async as user">
     <div class="profile-card__content">
         <div class="profile-card__info text-center">
             <div
@@ -8,13 +8,13 @@
                     class="profile-card__image"
                     src="https://picsum.photos/id/100/1500/500"
                 />
-                <div class="profile-card__title">
-                    <div class="profile-card__fullname">
+                <div class="profile-card__title my-3">
+                    <h2 class="profile-card__fullname">
                         {{ user.name }} {{ user.surname }}
-                    </div>
-                    <div *ngIf="user.position" class="profile-card__position">
+                    </h2>
+                    <h4 *ngIf="user.position" class="profile-card__position">
                         {{ user.position }}
-                    </div>
+                    </h4>
                 </div>
             </div>
             <div class="profile-card__summary">

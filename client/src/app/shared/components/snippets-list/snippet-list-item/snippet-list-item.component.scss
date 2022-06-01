@@ -2,7 +2,7 @@ $list-item-border-color: rgba(44, 29, 29, 0.596);
 $likes-icon-color: #f94a4a;
 
 .snippet-list-item {
-    height: 350px;
+    height: 400px;
     border: 3px solid #{$list-item-border-color};
     border-radius: 10px;
 }
@@ -27,9 +27,11 @@ $likes-icon-color: #f94a4a;
         }
     }
 
-    &__shortened-source > .app-ace-editor {
-        height: 140px;
-        max-height: 150px;
-        width: 100%;
+    &__shortened-source {
+        & > .app-ace-editor {
+            height: 200px;
+            width: 100%;
+            border-radius: 5px;
+        }
     }
 }

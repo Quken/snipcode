@@ -1,6 +1,6 @@
-<div class="snippets-list text-left" *ngIf="snippets.length">
+<div class="snippets-list text-left container" *ngIf="snippets.length">
     <div
-        class="snippets-list__item my-4"
+        class="snippets-list__item my-4 mx-2 col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12"
         *ngFor="let snippet of snippets; trackBy: trackByFn"
     >
         <app-snippet-list-item

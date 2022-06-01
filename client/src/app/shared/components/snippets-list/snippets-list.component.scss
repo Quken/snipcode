@@ -1,13 +1,8 @@
-$item-width: calc(100% / (3 + 0.6));
-
 .snippets-list {
     flex-direction: row;
     align-items: stretch;
     flex-wrap: wrap;
     display: flex;
     justify-content: space-between;
-
-    &__item {
-        width: #{$item-width};
-    }
+    padding: 0;
 }

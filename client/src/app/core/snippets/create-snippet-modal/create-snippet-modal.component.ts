@@ -117,7 +117,6 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
         const snippet: Partial<Snippet> = {
             srcRaw: this._code,
             language,
-            likes: 0,
             extension: SnippetExtensionsEnum[language],
             name: this.formGroup.controls['name'].value,
         };
