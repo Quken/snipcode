@@ -45,7 +45,8 @@ export class SnippetListItemComponent implements AfterViewInit {
         );
         this._aceEditor.session.setOption('useWorker', false);
         this._aceEditor.setOptions({
-            lines: this._lines,
+            minLines: this._lines,
+            maxLines: this._lines,
             readOnly: true,
         });
         const shortenedSource = this.snippet.srcRaw.slice(0, this._maxLength);

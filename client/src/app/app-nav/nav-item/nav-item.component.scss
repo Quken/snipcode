@@ -1,13 +1,17 @@
+@import "../../footer/footer.component.scss";
+
+$nav-link-color: rgba($nav-bg-color, 0.8);
+
 .nav-item {
     &__link {
         text-decoration: none;
-        color: lightslategray;
+        color: #{$nav-link-color};
         font-weight: 600;
         font-size: 1.2rem;
         transition: all 0.2s ease-in;
 
         &:hover {
-            color: black;
+            color: rgb(0, 0, 0);
             text-decoration: underline;
             transition: all 0.2s ease-in;
         }
