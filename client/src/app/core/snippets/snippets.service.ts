@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
-import { mapTo, Observable, of, shareReplay, switchMap } from 'rxjs';
+import {
+    EMPTY,
+    mapTo,
+    Observable,
+    of,
+    shareReplay,
+    switchMap,
+    tap,
+} from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
 import { Snippet } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +17,7 @@ import { User, UserService } from '@core/user';
 const snippetsMock: Snippet[] = [
     new Snippet({
         id: '1',
-        name: '1',
+        name: 'MyCssSnippet',
         language: 'css',
         createdBy: {
             id: '1',
@@ -24,7 +32,7 @@ const snippetsMock: Snippet[] = [
     }),
     new Snippet({
         id: '2',
-        name: '2',
+        name: 'MyTypescriptSnippet',
         language: 'typescript',
         extension: SnippetExtensionsEnum.typescript,
         createdBy: {
@@ -39,7 +47,7 @@ const snippetsMock: Snippet[] = [
     }),
     new Snippet({
         id: '3',
-        name: '3',
+        name: 'MyJavascriptSnippet',
         language: 'javascript',
         createdBy: {
             id: '1',
@@ -66,7 +74,7 @@ function debounce(fn, delay) {
     }),
     new Snippet({
         id: '4',
-        name: '4',
+        name: 'MySecondJavascriptSnippet',
         language: 'javascript',
         createdBy: {
             id: '1',
@@ -101,6 +109,13 @@ export class SnippetsService {
                 console.log(body);
                 return of(null);
             }),
+            mapTo(void 0)
+        );
+    }
+
+    public update(snippet: Partial<Snippet>): Observable<void> {
+        return of(null).pipe(
+            tap(() => console.log(snippet)),
             mapTo(void 0)
         );
     }

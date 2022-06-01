@@ -34,6 +34,10 @@ export class Snippet {
         return this._name;
     }
 
+    public set name(value: string) {
+        this._name = value;
+    }
+
     public get id(): string {
         return this._id;
     }
@@ -64,6 +68,10 @@ export class Snippet {
 
     public get srcRaw(): string {
         return this._srcRaw;
+    }
+
+    public set srcRaw(value: string) {
+        this._srcRaw = value;
     }
 
     public get likes(): number {

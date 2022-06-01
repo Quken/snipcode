@@ -1,62 +1,104 @@
 <div class="snippet-modal snippet app-modal">
-    <div class="app-modal__header">
-        <div class="snippet__title d-flex justify-content-between">
-            <h3 class="snippet__name">{{ snippetFullName }}</h3>
-            <div class="d-flex align-items-center">
-                <button
-                    type="button"
-                    class="btn btn-primary mx-2"
-                    aria-label="Edit"
-                    [style.color]="'white'"
-                    [disabled]="isEdit"
-                    (click)="onEdit()"
-                >
-                    Edit
-                </button>
-                <button
-                    type="button"
-                    class="snippet__close btn-close"
-                    aria-label="Close"
-                    (click)="onClose()"
-                ></button>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="app-modal__header">
+            <div class="snippet__title d-flex justify-content-between">
+                <h3 class="snippet__name" *ngIf="!isEdit">
+                    {{ snippetFullName }}
+                </h3>
+                <div *ngIf="isEdit">
+                    <input
+                        *ngIf="isEdit"
+                        type="text"
+                        class="form-control"
+                        [ngClass]="{ 'is-invalid': isNameInvalid }"
+                        placeholder="Snippet name"
+                        aria-label="name"
+                        aria-describedby="name"
+                        formControlName="name"
+                    />
+                    <div
+                        *ngIf="isNameInvalid"
+                        class="alert my-0 mx-2 p-0"
+                        style="color: red"
+                    >
+                        <div
+                            *ngIf="formGroup.controls['name'].errors?.['required']"
+                        >
+                            Name is required.
+                        </div>
+                        <div
+                            *ngIf="formGroup.controls['name'].errors?.['minlength']"
+                        >
+                            Name must be at least 4 characters long.
+                        </div>
+                        <div
+                            *ngIf="formGroup.controls['name'].errors?.['pattern']"
+                        >
+                            Unsupported characters for snippet name.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <button
+                        type="button"
+                        class="btn btn-primary mx-2"
+                        aria-label="Edit"
+                        [style.color]="'white'"
+                        [disabled]="isEdit"
+                        (click)="onEdit()"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        type="button"
+                        class="snippet__close btn-close"
+                        aria-label="Close"
+                        (click)="onClose()"
+                    ></button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="snippet__content app-modal__content">
-        <div class="snippet__code" #editor></div>
-    </div>
-    <ng-container
-        *ngIf="isEdit; then editTemplate; else readonlyTemplate"
-    ></ng-container>
-    <ng-template #editTemplate>
-        <div class="app-modal__footer d-flex justify-content-between">
-            <button
-                type="button"
-                class="snippet__close btn btn-danger"
-                (click)="onClose()"
-            >
-                Close
-            </button>
-            <h5 *ngIf="hasDiff">
-                <i
-                    class="snippet__warning-icon fas fa-lg fa-exclamation-triangle mx-1"
-                ></i>
-                Changes has been made.
-            </h5>
-            <button type="button" class="btn btn-success" (click)="onSave()">
-                Save
-            </button>
+        <div class="snippet__content app-modal__content">
+            <div class="snippet__code" #editor></div>
         </div>
-    </ng-template>
-    <ng-template #readonlyTemplate>
-        <div class="app-modal__footer d-flex justify-content-end">
-            <button
-                type="button"
-                class="snippet__close btn btn-danger"
-                (click)="onClose()"
-            >
-                Close
-            </button>
-        </div>
-    </ng-template>
+        <ng-container
+            *ngIf="isEdit; then editTemplate; else readonlyTemplate"
+        ></ng-container>
+        <ng-template #editTemplate>
+            <div class="app-modal__footer d-flex justify-content-between">
+                <button
+                    type="button"
+                    class="snippet__close btn btn-danger"
+                    (click)="onClose()"
+                >
+                    Close
+                </button>
+                <h5 *ngIf="hasDiff">
+                    <i
+                        class="snippet__warning-icon fas fa-lg fa-exclamation-triangle mx-1"
+                    ></i>
+                    Changes has been made.
+                </h5>
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                    [disabled]="isDisabled"
+                >
+                    Save
+                </button>
+            </div>
+        </ng-template>
+        <ng-template #readonlyTemplate>
+            <div class="app-modal__footer d-flex justify-content-end">
+                <button
+                    type="button"
+                    class="snippet__close btn btn-danger"
+                    (click)="onClose()"
+                >
+                    Close
+                </button>
+            </div>
+        </ng-template>
+    </form>
 </div>

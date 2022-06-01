@@ -86,6 +86,7 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
                         Validators.required,
                         Validators.minLength(4),
                         Validators.pattern(/\w/gim),
+                        Validators.maxLength(255),
                     ],
                 },
             ],
