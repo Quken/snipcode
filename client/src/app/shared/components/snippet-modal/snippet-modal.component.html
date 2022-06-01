@@ -47,6 +47,7 @@
                         [style.color]="'white'"
                         [disabled]="isEdit"
                         (click)="onEdit()"
+                        *ngIf="!readOnly"
                     >
                         Edit
                     </button>
@@ -63,7 +64,11 @@
             <div class="snippet__code" #editor></div>
         </div>
         <ng-container
-            *ngIf="isEdit; then editTemplate; else readonlyTemplate"
+            *ngIf="
+                !readOnly && isEdit;
+                then editTemplate;
+                else readonlyTemplate
+            "
         ></ng-container>
         <ng-template #editTemplate>
             <div class="app-modal__footer d-flex justify-content-between">

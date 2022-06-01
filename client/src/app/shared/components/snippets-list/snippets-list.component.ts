@@ -17,6 +17,12 @@ export class SnippetsListComponent {
     @Input()
     public classes!: string;
 
+    @Input()
+    public readOnlySnippets: boolean = true;
+
+    @Input()
+    public showAuthor: boolean = true;
+
     constructor(private readonly _modalService: NgbModal) {}
 
     public trackByFn(index: number, snippet: Snippet) {
@@ -35,5 +41,6 @@ export class SnippetsListComponent {
         });
         const snippet = this.snippets.find(({ id }) => id === snippetId);
         snippetModal.componentInstance.snippet = snippet;
+        snippetModal.componentInstance.readOnly = this.readOnlySnippets;
     }
 }

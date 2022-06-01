@@ -1,6 +1,6 @@
 <div class="profile-card py-3" *ngIf="user$ | async as user">
     <div class="profile-card__content">
-        <div class="profile-card__info text-center">
+        <div class="profile-card__info">
             <div
                 class="d-flex profile-card__image-container flex-column align-items-center"
             >
@@ -34,6 +34,8 @@
                 <app-snippets-list
                     *ngIf="snippets?.length"
                     [snippets]="snippets"
+                    [readOnlySnippets]="false"
+                    [showAuthor]="false"
                     [classes]="
                         'col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12'
                     "

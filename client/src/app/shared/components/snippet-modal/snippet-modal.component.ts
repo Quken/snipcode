@@ -25,8 +25,13 @@ import * as ace from 'ace-builds';
 export class SnippetModalComponent implements OnInit, AfterViewInit {
     @ViewChild('editor', { static: true })
     public editorElementRef!: ElementRef<HTMLElement>;
+
     @Input()
     public snippet!: Snippet;
+
+    @Input()
+    public readOnly: boolean = true;
+
     public isEdit: boolean = false;
     public formGroup!: FormGroup;
 

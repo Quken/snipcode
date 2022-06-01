@@ -102,6 +102,10 @@ export class SnippetsService {
         return of(snippetsMock).pipe(shareReplay(1));
     }
 
+    public getAll(): Observable<Snippet[]> {
+        return of(snippetsMock).pipe(shareReplay(1));
+    }
+
     public create(snippet: Partial<Snippet>): Observable<void> {
         return this._userService.user$.pipe(
             switchMap((user: User) => {

@@ -13,6 +13,7 @@ $nav-border-color: #140606;
         left: 0;
         right: 0;
         width: 30%;
+        min-width: 400px;
         z-index: 2000;
         border-top-left-radius: #{$nav-panel-border-radius};
         border-top-right-radius: #{$nav-panel-border-radius};
