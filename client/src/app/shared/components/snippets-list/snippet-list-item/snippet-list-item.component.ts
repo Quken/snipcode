@@ -32,7 +32,10 @@ export class SnippetListItemComponent implements AfterViewInit {
     public openSnippetEventEmitter: EventEmitter<GUID> = new EventEmitter();
 
     @Input()
-    snippet!: Snippet;
+    public snippet!: Snippet;
+
+    @Input()
+    public showAuthor: boolean = false;
 
     constructor(
         private readonly _aceService: AceService,

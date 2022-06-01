@@ -14,6 +14,9 @@ export class SnippetsListComponent {
     @Input()
     public snippets: Snippet[] = [];
 
+    @Input()
+    public classes!: string;
+
     constructor(private readonly _modalService: NgbModal) {}
 
     public trackByFn(index: number, snippet: Snippet) {

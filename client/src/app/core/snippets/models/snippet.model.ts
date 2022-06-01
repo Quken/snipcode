@@ -24,7 +24,6 @@ export class Snippet {
     private _createdBy: User;
     private _name: string;
     private _modifiedAt?: DateUTC;
-    private _modifiedBy?: User;
     private _srcRaw: string;
     private _language: SnippetLanguage;
     private _extension: SnippetExtensionsEnum;
@@ -54,16 +53,16 @@ export class Snippet {
         return this._createdAt;
     }
 
-    public get modifiedAt(): DateUTC | void {
-        return this._modifiedAt;
+    public get modifiedAt(): DateUTC {
+        return <DateUTC>this._modifiedAt;
+    }
+
+    public set modifiedAt(value: DateUTC) {
+        this._modifiedAt = value;
     }
 
     public get createdBy(): User {
         return this._createdBy;
-    }
-
-    public get modifiedBy(): User | void {
-        return this._modifiedBy;
     }
 
     public get srcRaw(): string {
@@ -88,7 +87,6 @@ export class Snippet {
         createdBy,
         name,
         modifiedAt,
-        modifiedBy,
         srcRaw,
         language,
         extension,
@@ -99,7 +97,6 @@ export class Snippet {
         this._createdBy = createdBy;
         this._name = name;
         this._modifiedAt = modifiedAt;
-        this._modifiedBy = modifiedBy;
         this._srcRaw = srcRaw;
         this._language = language;
         this._extension = extension;

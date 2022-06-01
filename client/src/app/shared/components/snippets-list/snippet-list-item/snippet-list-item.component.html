@@ -4,6 +4,9 @@
             <p class="snippet__name pb-1">
                 {{ snippet.fullSnippetName }}
             </p>
+            <p class="snippet__author pb-1" *ngIf="showAuthor">
+                {{ snippet.createdBy.name }} {{ snippet.createdBy.surname }}
+            </p>
             <div class="snippet__short-info">
                 <div class="snippet__language">
                     Language: {{ snippet.language }}

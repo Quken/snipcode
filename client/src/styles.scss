@@ -1,3 +1,10 @@
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
 @import "./app/shared/styles/modal.scss";
+
+$header-height: 48px;
+$footer-height: 40px;
+
+.app-content-container {
+    min-height: calc(100vh - #{$footer-height + $header-height});
+}

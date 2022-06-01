@@ -34,6 +34,9 @@
                 <app-snippets-list
                     *ngIf="snippets?.length"
                     [snippets]="snippets"
+                    [classes]="
+                        'col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12'
+                    "
                 ></app-snippets-list>
             </ng-container>
         </div>

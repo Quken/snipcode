@@ -10,7 +10,7 @@ import {
     tap,
 } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
-import { Snippet } from './models';
+import { DateUTC, Snippet } from './models';
 import { HttpClient } from '@angular/common/http';
 import { User, UserService } from '@core/user';
 
@@ -105,7 +105,12 @@ export class SnippetsService {
     public create(snippet: Partial<Snippet>): Observable<void> {
         return this._userService.user$.pipe(
             switchMap((user: User) => {
-                const body = { snippet, user };
+                const snippetDTO: Partial<Snippet> = {
+                    ...snippet,
+                    createdAt: <DateUTC>new Date().toUTCString(),
+                    createdBy: user,
+                };
+                const body = { snippet: snippetDTO, user };
                 console.log(body);
                 return of(null);
             }),
@@ -114,8 +119,16 @@ export class SnippetsService {
     }
 
     public update(snippet: Partial<Snippet>): Observable<void> {
-        return of(null).pipe(
-            tap(() => console.log(snippet)),
+        return this._userService.user$.pipe(
+            switchMap((user: User) => {
+                const snippetDTO: Partial<Snippet> = {
+                    ...snippet,
+                    modifiedAt: <DateUTC>new Date().toUTCString(),
+                };
+                const body = { snippet: snippetDTO, user };
+                console.log(body);
+                return of(null);
+            }),
             mapTo(void 0)
         );
     }
