@@ -29,6 +29,9 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     }
 
     public get hasDiff(): boolean {
+        if (!this._userSettings) {
+            return false;
+        }
         const {
             theme = AceEditorThemes.Dark,
             fontSize = 14,
@@ -124,8 +127,9 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this._initForm();
         this._subscriptions.add(
-            this._userSettingsService.getCurrentSettings().subscribe({
+            this._userSettingsService.getUserSettings().subscribe({
                 next: (settings) => {
+                    console.log(settings);
                     this._userSettings = settings;
                     this._setFormValues();
                     this._cdr.detectChanges();

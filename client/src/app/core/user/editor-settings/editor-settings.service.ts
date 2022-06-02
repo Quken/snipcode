@@ -1,20 +1,47 @@
 import { Injectable } from '@angular/core';
 import { AceEditorSettings } from '@core/ace/model';
-import { Observable, of, shareReplay } from 'rxjs';
-import { UserSettingsService } from '../settings';
+import { userSettingsMock } from '@mocks/user';
+
+import {
+    concat,
+    iif,
+    map,
+    merge,
+    Observable,
+    of,
+    ReplaySubject,
+    shareReplay,
+    Subject,
+    switchMap,
+    tap,
+} from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EditorSettingsService {
-    public editorSettings$ = this._userSettingsService
-        .getCurrentSettings()
-        .pipe(shareReplay(1));
+    private _editorSettingsSubject: Subject<AceEditorSettings> =
+        new ReplaySubject(1);
+    public editorSettings$ = this._editorSettingsSubject.asObservable();
 
-    constructor(private readonly _userSettingsService: UserSettingsService) {}
+    constructor() {}
 
-    public update(settings: Partial<AceEditorSettings>): Observable<void> {
-        console.log(settings);
-        return of(void 0);
+    public getSettings(): Observable<AceEditorSettings> {
+        this._editorSettingsSubject.next(userSettingsMock.aceEditor);
+        return this.editorSettings$;
+    }
+
+    public update(newSettings: Partial<AceEditorSettings>): Observable<void> {
+        console.log(newSettings);
+        return of(void 0).pipe(
+            switchMap(() => this.editorSettings$),
+            tap((settings) => {
+                this._editorSettingsSubject.next({
+                    ...settings,
+                    ...newSettings,
+                });
+            }),
+            map(() => void 0)
+        );
     }
 }

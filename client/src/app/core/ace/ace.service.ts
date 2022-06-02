@@ -14,9 +14,10 @@ export class AceService {
 
     constructor(private readonly _userSettingsService: UserSettingsService) {
         this._subscriptions.add(
-            this._userSettingsService.getCurrentSettings().subscribe({
+            this._userSettingsService.getUserSettings().subscribe({
                 next: (userSettings: UserSettings) => {
                     this._userSettings = userSettings;
+                    console.log(userSettings);
                     this._setupAce();
                 },
             })
