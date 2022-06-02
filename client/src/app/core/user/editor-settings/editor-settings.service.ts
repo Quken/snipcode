@@ -3,14 +3,10 @@ import { AceEditorSettings } from '@core/ace/model';
 import { userSettingsMock } from '@mocks/user';
 
 import {
-    concat,
-    iif,
     map,
-    merge,
     Observable,
     of,
     ReplaySubject,
-    shareReplay,
     Subject,
     switchMap,
     tap,
@@ -24,15 +20,23 @@ export class EditorSettingsService {
         new ReplaySubject(1);
     public editorSettings$ = this._editorSettingsSubject.asObservable();
 
-    constructor() {}
-
-    public getSettings(): Observable<AceEditorSettings> {
+    constructor() {
         this._editorSettingsSubject.next(userSettingsMock.aceEditor);
-        return this.editorSettings$;
+    }
+
+    public getEditorSettings(): Observable<AceEditorSettings> {
+        return this.editorSettings$.pipe(
+            tap((settings) => {
+                if (!settings) {
+                    this._editorSettingsSubject.next(
+                        userSettingsMock.aceEditor
+                    );
+                }
+            })
+        );
     }
 
     public update(newSettings: Partial<AceEditorSettings>): Observable<void> {
-        console.log(newSettings);
         return of(void 0).pipe(
             switchMap(() => this.editorSettings$),
             tap((settings) => {

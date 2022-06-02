@@ -141,7 +141,11 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     public onSubmit(): void {
         const newEditorSettings = this._getEditorUpdates();
         if (Object.keys(newEditorSettings).length) {
-            this._editorSettingsService.update(newEditorSettings);
+            this._editorSettingsService.update(newEditorSettings).subscribe({
+                next: () => {
+                    console.log('updated');
+                },
+            });
         }
     }
 

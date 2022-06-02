@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AceEditorSettings } from '@core/ace/model';
-import { userSettingsMock } from '@mocks/user';
-import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { EditorSettingsService } from '../editor-settings';
-import { User, UserSettings } from '../models';
-import { UserService } from '../user.service';
+import { UserSettings } from '../models';
 
 @Injectable({
     providedIn: 'root',
@@ -17,14 +15,16 @@ export class UserSettingsService {
     ) {}
 
     public getUserSettings(): Observable<UserSettings> {
-        this._settings$ = this._editorSettingsService.getSettings().pipe(
-            map((editorSettings: AceEditorSettings) => {
-                console.log(editorSettings);
-                return {
-                    aceEditor: editorSettings,
-                };
-            })
-        );
+        if (!this._settings$) {
+            this._settings$ = this._editorSettingsService
+                .getEditorSettings()
+                .pipe(
+                    map((editorSettings: AceEditorSettings) => ({
+                        aceEditor: editorSettings,
+                    }))
+                );
+        }
+
         return this._settings$;
     }
 }
