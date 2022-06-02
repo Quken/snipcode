@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AceEditorFontFamilies, AceEditorThemes } from '@core/ace/enum';
 import { AceEditorSettings } from '@core/ace/model';
 import { UserSettings, UserSettingsService } from '@core/user';
+import { EditorSettingsService } from '@core/user/editor-settings';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -24,7 +25,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     public formGroup!: FormGroup;
 
     public get isDisabled(): boolean {
-        return !this.formGroup.valid;
+        return !this.hasDiff || !this.formGroup.valid;
     }
 
     public get hasDiff(): boolean {
@@ -60,7 +61,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     constructor(
         private readonly _userSettingsService: UserSettingsService,
         private readonly _fb: FormBuilder,
-        private readonly _cdr: ChangeDetectorRef
+        private readonly _cdr: ChangeDetectorRef,
+        private readonly _editorSettingsService: EditorSettingsService
     ) {}
 
     private _initForm(): void {
@@ -96,6 +98,29 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
+    private _getEditorUpdates(): Partial<AceEditorSettings> {
+        const newTheme = this.formGroup.get(['editor', 'theme'])?.value;
+        const newFontSize = this.formGroup.get(['editor', 'fontSize'])?.value;
+        const newFontFamily = this.formGroup.get([
+            'editor',
+            'fontFamily',
+        ])?.value;
+        const { theme, fontSize, fontFamily } = <AceEditorSettings>(
+            this._userSettings?.aceEditor
+        );
+        const editorUpdates: Partial<AceEditorSettings> = {};
+        if (newTheme !== theme) {
+            editorUpdates.theme = newTheme;
+        }
+        if (newFontSize !== fontSize) {
+            editorUpdates.fontSize = newFontSize;
+        }
+        if (newFontFamily !== fontFamily) {
+            editorUpdates.fontFamily = newFontFamily;
+        }
+        return editorUpdates;
+    }
+
     public ngOnInit(): void {
         this._initForm();
         this._subscriptions.add(
@@ -110,7 +135,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     }
 
     public onSubmit(): void {
-        console.log(this.formGroup);
+        const newEditorSettings = this._getEditorUpdates();
+        if (Object.keys(newEditorSettings).length) {
+            this._editorSettingsService.update(newEditorSettings);
+        }
     }
 
     public ngOnDestroy(): void {
