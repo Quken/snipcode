@@ -15,7 +15,6 @@ export class UserSettingsService {
     public getCurrent(): Observable<UserSettings> {
         this.settings$ = this._userService.user$.pipe(
             map((user: User) => {
-                console.log(user);
                 return userSettingsMock;
             }),
             shareReplay(1)

@@ -7,6 +7,7 @@ import {
 } from '@core/snippets';
 import { User, UserService } from '@core/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-profile-card',
@@ -23,7 +24,9 @@ export class ProfileCardComponent {
     constructor(
         private readonly _userService: UserService,
         private readonly _snippetsService: SnippetsService,
-        private readonly _modalService: NgbModal
+        private readonly _modalService: NgbModal,
+        private readonly _router: Router,
+        private readonly _route: ActivatedRoute
     ) {}
 
     public onCreate(): void {
@@ -36,6 +39,9 @@ export class ProfileCardComponent {
             keyboard: false,
             size: 'lg',
         });
-        // modal.componentInstance.snippet = snippet;
+    }
+
+    public onSettingsClick(): void {
+        this._router.navigate(['../settings'], { relativeTo: this._route });
     }
 }

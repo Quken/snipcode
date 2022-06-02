@@ -9,8 +9,8 @@ import { NavItemConfig } from '../models';
 })
 export class NavComponent {
     public navItems: NavItemConfig[] = [
-        { title: 'Home', route: '/' },
-        { title: 'Profile', route: '/profile' },
-        { title: 'Trending', route: '/trending' },
+        { title: 'Home', route: '' },
+        { title: 'Profile', route: 'profile' },
+        { title: 'Trending', route: 'trending' },
     ];
 }

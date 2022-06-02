@@ -16,6 +16,15 @@
                         {{ user.position }}
                     </h4>
                 </div>
+                <div class="profile-card__settings mb-3">
+                    <button
+                        type="button"
+                        class="btn btn-info"
+                        (click)="onSettingsClick()"
+                    >
+                        Settings
+                    </button>
+                </div>
             </div>
             <div class="profile-card__summary">
                 <app-profile-summary></app-profile-summary>
