@@ -8,17 +8,17 @@ import { UserService } from '../user.service';
     providedIn: 'root',
 })
 export class UserSettingsService {
-    public settings$: Observable<UserSettings> | null = null;
+    private _settings$: Observable<UserSettings> | null = null;
 
     constructor(private readonly _userService: UserService) {}
 
-    public getCurrent(): Observable<UserSettings> {
-        this.settings$ = this._userService.user$.pipe(
+    public getCurrentSettings(): Observable<UserSettings> {
+        this._settings$ = this._userService.user$.pipe(
             map((user: User) => {
                 return userSettingsMock;
             }),
             shareReplay(1)
         );
-        return this.settings$;
+        return this._settings$;
     }
 }

@@ -1,5 +1,5 @@
-import { AceEditorThemes } from '@core/ace/enum';
+import { AceEditorSettings } from '@core/ace/model';
 
 export interface UserSettings {
-    aceEditorTheme: AceEditorThemes;
+    aceEditor: AceEditorSettings;
 }

@@ -1,1 +1,78 @@
-<p>settings works!</p>
+<div class="container settings">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div formGroupName="editor">
+            <div class="d-flex align-items-center">
+                <div class="col-6 settings__key">Theme</div>
+                <div class="col-6" ngbDropdown class="my-2">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        id="theme-dropdown"
+                        ngbDropdownToggle
+                    >
+                        {{
+                            this.formGroup.get(["editor", "theme"])?.value ??
+                                "Select editor theme"
+                        }}
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="theme-dropdown">
+                        <button
+                            ngbDropdownItem
+                            *ngFor="let theme of editorSettings.themes"
+                            (click)="onThemeSelect(theme)"
+                            type="button"
+                        >
+                            {{ theme }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="col-6 settings__key">Font size</div>
+                <div class="col-6" ngbDropdown class="my-2">
+                    <input
+                        type="number"
+                        class="form-control"
+                        min="8"
+                        max="64"
+                        placeholder="Font size"
+                        aria-label="fontsize"
+                        aria-describedby="fontsize"
+                        formControlName="fontSize"
+                    />
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="col-6 settings__key">Font family</div>
+                <div class="col-6" ngbDropdown class="my-2">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        id="fontFamily-dropdown"
+                        ngbDropdownToggle
+                    >
+                        {{
+                            this.formGroup.get(["editor", "fontFamily"])
+                                ?.value ?? "Select editor font family"
+                        }}
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="theme-dropdown">
+                        <button
+                            ngbDropdownItem
+                            *ngFor="
+                                let fontFamily of editorSettings.fontFamilies
+                            "
+                            (click)="onFontFamilySelect(fontFamily)"
+                            type="button"
+                        >
+                            {{ fontFamily }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" [disabled]="isDisabled">
+            Save
+        </button>
+    </form>
+</div>

@@ -13,19 +13,22 @@ export class AceService {
     private _ace: any;
 
     constructor(private readonly _userSettingsService: UserSettingsService) {
-        this._setupAce();
         this._subscriptions.add(
-            this._userSettingsService.getCurrent().subscribe({
+            this._userSettingsService.getCurrentSettings().subscribe({
                 next: (userSettings: UserSettings) => {
                     this._userSettings = userSettings;
+                    this._setupAce();
                 },
             })
         );
     }
 
     private _setupAce(): void {
-        ace.config.set('fontFamily', 'Roboto Mono');
-        ace.config.set('fontSize', '14px');
+        const fontFamily =
+            this._userSettings?.aceEditor.fontFamily ?? 'Roboto Mono';
+        const fontSize = this._userSettings?.aceEditor.fontSize ?? 14;
+        ace.config.set('fontFamily', fontFamily);
+        ace.config.set('fontSize', `${fontSize}px`);
         ace.config.set(
             'basePath',
             'https://unpkg.com/ace-builds@1.4.12/src-noconflict'
@@ -36,7 +39,7 @@ export class AceService {
     public getAceEditor(element: HTMLElement): ace.Ace.Editor {
         const aceEditor = this._ace.edit(element);
         const theme =
-            this._userSettings?.aceEditorTheme ?? AceEditorThemes.Dark;
+            this._userSettings?.aceEditor.theme ?? AceEditorThemes.Dark;
         aceEditor.setTheme(`ace/theme/${theme}`);
         return aceEditor;
     }

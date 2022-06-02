@@ -11,7 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         SnippetsListModule,
         ReactiveFormsModule,
     ],
-    exports: [CarouselModule, SnippetsListModule],
+    exports: [CarouselModule, SnippetsListModule, ReactiveFormsModule],
     declarations: [SnippetModalComponent],
 })
 export class SharedModule {}

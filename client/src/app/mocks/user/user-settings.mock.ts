@@ -1,6 +1,10 @@
-import { AceEditorThemes } from '@core/ace/enum';
+import { AceEditorFontFamilies, AceEditorThemes } from '@core/ace/enum';
 import { UserSettings } from '@core/user';
 
 export const userSettingsMock: UserSettings = {
-    aceEditorTheme: AceEditorThemes.Light,
+    aceEditor: {
+        theme: AceEditorThemes.Light,
+        fontSize: 18,
+        fontFamily: AceEditorFontFamilies['Roboto Mono'],
+    },
 };
