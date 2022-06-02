@@ -1,5 +1,21 @@
+$row-background-color: rgba(255, 255, 255, 0.7);
+$warning-icon-color: #ffc14f;
+
 .settings {
     &__key {
         font-weight: bold;
+    }
+
+    &__row {
+        padding: 0 10px;
+        background-color: #{$row-background-color};
+
+        &:nth-child(odd) {
+            background-color: rgba($row-background-color, 1);
+        }
+    }
+
+    &__warning-icon {
+        color: #{$warning-icon-color};
     }
 }

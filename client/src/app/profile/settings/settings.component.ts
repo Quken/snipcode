@@ -27,6 +27,26 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         return !this.formGroup.valid;
     }
 
+    public get hasDiff(): boolean {
+        const {
+            theme = AceEditorThemes.Dark,
+            fontSize = 14,
+            fontFamily = 'Roboto Mono',
+        } = <AceEditorSettings>this._userSettings?.aceEditor;
+        const newTheme = this.formGroup.get(['editor', 'theme'])?.value;
+        const newFontSize = this.formGroup.get(['editor', 'fontSize'])?.value;
+        const newFontFamily = this.formGroup.get([
+            'editor',
+            'fontFamily',
+        ])?.value;
+
+        return (
+            theme !== newTheme ||
+            fontSize !== newFontSize ||
+            fontFamily !== newFontFamily
+        );
+    }
+
     public get editorSettings(): {
         themes: string[];
         fontFamilies: string[];

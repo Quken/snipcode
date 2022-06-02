@@ -1,7 +1,7 @@
 <div class="container settings">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <div formGroupName="editor">
-            <div class="d-flex align-items-center">
+            <div class="settings__row d-flex align-items-center">
                 <div class="col-6 settings__key">Theme</div>
                 <div class="col-6" ngbDropdown class="my-2">
                     <button
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="settings__row d-flex align-items-center">
                 <div class="col-6 settings__key">Font size</div>
                 <div class="col-6" ngbDropdown class="my-2">
                     <input
@@ -42,7 +42,7 @@
                     />
                 </div>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="settings__row d-flex align-items-center">
                 <div class="col-6 settings__key">Font family</div>
                 <div class="col-6" ngbDropdown class="my-2">
                     <button
@@ -71,6 +71,12 @@
                 </div>
             </div>
         </div>
+        <h5 *ngIf="hasDiff">
+            <i
+                class="settings__warning-icon fas fa-lg fa-exclamation-triangle mx-1"
+            ></i>
+            Changes has been made.
+        </h5>
         <button type="submit" class="btn btn-success" [disabled]="isDisabled">
             Save
         </button>
