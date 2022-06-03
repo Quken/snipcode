@@ -5,6 +5,7 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
+    OnDestroy,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import { ToastService } from '@core/toast/toast.service';
 import { Toast } from '@core/toast/models';
 import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -25,7 +27,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [TitleCasePipe],
 })
-export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
+export class CreateSnippetModalComponent
+    implements OnInit, AfterViewInit, OnDestroy
+{
+    private readonly _subscriptions: Subscription = new Subscription();
+
     @ViewChild('editor', { static: true })
     public editorElementRef!: ElementRef<HTMLElement>;
     public readonly snippetLanguages = snippetLanguages;
@@ -94,18 +100,26 @@ export class CreateSnippetModalComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this._aceEditor = this._aceService.getAceEditor(
-            this.editorElementRef.nativeElement
+        this._subscriptions.add(
+            this._aceService
+                .getAceEditor$(this.editorElementRef.nativeElement)
+                .subscribe((aceEditor) => {
+                    this._aceEditor = aceEditor;
+                    this._aceEditor.session.setValue('Write your code here');
+                    this._aceEditor.on('change', () => {
+                        this._cdr.detectChanges();
+                    });
+                    this._cdr.detectChanges();
+                })
         );
-        this._aceEditor.session.setValue('Write your code here');
-        this._aceEditor.on('change', () => {
-            this._cdr.detectChanges();
-        });
-        this._cdr.detectChanges();
     }
 
     public ngOnInit(): void {
         this._initForm();
+    }
+
+    public ngOnDestroy(): void {
+        this._subscriptions.unsubscribe();
     }
 
     public onClose(): void {

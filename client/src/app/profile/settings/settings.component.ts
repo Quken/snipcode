@@ -127,7 +127,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this._initForm();
         this._subscriptions.add(
-            this._userSettingsService.getUserSettings().subscribe({
+            this._userSettingsService.settings$.subscribe({
                 next: (settings) => {
                     console.log(settings);
                     this._userSettings = settings;

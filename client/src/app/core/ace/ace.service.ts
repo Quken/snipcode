@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { UserSettings, UserSettingsService } from '@core/user';
 import * as ace from 'ace-builds';
-import { Subscription } from 'rxjs';
+import {
+    map,
+    Observable,
+    of,
+    ReplaySubject,
+    shareReplay,
+    Subscription,
+} from 'rxjs';
 import { AceEditorThemes } from './enum';
 
 @Injectable({
@@ -10,11 +17,12 @@ import { AceEditorThemes } from './enum';
 export class AceService {
     private _subscriptions: Subscription = new Subscription();
     private _userSettings: UserSettings | null = null;
-    private _ace: any;
+    private _aceSubject = new ReplaySubject(1);
+    private _ace$: Observable<any> = this._aceSubject.asObservable();
 
     constructor(private readonly _userSettingsService: UserSettingsService) {
         this._subscriptions.add(
-            this._userSettingsService.getUserSettings().subscribe({
+            this._userSettingsService.settings$.subscribe({
                 next: (userSettings: UserSettings) => {
                     this._userSettings = userSettings;
                     console.log(userSettings);
@@ -34,14 +42,18 @@ export class AceService {
             'basePath',
             'https://unpkg.com/ace-builds@1.4.12/src-noconflict'
         );
-        this._ace = ace;
+        this._aceSubject.next(ace);
     }
 
-    public getAceEditor(element: HTMLElement): ace.Ace.Editor {
-        const aceEditor = this._ace.edit(element);
-        const theme =
-            this._userSettings?.aceEditor.theme ?? AceEditorThemes.Dark;
-        aceEditor.setTheme(`ace/theme/${theme}`);
-        return aceEditor;
+    public getAceEditor$(element: HTMLElement): Observable<ace.Ace.Editor> {
+        return this._ace$.pipe(
+            map((ace) => {
+                const aceEditor = ace.edit(element);
+                const theme =
+                    this._userSettings?.aceEditor.theme ?? AceEditorThemes.Dark;
+                aceEditor.setTheme(`ace/theme/${theme}`);
+                return aceEditor;
+            })
+        );
     }
 }
