@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselModule, SnippetsListModule } from './components';
+import {
+    CarouselModule,
+    NotFoundComponent,
+    SnippetsListModule,
+} from './components';
 import { SnippetModalComponent } from './components/snippet-modal/snippet-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -12,6 +16,6 @@ import { ReactiveFormsModule } from '@angular/forms';
         ReactiveFormsModule,
     ],
     exports: [CarouselModule, SnippetsListModule, ReactiveFormsModule],
-    declarations: [SnippetModalComponent],
+    declarations: [SnippetModalComponent, NotFoundComponent],
 })
 export class SharedModule {}
