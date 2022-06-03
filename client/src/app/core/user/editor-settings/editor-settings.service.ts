@@ -3,40 +3,41 @@ import { AceEditorSettings } from '@core/ace/model';
 import { userSettingsMock } from '@mocks/user';
 
 import {
-    concatMap,
+    distinctUntilChanged,
     filter,
     map,
+    mergeMap,
     Observable,
     of,
     ReplaySubject,
-    shareReplay,
     Subject,
-    switchMap,
     tap,
 } from 'rxjs';
+import * as _ from 'lodash';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EditorSettingsService {
-    private _editorSettingsSubject: Subject<AceEditorSettings> =
+    private readonly _editorSettingsSubject: Subject<AceEditorSettings> =
         new ReplaySubject(1);
-    public editorSettings$ = this._editorSettingsSubject
-        .asObservable()
-        .pipe(filter((settings) => !!settings));
+    public editorSettings$ = this._editorSettingsSubject.asObservable().pipe(
+        filter((settings) => !!settings),
+        distinctUntilChanged((prev, curr) => _.isEqual(prev, curr))
+    );
 
     public loadEditorSettings(): Observable<AceEditorSettings> {
         return of(userSettingsMock.aceEditor).pipe(
             tap((settings) => {
                 this._editorSettingsSubject.next(settings);
             }),
-            switchMap(() => this.editorSettings$)
+            mergeMap(() => this.editorSettings$)
         );
     }
 
     public update(newSettings: Partial<AceEditorSettings>): Observable<void> {
         return of(void 0).pipe(
-            switchMap(() => this.editorSettings$),
+            mergeMap(() => this.editorSettings$),
             tap((settings) => {
                 this._editorSettingsSubject.next({
                     ...settings,

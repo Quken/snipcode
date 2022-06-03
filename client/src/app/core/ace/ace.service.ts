@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserSettings, UserSettingsService } from '@core/user';
 import * as ace from 'ace-builds';
-import {
-    map,
-    Observable,
-    of,
-    ReplaySubject,
-    shareReplay,
-    Subscription,
-} from 'rxjs';
+import { map, Observable, ReplaySubject, Subscription } from 'rxjs';
 import { AceEditorThemes } from './enum';
 
 @Injectable({
@@ -25,7 +18,6 @@ export class AceService {
             this._userSettingsService.settings$.subscribe({
                 next: (userSettings: UserSettings) => {
                     this._userSettings = userSettings;
-                    console.log(userSettings);
                     this._setupAce();
                 },
             })

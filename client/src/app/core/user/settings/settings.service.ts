@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AceEditorSettings } from '@core/ace/model';
-import { filter, map, Observable, shareReplay } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { EditorSettingsService } from '../editor-settings';
 import { UserSettings } from '../models';
 
