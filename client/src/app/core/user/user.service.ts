@@ -15,7 +15,7 @@ const userMock = new User({
     providedIn: 'root',
 })
 export class UserService {
-    public user$: Observable<User> = of(userMock).pipe(shareReplay(1));
+    public user$: Observable<User> = of(userMock);
 
     constructor() {}
 }
