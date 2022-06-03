@@ -9,13 +9,12 @@ import { UserSettings } from '../models';
 })
 export class UserSettingsService {
     public settings$: Observable<UserSettings> = this._editorSettingsService
-        .getEditorSettings()
+        .loadEditorSettings()
         .pipe(
             filter((editorSettings) => !!editorSettings),
             map((editorSettings: AceEditorSettings) => ({
                 aceEditor: editorSettings,
-            })),
-            shareReplay(1)
+            }))
         );
 
     constructor(

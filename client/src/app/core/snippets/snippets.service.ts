@@ -99,11 +99,11 @@ export class SnippetsService {
     ) {}
 
     public getById(userId: GUID): Observable<Snippet[]> {
-        return of(snippetsMock).pipe(shareReplay(1));
+        return of(snippetsMock)
     }
 
     public getAll(): Observable<Snippet[]> {
-        return of(snippetsMock).pipe(shareReplay(1));
+        return of(snippetsMock)
     }
 
     public create(snippet: Partial<Snippet>): Observable<void> {

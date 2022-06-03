@@ -4,6 +4,7 @@ import { userSettingsMock } from '@mocks/user';
 
 import {
     concatMap,
+    filter,
     map,
     Observable,
     of,
@@ -20,30 +21,16 @@ import {
 export class EditorSettingsService {
     private _editorSettingsSubject: Subject<AceEditorSettings> =
         new ReplaySubject(1);
-    public editorSettings$ = this._editorSettingsSubject.asObservable().pipe();
+    public editorSettings$ = this._editorSettingsSubject
+        .asObservable()
+        .pipe(filter((settings) => !!settings));
 
-    constructor() {}
-
-    private loadEditorSettings(): Observable<AceEditorSettings> {
-        return of(userSettingsMock.aceEditor);
-    }
-
-    public getEditorSettings(): Observable<AceEditorSettings> {
-        // return this.editorSettings$.pipe(
-        //     map((settings) => {
-        //         if (!settings) {
-        //             this._editorSettingsSubject.next(
-        //                 userSettingsMock.aceEditor
-        //             );
-        //             return userSettingsMock.aceEditor;
-        //         }
-        //         return settings;
-        //     })
-        // );
-        return this.editorSettings$.pipe(
-            concatMap((settings) =>
-                !!settings ? of(settings) : this.loadEditorSettings()
-            )
+    public loadEditorSettings(): Observable<AceEditorSettings> {
+        return of(userSettingsMock.aceEditor).pipe(
+            tap((settings) => {
+                this._editorSettingsSubject.next(settings);
+            }),
+            switchMap(() => this.editorSettings$)
         );
     }
 
