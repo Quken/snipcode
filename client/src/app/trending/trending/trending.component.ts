@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Snippet, SnippetsService } from '@core/snippets';
 import { map } from 'rxjs';
 import * as _ from 'lodash';
@@ -9,8 +9,8 @@ import * as _ from 'lodash';
     styleUrls: ['./trending.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrendingComponent {
-    public snippets$ = this._snippetsService.getAll().pipe(
+export class TrendingComponent implements OnInit {
+    public snippets$ = this._snippetsService.allSnippets$.pipe(
         map((snippets: Snippet[]) => {
             return [...snippets].sort(
                 (snippetA, snippetB) => snippetB.likes - snippetA.likes
@@ -19,4 +19,8 @@ export class TrendingComponent {
     );
 
     constructor(private readonly _snippetsService: SnippetsService) {}
+
+    public ngOnInit(): void {
+        this._snippetsService.getAll();
+    }
 }

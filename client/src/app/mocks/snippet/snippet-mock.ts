@@ -6,7 +6,7 @@ export const snippetMock = new Snippet({
     id: '12345',
     createdAt: new Date().toUTCString(),
     createdBy: new User({
-        id: 'userID',
+        id: '1',
         name: 'username',
         surname: 'usersurname',
         summary: 'some user summary',

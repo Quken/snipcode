@@ -3,13 +3,9 @@ import { AceEditorSettings } from '@core/ace/model';
 import { userSettingsMock } from '@mocks/user';
 
 import {
-    defaultIfEmpty,
     distinctUntilChanged,
     filter,
-    last,
     map,
-    merge,
-    mergeMap,
     Observable,
     of,
     ReplaySubject,
@@ -32,11 +28,9 @@ export class EditorSettingsService {
     );
 
     public loadEditorSettings(): void {
-        of(userSettingsMock.aceEditor)
-            .pipe(last())
-            .subscribe((settings) => {
-                this._editorSettingsSubject.next(settings);
-            });
+        of(userSettingsMock.aceEditor).subscribe((settings) => {
+            this._editorSettingsSubject.next(settings);
+        });
     }
 
     public update(newSettings: Partial<AceEditorSettings>): Observable<void> {

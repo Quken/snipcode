@@ -1,5 +1,5 @@
-import { Observable, switchMap } from 'rxjs';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable, switchMap, take } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
     CreateSnippetModalComponent,
     Snippet,
@@ -15,11 +15,10 @@ import { ActivatedRoute, Router } from '@angular/router';
     styleUrls: ['./profile-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileCardComponent {
+export class ProfileCardComponent implements OnInit {
     public user$: Observable<User> = this._userService.user$;
-    public snippets$: Observable<Snippet[]> = this.user$.pipe(
-        switchMap(({ id }: User) => this._snippetsService.getById(id))
-    );
+    public snippets$: Observable<Snippet[]> =
+        this._snippetsService.userSnippets$;
 
     constructor(
         private readonly _userService: UserService,
@@ -28,6 +27,12 @@ export class ProfileCardComponent {
         private readonly _router: Router,
         private readonly _route: ActivatedRoute
     ) {}
+
+    public ngOnInit(): void {
+        this.user$
+            .pipe(take(1))
+            .subscribe((user) => this._snippetsService.getById(user.id));
+    }
 
     public onCreate(): void {
         const modal = this._modalService.open(CreateSnippetModalComponent, {

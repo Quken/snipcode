@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
-import {
-    EMPTY,
-    mapTo,
-    Observable,
-    of,
-    shareReplay,
-    switchMap,
-    tap,
-} from 'rxjs';
+import { map, Observable, of, ReplaySubject, switchMap, take } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
 import { DateUTC, Snippet } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -50,9 +42,9 @@ const snippetsMock: Snippet[] = [
         name: 'MyJavascriptSnippet',
         language: 'javascript',
         createdBy: {
-            id: '1',
-            name: 'John',
-            surname: 'Doe',
+            id: '2',
+            name: 'Travis',
+            surname: 'Scott',
             summary: 'Software engineer',
         },
         extension: SnippetExtensionsEnum.javascript,
@@ -77,9 +69,9 @@ function debounce(fn, delay) {
         name: 'MySecondJavascriptSnippet',
         language: 'javascript',
         createdBy: {
-            id: '1',
-            name: 'John',
-            surname: 'Doe',
+            id: '2',
+            name: 'Travis',
+            surname: 'Scott',
             summary: 'Software engineer',
         },
         extension: SnippetExtensionsEnum.javascript,
@@ -93,17 +85,29 @@ function debounce(fn, delay) {
     providedIn: 'root',
 })
 export class SnippetsService {
+    private readonly _userSnippetsSubject: ReplaySubject<Snippet[]> =
+        new ReplaySubject(1);
+    private readonly _allSnippetsSubject: ReplaySubject<Snippet[]> =
+        new ReplaySubject(1);
+
+    public userSnippets$ = this._userSnippetsSubject.asObservable();
+    public allSnippets$ = this._allSnippetsSubject.asObservable();
+
     constructor(
         private readonly _httpClient: HttpClient,
         private readonly _userService: UserService
     ) {}
 
-    public getById(userId: GUID): Observable<Snippet[]> {
-        return of(snippetsMock)
+    public getById(userId: GUID): void {
+        of(snippetsMock.filter((s) => s.createdBy.id === userId)).subscribe(
+            (snippets) => this._userSnippetsSubject.next(snippets)
+        );
     }
 
-    public getAll(): Observable<Snippet[]> {
-        return of(snippetsMock)
+    public getAll(): void {
+        of(snippetsMock).subscribe((snippets) =>
+            this._allSnippetsSubject.next(snippets)
+        );
     }
 
     public create(snippet: Partial<Snippet>): Observable<void> {
@@ -118,7 +122,7 @@ export class SnippetsService {
                 console.log(body);
                 return of(null);
             }),
-            mapTo(void 0)
+            map(() => void 0)
         );
     }
 
@@ -133,7 +137,7 @@ export class SnippetsService {
                 console.log(body);
                 return of(null);
             }),
-            mapTo(void 0)
+            map(() => void 0)
         );
     }
 }
