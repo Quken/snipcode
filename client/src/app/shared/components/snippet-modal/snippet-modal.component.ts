@@ -136,16 +136,20 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this._snippetsService.update(snippet).subscribe({
             next: () => {
-                this.activeModal.close('Success');
+                this.activeModal.close();
                 const toast: Toast = {
-                    textOrTemplate: `Snippet ${snippet.name}.${this.snippet.extension} successfully updated`,
+                    textOrTemplate: `Snippet ${
+                        snippet.name ?? this.snippet.name
+                    }.${this.snippet.extension} successfully updated`,
                 };
                 this._toastService.showSuccess(toast);
             },
             error: (e) => {
                 console.error(e);
                 const toast: Toast = {
-                    textOrTemplate: `Unable to update snippet ${snippet.name}.${this.snippet.extension}`,
+                    textOrTemplate: `Unable to update snippet ${
+                        snippet.name ?? this.snippet.name
+                    }.${this.snippet.extension}`,
                 };
                 this._toastService.showDanger(toast);
             },

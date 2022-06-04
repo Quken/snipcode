@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
-import { map, Observable, of, ReplaySubject, switchMap, take } from 'rxjs';
+import {
+    combineLatest,
+    forkJoin,
+    from,
+    last,
+    map,
+    Observable,
+    of,
+    ReplaySubject,
+    shareReplay,
+    switchMap,
+    take,
+    tap,
+    zip,
+} from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
 import { DateUTC, Snippet } from './models';
 import { HttpClient } from '@angular/common/http';
@@ -127,7 +141,7 @@ export class SnippetsService {
     }
 
     public update(snippet: Partial<Snippet>): Observable<void> {
-        return this._userService.user$.pipe(
+        const update$ = this._userService.user$.pipe(
             switchMap((user: User) => {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
@@ -135,9 +149,50 @@ export class SnippetsService {
                 };
                 const body = { snippet: snippetDTO, user };
                 console.log(body);
-                return of(null);
-            }),
-            map(() => void 0)
+                // http here
+                return of(snippetDTO as Snippet);
+            })
         );
+
+        forkJoin({
+            allSnippets: this.allSnippets$.pipe(take(1)),
+            snippetDiff: update$,
+        }).subscribe({
+            next: ({ allSnippets, snippetDiff }) => {
+                const snippet = allSnippets.find(
+                    (snippet) => snippet.id === snippetDiff.id
+                ) as Snippet;
+                if (snippet) {
+                    if (snippetDiff.srcRaw) {
+                        snippet.srcRaw = snippetDiff.srcRaw;
+                    }
+                    if (snippetDiff.name) {
+                        snippet.name = snippetDiff.name;
+                    }
+                    snippet.modifiedAt = snippetDiff.modifiedAt;
+                }
+            },
+        });
+
+        forkJoin({
+            userSnippets: this.userSnippets$.pipe(take(1)),
+            snippetDiff: update$,
+        }).subscribe({
+            next: ({ userSnippets, snippetDiff }) => {
+                const snippet = userSnippets.find(
+                    (snippet) => snippet.id === snippetDiff.id
+                ) as Snippet;
+                if (snippet) {
+                    if (snippetDiff.srcRaw) {
+                        snippet.srcRaw = snippetDiff.srcRaw;
+                    }
+                    if (snippetDiff.name) {
+                        snippet.name = snippetDiff.name;
+                    }
+                    snippet.modifiedAt = snippetDiff.modifiedAt;
+                }
+            },
+        });
+        return update$.pipe(map(() => void 0));
     }
 }
