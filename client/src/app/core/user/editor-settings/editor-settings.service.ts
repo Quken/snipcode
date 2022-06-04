@@ -3,10 +3,12 @@ import { AceEditorSettings } from '@core/ace/model';
 import { userSettingsMock } from '@mocks/user';
 
 import {
+    defaultIfEmpty,
     distinctUntilChanged,
     filter,
     last,
     map,
+    merge,
     mergeMap,
     Observable,
     of,
@@ -29,13 +31,12 @@ export class EditorSettingsService {
         distinctUntilChanged((prev, curr) => _.isEqual(prev, curr))
     );
 
-    public loadEditorSettings(): Observable<AceEditorSettings> {
-        return of(userSettingsMock.aceEditor).pipe(
-            tap((settings) => {
+    public loadEditorSettings(): void {
+        of(userSettingsMock.aceEditor)
+            .pipe(last())
+            .subscribe((settings) => {
                 this._editorSettingsSubject.next(settings);
-            }),
-            switchMap(() => this.editorSettings$)
-        );
+            });
     }
 
     public update(newSettings: Partial<AceEditorSettings>): Observable<void> {

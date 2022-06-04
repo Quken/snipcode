@@ -8,9 +8,8 @@ import { UserSettings } from '../models';
     providedIn: 'root',
 })
 export class UserSettingsService {
-    public settings$: Observable<UserSettings> = this._editorSettingsService
-        .loadEditorSettings()
-        .pipe(
+    public settings$: Observable<UserSettings> =
+        this._editorSettingsService.editorSettings$.pipe(
             filter((editorSettings) => !!editorSettings),
             map((editorSettings: AceEditorSettings) => ({
                 aceEditor: editorSettings,
@@ -19,5 +18,7 @@ export class UserSettingsService {
 
     constructor(
         private readonly _editorSettingsService: EditorSettingsService
-    ) {}
+    ) {
+        this._editorSettingsService.loadEditorSettings();
+    }
 }
