@@ -8,6 +8,8 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AceEditorFontFamilies, AceEditorThemes } from '@core/ace/enum';
 import { AceEditorSettings } from '@core/ace/model';
+import { Toast } from '@core/toast/models';
+import { ToastService } from '@core/toast/toast.service';
 import { UserSettings, UserSettingsService } from '@core/user';
 import { EditorSettingsService } from '@core/user/editor-settings';
 import { Subscription } from 'rxjs';
@@ -65,7 +67,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         private readonly _userSettingsService: UserSettingsService,
         private readonly _fb: FormBuilder,
         private readonly _cdr: ChangeDetectorRef,
-        private readonly _editorSettingsService: EditorSettingsService
+        private readonly _editorSettingsService: EditorSettingsService,
+        private readonly _toastService: ToastService
     ) {}
 
     private _initForm(): void {
@@ -129,7 +132,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         this._subscriptions.add(
             this._userSettingsService.settings$.subscribe({
                 next: (settings) => {
-                    console.log(settings);
                     this._userSettings = settings;
                     this._setFormValues();
                     this._cdr.detectChanges();
@@ -143,7 +145,17 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         if (Object.keys(newEditorSettings).length) {
             this._editorSettingsService.update(newEditorSettings).subscribe({
                 next: () => {
-                    console.log('updated');
+                    const toast: Toast = {
+                        textOrTemplate: `Your profile settings successfully saved`,
+                    };
+                    this._toastService.showSuccess(toast);
+                },
+                error: (e) => {
+                    console.error(e);
+                    const toast: Toast = {
+                        textOrTemplate: `Oops. Error during saving profile settings. Try again later`,
+                    };
+                    this._toastService.showDanger(toast);
                 },
             });
         }

@@ -5,12 +5,15 @@ import { userSettingsMock } from '@mocks/user';
 import {
     distinctUntilChanged,
     filter,
+    last,
     map,
     mergeMap,
     Observable,
     of,
     ReplaySubject,
     Subject,
+    switchMap,
+    take,
     tap,
 } from 'rxjs';
 import * as _ from 'lodash';
@@ -31,19 +34,22 @@ export class EditorSettingsService {
             tap((settings) => {
                 this._editorSettingsSubject.next(settings);
             }),
-            mergeMap(() => this.editorSettings$)
+            switchMap(() => this.editorSettings$)
         );
     }
 
     public update(newSettings: Partial<AceEditorSettings>): Observable<void> {
         return of(void 0).pipe(
-            mergeMap(() => this.editorSettings$),
+            switchMap(() => this.editorSettings$),
+            take(1),
             tap((settings) => {
                 this._editorSettingsSubject.next({
                     ...settings,
                     ...newSettings,
                 });
             }),
+            switchMap(() => this.editorSettings$),
+            take(1),
             map(() => void 0)
         );
     }
