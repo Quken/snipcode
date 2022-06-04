@@ -8,6 +8,7 @@
             [snippet]="snippet"
             [showAuthor]="showAuthor"
             (openSnippetEventEmitter)="onOpenSnippet($event)"
+            (likeChange)="likeChange.emit($event)"
         ></app-snippet-list-item>
     </div>
 </div>
