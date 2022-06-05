@@ -28,7 +28,11 @@
         <div
             class="snippet__footer d-flex justify-content-between align-items-center mx-2"
         >
-            <div class="snippet__likes" (click)="onLikeClick()">
+            <div
+                class="snippet__likes"
+                (click)="onLikeClick()"
+                [style.cursor]="likeable ? 'pointer' : 'initial'"
+            >
                 <i class="fa-solid fa-heart"></i>
                 <span>{{ snippet.likedBy.length }}</span>
             </div>

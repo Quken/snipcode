@@ -7,6 +7,7 @@ import {
     Output,
 } from '@angular/core';
 import { Snippet } from '@core/snippets';
+import { User, UserService } from '@core/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GUID } from '@shared/models';
 import { SnippetModalComponent } from '../snippet-modal/snippet-modal.component';
@@ -33,9 +34,12 @@ export class SnippetsListComponent {
     @Output()
     public likeChange: EventEmitter<GUID> = new EventEmitter();
 
+    public user$ = this._userService.user$;
+
     constructor(
         private readonly _modalService: NgbModal,
-        private readonly _cdr: ChangeDetectorRef
+        private readonly _cdr: ChangeDetectorRef,
+        private readonly _userService: UserService
     ) {}
 
     public trackByFn(index: number, snippet: Snippet) {
@@ -61,5 +65,9 @@ export class SnippetsListComponent {
         snippetModal.result.then(() => {
             this._cdr.detectChanges();
         });
+    }
+
+    public isLikeable(user: User, snippet: Snippet): boolean {
+        return user.id !== snippet.createdBy.id;
     }
 }
