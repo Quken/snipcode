@@ -27,7 +27,7 @@ const snippetsMock: Snippet[] = [
         },
         createdAt: new Date().toUTCString(),
         srcRaw: 'p { color: red }',
-        likes: 0,
+        likedBy: [],
         extension: SnippetExtensionsEnum.css,
     }),
     new Snippet({
@@ -43,7 +43,13 @@ const snippetsMock: Snippet[] = [
         },
         createdAt: new Date().toUTCString(),
         srcRaw: 'export type GUID = string',
-        likes: 2,
+        likedBy: [
+            {
+                id: '2',
+                name: 'Travis',
+                surname: 'Scott',
+            },
+        ],
     }),
     new Snippet({
         id: '3',
@@ -70,7 +76,13 @@ function debounce(fn, delay) {
 		}, delay);
 	};
 }`,
-        likes: 3,
+        likedBy: [
+            {
+                id: '1',
+                name: 'John',
+                surname: 'Doe',
+            },
+        ],
     }),
     new Snippet({
         id: '4',
@@ -85,7 +97,13 @@ function debounce(fn, delay) {
         extension: SnippetExtensionsEnum.javascript,
         createdAt: new Date().toUTCString(),
         srcRaw: `console.log(4)`,
-        likes: 4,
+        likedBy: [
+            {
+                id: '1',
+                name: 'John',
+                surname: 'Doe',
+            },
+        ],
     }),
 ];
 
@@ -139,8 +157,10 @@ export class SnippetsService {
             switchMap((user: User) => {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
-                    modifiedAt: <DateUTC>new Date().toUTCString(),
                 };
+                if (!snippet?.likedBy?.length) {
+                    snippetDTO.modifiedAt = <DateUTC>new Date().toUTCString();
+                }
                 const body = { snippet: snippetDTO, user };
                 console.log(body);
                 // http here
@@ -153,17 +173,11 @@ export class SnippetsService {
             snippetDiff: update$,
         }).subscribe({
             next: ({ allSnippets, snippetDiff }) => {
-                const snippet = allSnippets.find(
+                let snippet = allSnippets.find(
                     (snippet) => snippet.id === snippetDiff.id
                 ) as Snippet;
                 if (snippet) {
-                    if (snippetDiff.srcRaw) {
-                        snippet.srcRaw = snippetDiff.srcRaw;
-                    }
-                    if (snippetDiff.name) {
-                        snippet.name = snippetDiff.name;
-                    }
-                    snippet.modifiedAt = snippetDiff.modifiedAt;
+                    snippet = snippet.merge(snippetDiff);
                 }
             },
         });
@@ -173,17 +187,11 @@ export class SnippetsService {
             snippetDiff: update$,
         }).subscribe({
             next: ({ userSnippets, snippetDiff }) => {
-                const snippet = userSnippets.find(
+                let snippet = userSnippets.find(
                     (snippet) => snippet.id === snippetDiff.id
                 ) as Snippet;
                 if (snippet) {
-                    if (snippetDiff.srcRaw) {
-                        snippet.srcRaw = snippetDiff.srcRaw;
-                    }
-                    if (snippetDiff.name) {
-                        snippet.name = snippetDiff.name;
-                    }
-                    snippet.modifiedAt = snippetDiff.modifiedAt;
+                    snippet = snippet.merge(snippetDiff);
                 }
             },
         });

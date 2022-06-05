@@ -14,7 +14,10 @@
                 <div class="snippet__created-at">
                     Created: {{ snippet.createdAt | date }}
                 </div>
-                <div *ngIf="snippet.modifiedAt" class="snippet__modified-at">
+                <div
+                    *ngIf="!showAuthor && snippet.modifiedAt"
+                    class="snippet__modified-at"
+                >
                     Modified: {{ snippet.modifiedAt | date }}
                 </div>
             </div>
@@ -25,9 +28,9 @@
         <div
             class="snippet__footer d-flex justify-content-between align-items-center mx-2"
         >
-            <div class="snippet__likes">
+            <div class="snippet__likes" (click)="onLikeClick()">
                 <i class="fa-solid fa-heart"></i>
-                <span>{{ snippet.likes }}</span>
+                <span>{{ snippet.likedBy.length }}</span>
             </div>
             <button type="button" (click)="onClick()" class="btn btn-success">
                 Open

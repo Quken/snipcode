@@ -34,6 +34,9 @@ export class SnippetListItemComponent implements AfterViewInit, OnDestroy {
     @Output()
     public openSnippetEventEmitter: EventEmitter<GUID> = new EventEmitter();
 
+    @Output()
+    public likeChange: EventEmitter<GUID> = new EventEmitter();
+
     @Input()
     public snippet!: Snippet;
 
@@ -76,5 +79,9 @@ export class SnippetListItemComponent implements AfterViewInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this._subscriptions.unsubscribe();
+    }
+
+    public onLikeClick(): void {
+        this.likeChange.emit(this.snippet.id);
     }
 }

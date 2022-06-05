@@ -2,7 +2,9 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    EventEmitter,
     Input,
+    Output,
 } from '@angular/core';
 import { Snippet } from '@core/snippets';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -28,18 +30,15 @@ export class SnippetsListComponent {
     @Input()
     public showAuthor: boolean = true;
 
+    @Output()
+    public likeChange: EventEmitter<GUID> = new EventEmitter();
+
     constructor(
         private readonly _modalService: NgbModal,
         private readonly _cdr: ChangeDetectorRef
     ) {}
 
     public trackByFn(index: number, snippet: Snippet) {
-        console.log(
-            Object.entries(snippet).reduce((acc, [key, value]) => {
-                acc += JSON.stringify({ [key]: value });
-                return acc;
-            }, '')
-        );
         return Object.entries(snippet).reduce((acc, [key, value]) => {
             acc += JSON.stringify({ [key]: value });
             return acc;
@@ -61,7 +60,6 @@ export class SnippetsListComponent {
         snippetModal.componentInstance.readOnly = this.readOnlySnippets;
         snippetModal.result.then(() => {
             this._cdr.detectChanges();
-            debugger;
         });
     }
 }
