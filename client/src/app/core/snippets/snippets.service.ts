@@ -155,20 +155,11 @@ export class SnippetsService {
             snippetDiff: update$,
         }).subscribe({
             next: ({ allSnippets, snippetDiff }) => {
-                const snippet = allSnippets.find(
+                let snippet = allSnippets.find(
                     (snippet) => snippet.id === snippetDiff.id
                 ) as Snippet;
                 if (snippet) {
-                    if (snippetDiff.srcRaw) {
-                        snippet.srcRaw = snippetDiff.srcRaw;
-                    }
-                    if (snippetDiff.name) {
-                        snippet.name = snippetDiff.name;
-                    }
-                    if (snippetDiff.likes) {
-                        snippet.likes = snippetDiff.likes;
-                    }
-                    snippet.modifiedAt = snippetDiff.modifiedAt;
+                    snippet = snippet.merge(snippetDiff);
                 }
             },
         });
@@ -178,20 +169,11 @@ export class SnippetsService {
             snippetDiff: update$,
         }).subscribe({
             next: ({ userSnippets, snippetDiff }) => {
-                const snippet = userSnippets.find(
+                let snippet = userSnippets.find(
                     (snippet) => snippet.id === snippetDiff.id
                 ) as Snippet;
                 if (snippet) {
-                    if (snippetDiff.srcRaw) {
-                        snippet.srcRaw = snippetDiff.srcRaw;
-                    }
-                    if (snippetDiff.name) {
-                        snippet.name = snippetDiff.name;
-                    }
-                    if (snippetDiff.likes) {
-                        snippet.likes = snippetDiff.likes;
-                    }
-                    snippet.modifiedAt = snippetDiff.modifiedAt;
+                    snippet = snippet.merge(snippetDiff);
                 }
             },
         });

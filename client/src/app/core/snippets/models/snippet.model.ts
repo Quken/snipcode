@@ -85,6 +85,22 @@ export class Snippet {
         return `${this.name}.${this.extension}`;
     }
 
+    public merge(snippetDiff: Partial<Snippet>): Snippet {
+        if (snippetDiff.srcRaw) {
+            this.srcRaw = snippetDiff.srcRaw;
+        }
+        if (snippetDiff.name) {
+            this.name = snippetDiff.name;
+        }
+        if (snippetDiff.likes) {
+            this.likes = snippetDiff.likes;
+        }
+        if (snippetDiff.modifiedAt) {
+            this.modifiedAt = snippetDiff.modifiedAt;
+        }
+        return this;
+    }
+
     constructor({
         id,
         createdAt,
