@@ -1,0 +1,35 @@
+<div class="app-content-container not-found">
+    <div class="container">
+        <form [formGroup]="formGroup">
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <input
+                        formControlName="email"
+                        type="text"
+                        class="form-control"
+                        [ngClass]="{
+                            'is-invalid': formGroup.controls['email'].invalid
+                        }"
+                        placeholder="Email"
+                        aria-label="Email"
+                        aria-describedby="Email"
+                    />
+                </div>
+                <div
+                    *ngIf="formGroup.controls['email'].invalid"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['email'].errors?.['required']"
+                    >
+                        Email is required.
+                    </div>
+                    <div *ngIf="formGroup.controls['email'].errors?.['email']">
+                        Email format is incorrect
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
