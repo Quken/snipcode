@@ -139,8 +139,10 @@ export class SnippetsService {
             switchMap((user: User) => {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
-                    modifiedAt: <DateUTC>new Date().toUTCString(),
                 };
+                if (!snippet.likes) {
+                    snippetDTO.modifiedAt = <DateUTC>new Date().toUTCString();
+                }
                 const body = { snippet: snippetDTO, user };
                 console.log(body);
                 // http here
@@ -163,6 +165,9 @@ export class SnippetsService {
                     if (snippetDiff.name) {
                         snippet.name = snippetDiff.name;
                     }
+                    if (snippetDiff.likes) {
+                        snippet.likes = snippetDiff.likes;
+                    }
                     snippet.modifiedAt = snippetDiff.modifiedAt;
                 }
             },
@@ -182,6 +187,9 @@ export class SnippetsService {
                     }
                     if (snippetDiff.name) {
                         snippet.name = snippetDiff.name;
+                    }
+                    if (snippetDiff.likes) {
+                        snippet.likes = snippetDiff.likes;
                     }
                     snippet.modifiedAt = snippetDiff.modifiedAt;
                 }

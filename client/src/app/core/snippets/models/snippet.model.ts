@@ -77,6 +77,10 @@ export class Snippet {
         return this._likes;
     }
 
+    public set likes(value: number) {
+        this._likes = value;
+    }
+
     public get fullSnippetName(): string {
         return `${this.name}.${this.extension}`;
     }
