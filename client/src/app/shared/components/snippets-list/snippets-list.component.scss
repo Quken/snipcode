@@ -5,4 +5,9 @@
     display: flex;
     justify-content: space-between;
     padding: 0;
+
+    &__item-readonly:first-child {
+        border: 3px solid goldenrod;
+        border-radius: 10px;
+    }
 }
