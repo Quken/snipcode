@@ -51,41 +51,38 @@ export class TrendingComponent implements OnInit, OnDestroy {
 
     public onLikeChange(snippetId: GUID, snippets: Snippet[]): void {
         const snippet = snippets.find((snippet) => snippet.id === snippetId);
-        if (!snippet || !this._user) {
+        if (
+            !snippet ||
+            !this._user ||
+            snippet?.createdBy.id === this._user.id
+        ) {
             return;
         }
-        if (snippet?.createdBy.id !== this._user.id) {
-            let isExists = snippet.likedBy.some(
-                ({ id }) => id === this._user.id
-            );
-            let likedBy = [];
-            if (isExists) {
-                likedBy = snippet.likedBy.filter(
-                    ({ id }) => id !== this._user.id
-                );
-            } else {
-                likedBy = [
-                    ...snippet.likedBy,
-                    {
-                        id: this._user.id,
-                        name: this._user.name,
-                        surname: this._user.surname,
-                    },
-                ];
-            }
-
-            const updatePayload: Partial<Snippet> = {
-                id: snippetId,
-                likedBy,
-            };
-            this._subscriptions.add(
-                this._snippetsService.update(updatePayload).subscribe({
-                    next: () => {
-                        console.log('likes increased');
-                        this._cdr.detectChanges();
-                    },
-                })
-            );
+        const isExists = snippet.likedBy.some(({ id }) => id === this._user.id);
+        let likedBy = [];
+        if (isExists) {
+            likedBy = snippet.likedBy.filter(({ id }) => id !== this._user.id);
+        } else {
+            likedBy = [
+                ...snippet.likedBy,
+                {
+                    id: this._user.id,
+                    name: this._user.name,
+                    surname: this._user.surname,
+                },
+            ];
         }
+        const updatePayload: Partial<Snippet> = {
+            id: snippetId,
+            likedBy,
+        };
+        this._subscriptions.add(
+            this._snippetsService.update(updatePayload).subscribe({
+                next: () => {
+                    console.log('likes increased');
+                    this._cdr.detectChanges();
+                },
+            })
+        );
     }
 }
