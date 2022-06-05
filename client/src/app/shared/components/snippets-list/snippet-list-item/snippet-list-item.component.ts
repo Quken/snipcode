@@ -43,6 +43,9 @@ export class SnippetListItemComponent implements AfterViewInit, OnDestroy {
     @Input()
     public showAuthor: boolean = false;
 
+    @Input()
+    public likeable: boolean = false;
+
     constructor(
         private readonly _aceService: AceService,
         private readonly _cdr: ChangeDetectorRef
@@ -82,6 +85,8 @@ export class SnippetListItemComponent implements AfterViewInit, OnDestroy {
     }
 
     public onLikeClick(): void {
-        this.likeChange.emit(this.snippet.id);
+        if (this.likeable) {
+            this.likeChange.emit(this.snippet.id);
+        }
     }
 }
