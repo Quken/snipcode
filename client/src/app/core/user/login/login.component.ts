@@ -6,6 +6,7 @@ import {
     OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 
 @Component({
@@ -15,6 +16,8 @@ import { UserService } from '../user.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit, OnDestroy {
+    private _returnUrl!: string;
+
     public formGroup!: FormGroup;
     public loginError?: string;
     public logging: boolean = false;
@@ -38,7 +41,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(
         private readonly _userService: UserService,
         private readonly _fb: FormBuilder,
-        private readonly _cdr: ChangeDetectorRef
+        private readonly _cdr: ChangeDetectorRef,
+        private readonly _router: Router,
+        private readonly _route: ActivatedRoute
     ) {}
 
     public ngOnInit(): void {
@@ -46,6 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(6)]],
         });
+        this._returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     public onSubmit(): void {
@@ -53,8 +59,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         const { email, password } = this.formGroup.value;
         this._userService.login(email, password).subscribe({
             next: () => {
-                console.log('Logged in');
                 this.logging = false;
+                this._router.navigate([this._returnUrl]);
                 this._cdr.detectChanges();
             },
             error: (e) => {

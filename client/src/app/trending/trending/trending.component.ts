@@ -79,7 +79,6 @@ export class TrendingComponent implements OnInit, OnDestroy {
         this._subscriptions.add(
             this._snippetsService.update(updatePayload).subscribe({
                 next: () => {
-                    console.log('likes increased');
                     this._cdr.detectChanges();
                 },
             })
