@@ -23,6 +23,7 @@ const snippetsMock: Snippet[] = [
             id: '1',
             name: 'John',
             surname: 'Doe',
+            email: 'johndoe@email.com',
             summary: 'Software engineer',
         },
         createdAt: new Date().toUTCString(),
@@ -38,6 +39,7 @@ const snippetsMock: Snippet[] = [
         createdBy: {
             id: '1',
             name: 'John',
+            email: 'johndoe@email.com',
             surname: 'Doe',
             summary: 'Software engineer',
         },
@@ -58,6 +60,7 @@ const snippetsMock: Snippet[] = [
         createdBy: {
             id: '2',
             name: 'Travis',
+            email: 'travis@email.com',
             surname: 'Scott',
             summary: 'Software engineer',
         },
@@ -90,6 +93,7 @@ function debounce(fn, delay) {
         language: 'javascript',
         createdBy: {
             id: '2',
+            email: 'travis@email.com',
             name: 'Travis',
             surname: 'Scott',
             summary: 'Software engineer',

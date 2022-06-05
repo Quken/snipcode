@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from '@core/user';
 import { NotFoundComponent } from '@shared/components';
 import { HomepageModule } from './homepage/homepage.module';
 import { HomepageComponent } from './homepage/homepage/homepage.component';
@@ -7,7 +8,7 @@ import { HomepageComponent } from './homepage/homepage/homepage.component';
 const routes: Routes = [
     {
         path: '',
-        component: HomepageComponent,
+        component: LoginComponent,
         pathMatch: 'full',
     },
     {
