@@ -16,5 +16,5 @@ export const snippetMock = new Snippet({
     name: 'snippet',
     language: 'javascript',
     extension: SnippetExtensionsEnum.javascript,
-    likes: 1,
+    likedBy: 1,
 });

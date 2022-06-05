@@ -27,7 +27,7 @@ const snippetsMock: Snippet[] = [
         },
         createdAt: new Date().toUTCString(),
         srcRaw: 'p { color: red }',
-        likes: 0,
+        likedBy: [],
         extension: SnippetExtensionsEnum.css,
     }),
     new Snippet({
@@ -43,7 +43,13 @@ const snippetsMock: Snippet[] = [
         },
         createdAt: new Date().toUTCString(),
         srcRaw: 'export type GUID = string',
-        likes: 2,
+        likedBy: [
+            {
+                id: '2',
+                name: 'Travis',
+                surname: 'Scott',
+            },
+        ],
     }),
     new Snippet({
         id: '3',
@@ -70,7 +76,13 @@ function debounce(fn, delay) {
 		}, delay);
 	};
 }`,
-        likes: 3,
+        likedBy: [
+            {
+                id: '1',
+                name: 'John',
+                surname: 'Doe',
+            },
+        ],
     }),
     new Snippet({
         id: '4',
@@ -85,7 +97,13 @@ function debounce(fn, delay) {
         extension: SnippetExtensionsEnum.javascript,
         createdAt: new Date().toUTCString(),
         srcRaw: `console.log(4)`,
-        likes: 4,
+        likedBy: [
+            {
+                id: '1',
+                name: 'John',
+                surname: 'Doe',
+            },
+        ],
     }),
 ];
 
@@ -140,7 +158,7 @@ export class SnippetsService {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
                 };
-                if (!snippet.likes) {
+                if (!snippet?.likedBy?.length) {
                     snippetDTO.modifiedAt = <DateUTC>new Date().toUTCString();
                 }
                 const body = { snippet: snippetDTO, user };

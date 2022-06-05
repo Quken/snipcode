@@ -24,7 +24,8 @@ export class TrendingComponent implements OnInit, OnDestroy {
     public snippets$ = this._snippetsService.allSnippets$.pipe(
         map((snippets: Snippet[]) => {
             return [...snippets].sort(
-                (snippetA, snippetB) => snippetB.likes - snippetA.likes
+                (snippetA, snippetB) =>
+                    snippetB.likedBy.length - snippetA.likedBy.length
             );
         })
     );
@@ -54,9 +55,28 @@ export class TrendingComponent implements OnInit, OnDestroy {
             return;
         }
         if (snippet?.createdBy.id !== this._user.id) {
+            let isExists = snippet.likedBy.some(
+                ({ id }) => id === this._user.id
+            );
+            let likedBy = [];
+            if (isExists) {
+                likedBy = snippet.likedBy.filter(
+                    ({ id }) => id !== this._user.id
+                );
+            } else {
+                likedBy = [
+                    ...snippet.likedBy,
+                    {
+                        id: this._user.id,
+                        name: this._user.name,
+                        surname: this._user.surname,
+                    },
+                ];
+            }
+
             const updatePayload: Partial<Snippet> = {
                 id: snippetId,
-                likes: snippet?.likes + 1,
+                likedBy,
             };
             this._subscriptions.add(
                 this._snippetsService.update(updatePayload).subscribe({
