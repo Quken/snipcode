@@ -2,12 +2,13 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    OnDestroy,
     OnInit,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { isNumber } from 'lodash';
-import { catchError, switchMap } from 'rxjs';
+import { catchError, Subscription, switchMap } from 'rxjs';
 import { isControlInvalid } from '../../form';
 import { User } from '../models';
 import { UserService } from '../user.service';
@@ -18,7 +19,9 @@ import { UserService } from '../user.service';
     styleUrls: ['./registration.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
+    private readonly _subscriptions: Subscription = new Subscription();
+
     public formGroup!: FormGroup;
     public loginError?: string;
     public loading: boolean = false;
@@ -47,7 +50,7 @@ export class RegistrationComponent implements OnInit {
         private readonly _route: ActivatedRoute
     ) {}
 
-    public ngOnInit(): void {
+    private initForm(): void {
         this.formGroup = this._fb.group({
             email: ['', [Validators.required, Validators.email]],
             name: ['', [Validators.required]],
@@ -58,20 +61,28 @@ export class RegistrationComponent implements OnInit {
             password: ['', [Validators.required, Validators.minLength(6)]],
             passwordConfirmation: [''],
         });
-        this.formGroup.get('password')?.valueChanges.subscribe({
-            next: (v) => {
-                this.passwordsAreSame =
-                    v === this.formGroup.get('passwordConfirmation')?.value;
-                this._cdr.detectChanges();
-            },
-        });
-        this.formGroup.get('passwordConfirmation')?.valueChanges.subscribe({
-            next: (v) => {
-                this.passwordsAreSame =
-                    v === this.formGroup.get('password')?.value;
-                this._cdr.detectChanges();
-            },
-        });
+        this._subscriptions.add(
+            this.formGroup.get('password')?.valueChanges.subscribe({
+                next: (v) => {
+                    this.passwordsAreSame =
+                        v === this.formGroup.get('passwordConfirmation')?.value;
+                    this._cdr.detectChanges();
+                },
+            })
+        );
+        this._subscriptions.add(
+            this.formGroup.get('passwordConfirmation')?.valueChanges.subscribe({
+                next: (v) => {
+                    this.passwordsAreSame =
+                        v === this.formGroup.get('password')?.value;
+                    this._cdr.detectChanges();
+                },
+            })
+        );
+    }
+
+    public ngOnInit(): void {
+        this.initForm();
     }
 
     public onSubmit(): void {
@@ -97,46 +108,36 @@ export class RegistrationComponent implements OnInit {
         if (position) {
             payload.position = position;
         }
-        this._userService
-            .register(payload)
-            .pipe(
-                switchMap(() =>
-                    this._userService.login(
-                        (payload as User).email,
-                        payload.password
-                    )
-                ),
-                catchError((e) => {
-                    console.log(e);
-                    return e;
+        this._subscriptions.add(
+            this._userService
+                .register(payload)
+                .pipe(
+                    switchMap(() =>
+                        this._userService.login(
+                            (payload as User).email,
+                            payload.password
+                        )
+                    ),
+                    catchError((e) => {
+                        console.log(e);
+                        return e;
+                    })
+                )
+                .subscribe({
+                    next: () => {
+                        this.loading = false;
+                        this._router.navigate(['/']);
+                    },
+                    error: (e) => {
+                        this.loading = false;
+                        // TODO: show alert
+                        console.error(e);
+                    },
                 })
-            )
-            .subscribe({
-                next: () => {
-                    this.loading = false;
-                    this._router.navigate(['/']);
-                },
-                error: (e) => {
-                    this.loading = false;
-                    // TODO: show alert
-                    console.error(e);
-                },
-            });
+        );
+    }
 
-        //after registration redirect to homepsge
-        // this.logging = true;
-        // const { email, password } = this.formGroup.value;
-        // this._userService.login(email, password).subscribe({
-        //     next: () => {
-        //         this.logging = false;
-        //         this._router.navigate([this._returnUrl]);
-        //         this._cdr.detectChanges();
-        //     },
-        //     error: (e) => {
-        //         this.loginError = e.message;
-        //         this.logging = false;
-        //         this._cdr.detectChanges();
-        //     },
-        // });
+    public ngOnDestroy(): void {
+        this._subscriptions.unsubscribe();
     }
 }
