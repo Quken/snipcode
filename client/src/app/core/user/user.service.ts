@@ -21,7 +21,7 @@ export class UserService {
 
     constructor() {}
 
-    public login(email: string, password: string) {
+    public login(email: string, password: string): Observable<void> {
         return new Observable((observer) => {
             setTimeout(() => {
                 if (email === userMock.email && password === 'usermock') {
@@ -34,6 +34,17 @@ export class UserService {
                         'Error during login. Please double-check your credentials or try again later.'
                     )
                 );
+                observer.complete();
+            }, 4000);
+        });
+    }
+
+    // TODO: DTO
+    public register(payload: Partial<User>): Observable<void> {
+        console.log(payload);
+        return new Observable((observer) => {
+            setTimeout(() => {
+                observer.next();
                 observer.complete();
             }, 4000);
         });

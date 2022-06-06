@@ -6,7 +6,10 @@ import {
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { isNumber } from 'lodash';
+import { catchError, switchMap } from 'rxjs';
 import { isControlInvalid } from '../../form';
+import { User } from '../models';
 import { UserService } from '../user.service';
 
 @Component({
@@ -72,6 +75,54 @@ export class RegistrationComponent implements OnInit {
     }
 
     public onSubmit(): void {
+        if (this.formGroup.invalid) {
+            return;
+        }
+        this.loading = true;
+
+        const { email, name, surname, summary, age, position, password } =
+            this.formGroup.value;
+
+        // TODO: DTO
+        const payload: Partial<User> & { password: string } = {
+            email,
+            name,
+            surname,
+            summary,
+            password,
+        };
+        if (isNumber(age)) {
+            payload.age = age;
+        }
+        if (position) {
+            payload.position = position;
+        }
+        this._userService
+            .register(payload)
+            .pipe(
+                switchMap(() =>
+                    this._userService.login(
+                        (payload as User).email,
+                        payload.password
+                    )
+                ),
+                catchError((e) => {
+                    console.log(e);
+                    return e;
+                })
+            )
+            .subscribe({
+                next: () => {
+                    this.loading = false;
+                    this._router.navigate(['/']);
+                },
+                error: (e) => {
+                    this.loading = false;
+                    // TODO: show alert
+                    console.error(e);
+                },
+            });
+
         //after registration redirect to homepsge
         // this.logging = true;
         // const { email, password } = this.formGroup.value;
