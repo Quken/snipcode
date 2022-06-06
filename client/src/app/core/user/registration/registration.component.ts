@@ -8,7 +8,6 @@ import {
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserService } from '../user.service';
-import { passwordConfirmationValidator } from './validators/password-confirmation';
 
 @Component({
     selector: 'app-registration',
@@ -21,6 +20,8 @@ export class RegistrationComponent implements OnInit {
     public loginError?: string;
     public loading: boolean = false;
 
+    public passwordsAreSame: boolean = true;
+
     public get isPasswordInvalid(): boolean {
         return (
             this.formGroup.controls['password'].invalid &&
@@ -30,12 +31,12 @@ export class RegistrationComponent implements OnInit {
     }
 
     public get isPasswordConfirmationInvalid(): boolean {
-        console.log(this.formGroup.controls['passwordConfirmation']?.errors);
-
         return (
-            this.formGroup.controls['passwordConfirmation'].invalid &&
+            !this.passwordsAreSame &&
             (this.formGroup.controls['passwordConfirmation'].dirty ||
-                this.formGroup.controls['passwordConfirmation'].touched)
+                this.formGroup.controls['passwordConfirmation'].touched) &&
+            (this.formGroup.controls['password'].dirty ||
+                this.formGroup.controls['password'].touched)
         );
     }
 
@@ -45,6 +46,10 @@ export class RegistrationComponent implements OnInit {
             (this.formGroup.controls['email'].dirty ||
                 this.formGroup.controls['email'].touched)
         );
+    }
+
+    public get isDisabled(): boolean {
+        return this.formGroup.invalid || this.loading || !this.passwordsAreSame;
     }
 
     constructor(
@@ -64,12 +69,22 @@ export class RegistrationComponent implements OnInit {
             age: ['', [Validators.min(0), Validators.max(100)]],
             position: [''],
             password: ['', [Validators.required, Validators.minLength(6)]],
-            passwordConfirmation: ['', ,],
+            passwordConfirmation: [''],
         });
-        this.formGroup.controls['passwordConfirmation'].addValidators([
-            passwordConfirmationValidator(this.formGroup.controls['password']),
-        ]);
-        // this._returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
+        this.formGroup.get('password')?.valueChanges.subscribe({
+            next: (v) => {
+                this.passwordsAreSame =
+                    v === this.formGroup.get('passwordConfirmation')?.value;
+                this._cdr.detectChanges();
+            },
+        });
+        this.formGroup.get('passwordConfirmation')?.valueChanges.subscribe({
+            next: (v) => {
+                this.passwordsAreSame =
+                    v === this.formGroup.get('password')?.value;
+                this._cdr.detectChanges();
+            },
+        });
     }
 
     public onSubmit(): void {

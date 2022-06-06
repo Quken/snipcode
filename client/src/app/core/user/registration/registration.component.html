@@ -101,9 +101,7 @@
                     class="alert my-0 mx-2 p-0"
                     style="color: red"
                 >
-                    <div
-                        *ngIf="formGroup.controls['passwordConfirmation'].errors?.['passwordConfirmation']"
-                    >
+                    <div *ngIf="!passwordsAreSame">
                         Passwords should be same.
                     </div>
                 </div>
@@ -114,7 +112,7 @@
             <button
                 type="submit"
                 class="btn btn-success"
-                [disabled]="formGroup.invalid || loading"
+                [disabled]="isDisabled"
             >
                 Register
             </button>
