@@ -9,7 +9,7 @@ import {
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { isNumber } from 'lodash';
-import { catchError, of, Subscription, switchMap, throwError } from 'rxjs';
+import { catchError, Subscription, switchMap, throwError } from 'rxjs';
 import { isControlInvalid } from '../../form';
 import { User } from '../models';
 import { UserService } from '../user.service';

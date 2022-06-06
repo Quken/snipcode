@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from '@core/user';
-import { AuthGuard } from '@core/user/guards';
-import { RegistrationComponent } from '@core/user/registration';
+import { AuthGuard, LoginComponent, RegistrationComponent } from '@core/user';
 import { NotFoundComponent } from '@shared/components';
 import { HomepageModule } from './homepage/homepage.module';
 import { HomepageComponent } from './homepage/homepage/homepage.component';
