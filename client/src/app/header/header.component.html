@@ -16,12 +16,22 @@
     </h5>
 </ng-template>
 <ng-template #notAuthorized>
-    <button
-        type="button"
-        class="btn btn-light"
-        (click)="onLogin()"
-        [style.fontWeight]="'bold'"
-    >
-        Login
-    </button>
+    <div>
+        <button
+            type="button"
+            class="btn btn-primary mx-3"
+            (click)="onLogin()"
+            [style.fontWeight]="'bold'"
+        >
+            Log in
+        </button>
+        <button
+            type="button"
+            class="btn btn-light"
+            (click)="onRegister()"
+            [style.fontWeight]="'bold'"
+        >
+            Register
+        </button>
+    </div>
 </ng-template>

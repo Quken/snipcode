@@ -134,6 +134,7 @@ export class SnippetsService {
         );
     }
 
+    // move to ngDoBootstrap ?
     public getAll(): void {
         of(snippetsMock).subscribe((snippets) =>
             this._allSnippetsSubject.next(snippets)

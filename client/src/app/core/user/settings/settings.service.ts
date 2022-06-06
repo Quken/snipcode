@@ -19,6 +19,7 @@ export class UserSettingsService {
     constructor(
         private readonly _editorSettingsService: EditorSettingsService
     ) {
+        // move to ngDoBootstrap
         this._editorSettingsService.loadEditorSettings();
     }
 }

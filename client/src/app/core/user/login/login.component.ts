@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    OnDestroy,
     OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -15,14 +14,14 @@ import { UserService } from '../user.service';
     styleUrls: ['./login.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
     private _returnUrl!: string;
 
     public formGroup!: FormGroup;
     public loginError?: string;
     public logging: boolean = false;
 
-    public get isLoginInvalid(): boolean {
+    public get isEmailInvalid(): boolean {
         return (
             this.formGroup.controls['email'].invalid &&
             (this.formGroup.controls['email'].dirty ||
@@ -30,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         );
     }
 
-    public get isPasswordInValid(): boolean {
+    public get isPasswordInvalid(): boolean {
         return (
             this.formGroup.controls['password'].invalid &&
             (this.formGroup.controls['password'].dirty ||
@@ -69,8 +68,9 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this._cdr.detectChanges();
             },
         });
-        console.log(this.formGroup.value);
     }
 
-    public ngOnDestroy(): void {}
+    public onRegister(): void {
+        this._router.navigate(['/register']);
+    }
 }

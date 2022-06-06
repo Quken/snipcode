@@ -53,4 +53,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public onLogin(): void {
         this._router.navigate(['/login']);
     }
+
+    public onRegister(): void {
+        this._router.navigate(['/register']);
+    }
 }

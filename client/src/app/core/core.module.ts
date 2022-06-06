@@ -5,6 +5,7 @@ import { SnippetsModule } from './snippets/snippets.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastModule } from './toast/toast.module';
 import { LoginModule } from './user';
+import { RegistrationModule } from './user/registration';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { LoginModule } from './user';
         HttpClientModule,
         ToastModule,
         LoginModule,
+        RegistrationModule,
     ],
     exports: [ToastModule, LoginModule],
 })
