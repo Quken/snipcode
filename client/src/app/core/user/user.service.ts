@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { delay, Observable, of, ReplaySubject, shareReplay } from 'rxjs';
 import { User } from './models';
@@ -41,9 +42,18 @@ export class UserService {
 
     // TODO: DTO
     public register(payload: Partial<User>): Observable<void> {
-        console.log(payload);
         return new Observable((observer) => {
             setTimeout(() => {
+                if (payload.email === userMock.email + '1') {
+                    const error = new HttpErrorResponse({
+                        error: {
+                            message: `Oops. User with such email already exists`,
+                        },
+                        status: 409,
+                    });
+                    observer.error(error);
+                    return;
+                }
                 observer.next();
                 observer.complete();
             }, 4000);

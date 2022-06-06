@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -8,7 +9,7 @@ import {
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { isNumber } from 'lodash';
-import { catchError, Subscription, switchMap } from 'rxjs';
+import { catchError, of, Subscription, switchMap, throwError } from 'rxjs';
 import { isControlInvalid } from '../../form';
 import { User } from '../models';
 import { UserService } from '../user.service';
@@ -118,9 +119,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                             payload.password
                         )
                     ),
-                    catchError((e) => {
-                        console.log(e);
-                        return e;
+                    catchError((e: HttpErrorResponse) => {
+                        if (e.status === 409) {
+                            return throwError(() => e.error);
+                        }
+                        return throwError(() => e.error);
                     })
                 )
                 .subscribe({
@@ -128,9 +131,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                         this.loading = false;
                         this._router.navigate(['/']);
                     },
-                    error: (e) => {
+                    error: (e: Error) => {
                         this.loading = false;
-                        // TODO: show alert
+                        this.loginError = e?.message;
+                        this._cdr.detectChanges();
                         console.error(e);
                     },
                 })
