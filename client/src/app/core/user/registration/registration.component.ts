@@ -47,8 +47,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         private readonly _userService: UserService,
         private readonly _fb: FormBuilder,
         private readonly _cdr: ChangeDetectorRef,
-        private readonly _router: Router,
-        private readonly _route: ActivatedRoute
+        private readonly _router: Router
     ) {}
 
     private initForm(): void {
