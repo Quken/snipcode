@@ -16,7 +16,9 @@
                             type="text"
                             class="form-control"
                             [ngClass]="{
-                                'is-invalid': isEmailInvalid
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['email']
+                                )
                             }"
                             placeholder="Type email here..."
                             aria-label="Email"
@@ -25,7 +27,7 @@
                     </div>
                 </div>
                 <div
-                    *ngIf="isEmailInvalid"
+                    *ngIf="isControlInvalid(formGroup.controls['email'])"
                     class="alert my-0 mx-2 p-0"
                     style="color: red"
                 >
@@ -50,7 +52,9 @@
                             type="password"
                             class="form-control"
                             [ngClass]="{
-                                'is-invalid': isPasswordInvalid
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['password']
+                                )
                             }"
                             placeholder="Type password here..."
                             aria-label="password"
@@ -59,7 +63,7 @@
                     </div>
                 </div>
                 <div
-                    *ngIf="isPasswordInvalid"
+                    *ngIf="isControlInvalid(formGroup.controls['password'])"
                     class="alert my-0 mx-2 p-0"
                     style="color: red"
                 >

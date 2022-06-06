@@ -10,14 +10,18 @@
                         *ngIf="isEdit"
                         type="text"
                         class="form-control"
-                        [ngClass]="{ 'is-invalid': isNameInvalid }"
+                        [ngClass]="{
+                            'is-invalid': isControlInvalid(
+                                formGroup.controls['name']
+                            )
+                        }"
                         placeholder="Snippet name"
                         aria-label="name"
                         aria-describedby="name"
                         formControlName="name"
                     />
                     <div
-                        *ngIf="isNameInvalid"
+                        *ngIf="isControlInvalid(formGroup.controls['name'])"
                         class="alert my-0 mx-2 p-0"
                         style="color: red"
                     >

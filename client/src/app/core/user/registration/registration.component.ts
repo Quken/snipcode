@@ -2,11 +2,11 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    OnDestroy,
     OnInit,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { isControlInvalid } from '../../form';
 import { UserService } from '../user.service';
 
 @Component({
@@ -19,16 +19,8 @@ export class RegistrationComponent implements OnInit {
     public formGroup!: FormGroup;
     public loginError?: string;
     public loading: boolean = false;
-
+    public isControlInvalid = isControlInvalid;
     public passwordsAreSame: boolean = true;
-
-    public get isPasswordInvalid(): boolean {
-        return (
-            this.formGroup.controls['password'].invalid &&
-            (this.formGroup.controls['password'].dirty ||
-                this.formGroup.controls['password'].touched)
-        );
-    }
 
     public get isPasswordConfirmationInvalid(): boolean {
         return (
@@ -37,14 +29,6 @@ export class RegistrationComponent implements OnInit {
                 this.formGroup.controls['passwordConfirmation'].touched) &&
             (this.formGroup.controls['password'].dirty ||
                 this.formGroup.controls['password'].touched)
-        );
-    }
-
-    public get isEmailInvalid(): boolean {
-        return (
-            this.formGroup.controls['email'].invalid &&
-            (this.formGroup.controls['email'].dirty ||
-                this.formGroup.controls['email'].touched)
         );
     }
 

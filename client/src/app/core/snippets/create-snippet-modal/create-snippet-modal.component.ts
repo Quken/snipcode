@@ -19,6 +19,7 @@ import { Toast } from '@core/toast/models';
 import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { isControlInvalid } from '@core/form';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -37,6 +38,7 @@ export class CreateSnippetModalComponent
     public readonly snippetLanguages = snippetLanguages;
     public selectedLanguage: SnippetLanguage | null = null;
     public formGroup!: FormGroup;
+    public isControlInvalid = isControlInvalid;
 
     private _aceEditor!: ace.Ace.Editor;
 

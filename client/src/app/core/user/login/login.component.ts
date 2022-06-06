@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { isControlInvalid } from '@core/form';
 import { UserService } from '../user.service';
 
 @Component({
@@ -18,24 +19,9 @@ export class LoginComponent implements OnInit {
     private _returnUrl!: string;
 
     public formGroup!: FormGroup;
+    public isControlInvalid = isControlInvalid;
     public loginError?: string;
     public logging: boolean = false;
-
-    public get isEmailInvalid(): boolean {
-        return (
-            this.formGroup.controls['email'].invalid &&
-            (this.formGroup.controls['email'].dirty ||
-                this.formGroup.controls['email'].touched)
-        );
-    }
-
-    public get isPasswordInvalid(): boolean {
-        return (
-            this.formGroup.controls['password'].invalid &&
-            (this.formGroup.controls['password'].dirty ||
-                this.formGroup.controls['password'].touched)
-        );
-    }
 
     constructor(
         private readonly _userService: UserService,
@@ -48,7 +34,7 @@ export class LoginComponent implements OnInit {
     public ngOnInit(): void {
         this.formGroup = this._fb.group({
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
+            password: ['', [Validators.required]],
         });
         this._returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
     }
