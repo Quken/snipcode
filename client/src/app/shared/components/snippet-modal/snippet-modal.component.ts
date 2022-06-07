@@ -139,7 +139,7 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this._snippetsService
             .update(snippet)
-            .pipe(delay(10000))
+            .pipe(delay(2000))
             .subscribe({
                 next: () => {
                     this.activeModal.close();
