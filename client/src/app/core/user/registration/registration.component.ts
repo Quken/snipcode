@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MaskService } from '@core/mask';
 import { isNumber } from 'lodash';
 import { catchError, Subscription, switchMap, throwError } from 'rxjs';
 import { isControlInvalid } from '../../form';
@@ -47,7 +48,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         private readonly _userService: UserService,
         private readonly _fb: FormBuilder,
         private readonly _cdr: ChangeDetectorRef,
-        private readonly _router: Router
+        private readonly _router: Router,
+        private readonly _maskService: MaskService
     ) {}
 
     private initForm(): void {
@@ -89,8 +91,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         if (this.formGroup.invalid) {
             return;
         }
+        this._maskService.show();
         this.loading = true;
-
         const { email, name, surname, summary, age, position, password } =
             this.formGroup.value;
 
@@ -128,11 +130,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                 .subscribe({
                     next: () => {
                         this.loading = false;
+                        this._maskService.hide();
                         this._router.navigate(['/']);
                     },
                     error: (e: Error) => {
                         this.loading = false;
                         this.loginError = e?.message;
+                        this._maskService.hide();
                         this._cdr.detectChanges();
                         console.error(e);
                     },
