@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { SnippetsModule } from './snippets/snippets.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastModule } from './toast/toast.module';
+import { MaskModule } from './mask';
 
 @NgModule({
     imports: [
@@ -12,7 +13,8 @@ import { ToastModule } from './toast/toast.module';
         SnippetsModule,
         HttpClientModule,
         ToastModule,
+        MaskModule,
     ],
-    exports: [ToastModule],
+    exports: [ToastModule, MaskModule],
 })
 export class CoreModule {}

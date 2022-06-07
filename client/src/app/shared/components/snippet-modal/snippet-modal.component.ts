@@ -11,12 +11,13 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AceService } from '@core/ace';
+import { MaskService } from '@core/mask';
 import { Snippet, SnippetsService } from '@core/snippets';
 import { Toast } from '@core/toast/models';
 import { ToastService } from '@core/toast/toast.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import * as ace from 'ace-builds';
-import { Subscription } from 'rxjs';
+import { delay, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-snippet-modal',
@@ -46,7 +47,8 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
         private readonly _cdr: ChangeDetectorRef,
         private readonly _snippetsService: SnippetsService,
         private readonly _toastService: ToastService,
-        private readonly _formBuilder: FormBuilder
+        private readonly _formBuilder: FormBuilder,
+        private readonly _maskService: MaskService
     ) {}
 
     public get isNameInvalid(): boolean {
@@ -121,6 +123,7 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public onSubmit(): void {
+        this._maskService.show();
         const isNameChanged =
             this.snippet.name !== this.formGroup.controls['name'].value;
         const isCodeChanged =
@@ -134,26 +137,31 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
         if (isCodeChanged) {
             snippet.srcRaw = this._aceEditor?.getValue();
         }
-        this._snippetsService.update(snippet).subscribe({
-            next: () => {
-                this.activeModal.close();
-                const toast: Toast = {
-                    textOrTemplate: `Snippet ${
-                        snippet.name ?? this.snippet.name
-                    }.${this.snippet.extension} successfully updated`,
-                };
-                this._toastService.showSuccess(toast);
-            },
-            error: (e) => {
-                console.error(e);
-                const toast: Toast = {
-                    textOrTemplate: `Unable to update snippet ${
-                        snippet.name ?? this.snippet.name
-                    }.${this.snippet.extension}`,
-                };
-                this._toastService.showDanger(toast);
-            },
-        });
+        this._snippetsService
+            .update(snippet)
+            .pipe(delay(2000))
+            .subscribe({
+                next: () => {
+                    this.activeModal.close();
+                    this._maskService.hide();
+                    const toast: Toast = {
+                        textOrTemplate: `Snippet ${
+                            snippet.name ?? this.snippet.name
+                        }.${this.snippet.extension} successfully updated`,
+                    };
+                    this._toastService.showSuccess(toast);
+                },
+                error: (e) => {
+                    this._maskService.hide();
+                    console.error(e);
+                    const toast: Toast = {
+                        textOrTemplate: `Unable to update snippet ${
+                            snippet.name ?? this.snippet.name
+                        }.${this.snippet.extension}`,
+                    };
+                    this._toastService.showDanger(toast);
+                },
+            });
     }
 
     public ngOnDestroy(): void {
