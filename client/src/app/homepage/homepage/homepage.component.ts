@@ -8,11 +8,13 @@ import { CarouselImage } from '@shared/components';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomepageComponent {
-    public carouselImages: CarouselImage[] = [944, 1011, 984].map(
+    public carouselImages: CarouselImage[] = [...new Array(3)].map(
         (n, index) => ({
-            src: `https://picsum.photos/id/${n}/1500/500`,
+            src: `../../../assets/img/slider-${index + 1}.jpg`,
             title: `This is title of ${index + 1} image`,
             description: `This is description of ${index + 1} image`,
+            width: 1500,
+            height: 500,
         })
     );
 }

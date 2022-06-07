@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, UserService } from '@core/user';
-import { buffer, map, of, Subscription, take, timer } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',

@@ -1,6 +1,34 @@
 <div class="app-content-container homepage">
     <div class="container">
-        <p>homepage works!</p>
-        <app-carousel [images]="carouselImages"></app-carousel>
+        <div class="d-flex py-3">
+            <app-carousel [images]="carouselImages"></app-carousel>
+        </div>
+        <section class="py-2">
+            <article>
+                <span [style.fontWeight]="'bold'">Snipcode</span> is a platform
+                where you can easily save your code examples.
+                <div>
+                    <p class="m-0">
+                        Benefits you'll receive using
+                        <span [style.fontWeight]="'bold'">Snipcode</span>:
+                    </p>
+                    <ul class="homepage__benefits-list">
+                        <li>
+                            Now, there are no reason to remember your code
+                            examples
+                        </li>
+                        <li>
+                            Forget about storing code fragments on your local
+                            drive
+                        </li>
+                        <li>
+                            Share useful snippets with your team and friends
+                        </li>
+                        <li>Edit and save your code instantly</li>
+                        <li>Setup your editor online by your needs</li>
+                    </ul>
+                </div>
+            </article>
+        </section>
     </div>
 </div>
