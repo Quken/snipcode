@@ -1,1 +1,5 @@
-<p>mask works!</p>
+<ng-container *ngIf="show$ | async">
+    <div class="loading-mask">
+        <h1>Loading mask</h1>
+    </div>
+</ng-container>

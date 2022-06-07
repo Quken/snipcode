@@ -19,6 +19,7 @@ import { Toast } from '@core/toast/models';
 import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { MaskService } from '@core/mask';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -80,7 +81,8 @@ export class CreateSnippetModalComponent
         private readonly _cdr: ChangeDetectorRef,
         private readonly _snippetsService: SnippetsService,
         private readonly _toastService: ToastService,
-        private readonly _formBuilder: FormBuilder
+        private readonly _formBuilder: FormBuilder,
+        private readonly _maskService: MaskService
     ) {}
 
     private _initForm(): void {
@@ -127,6 +129,7 @@ export class CreateSnippetModalComponent
     }
 
     public onSubmit(): void {
+        this._maskService.show();
         const language = <SnippetLanguage>this.selectedLanguage;
         const snippet: Partial<Snippet> = {
             srcRaw: this._code,
@@ -136,6 +139,7 @@ export class CreateSnippetModalComponent
         };
         this._snippetsService.create(snippet).subscribe({
             next: () => {
+                this._maskService.hide();
                 this.activeModal.close('Success');
                 const toast: Toast = {
                     textOrTemplate: `Snippet ${snippet.name}.${snippet.extension} successfully saved`,
@@ -143,6 +147,7 @@ export class CreateSnippetModalComponent
                 this._toastService.showSuccess(toast);
             },
             error: (e) => {
+                this._maskService.hide();
                 console.error(e);
                 const toast: Toast = {
                     textOrTemplate: `Unable to save snippet ${snippet.name}.${snippet.extension}`,

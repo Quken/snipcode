@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-mask',
@@ -7,6 +14,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MaskComponent implements OnInit {
+    @Output()
+    public show$: Subject<boolean> = new Subject();
+
     constructor() {}
 
     ngOnInit(): void {}
