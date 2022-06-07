@@ -12,6 +12,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AceService } from '@core/ace';
 import { MaskService } from '@core/mask';
+import { isControlInvalid } from '@core/form';
 import { Snippet, SnippetsService } from '@core/snippets';
 import { Toast } from '@core/toast/models';
 import { ToastService } from '@core/toast/toast.service';
@@ -37,6 +38,7 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public isEdit: boolean = false;
     public formGroup!: FormGroup;
+    public isControlInvalid = isControlInvalid;
 
     private _aceEditor!: ace.Ace.Editor;
     private _subscriptions: Subscription = new Subscription();

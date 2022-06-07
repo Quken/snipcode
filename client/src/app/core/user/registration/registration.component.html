@@ -1,0 +1,273 @@
+<div class="app-content-container login">
+    <div class="registration__container container col-lg-6 col-sm-12 p-5">
+        <form
+            [formGroup]="formGroup"
+            (submit)="onSubmit()"
+            class="d-flex flex-column"
+        >
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Email*</span>
+                        </div>
+                        <input
+                            formControlName="email"
+                            type="text"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['email']
+                                )
+                            }"
+                            placeholder="Type email here..."
+                            aria-label="Email"
+                            aria-describedby="Email"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['email'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['email'].errors?.['required']"
+                    >
+                        Email is required.
+                    </div>
+                    <div *ngIf="formGroup.controls['email'].errors?.['email']">
+                        Email format is incorrect
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Password*</span>
+                        </div>
+                        <input
+                            formControlName="password"
+                            type="password"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['password']
+                                )
+                            }"
+                            placeholder="Type password here..."
+                            aria-label="password"
+                            aria-describedby="password"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['password'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['password'].errors?.['required']"
+                    >
+                        Password is required.
+                    </div>
+                    <div
+                        *ngIf="formGroup.controls['password'].errors?.['minlength']"
+                    >
+                        Password length should be more than 5 characters
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"
+                                >Password Confirmation</span
+                            >
+                        </div>
+                        <input
+                            formControlName="passwordConfirmation"
+                            type="password"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isPasswordConfirmationInvalid
+                            }"
+                            placeholder="Re-type password here..."
+                            aria-label="passwordConfirmation"
+                            aria-describedby="passwordConfirmation"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isPasswordConfirmationInvalid"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div *ngIf="!passwordsAreSame">
+                        Passwords should be same.
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Name*</span>
+                        </div>
+                        <input
+                            formControlName="name"
+                            type="text"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['name']
+                                )
+                            }"
+                            placeholder=""
+                            aria-label="name"
+                            aria-describedby="name"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['name'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['name'].errors?.['required']"
+                    >
+                        Name is required.
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Surname*</span>
+                        </div>
+                        <input
+                            formControlName="surname"
+                            type="text"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['surname']
+                                )
+                            }"
+                            aria-label="surname"
+                            aria-describedby="surname"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['surname'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['surname'].errors?.['required']"
+                    >
+                        Surname is required.
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Summary*</span>
+                        </div>
+                        <input
+                            formControlName="summary"
+                            type="text"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['summary']
+                                )
+                            }"
+                            aria-label="summary"
+                            aria-describedby="summary"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['summary'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['summary'].errors?.['required']"
+                    >
+                        Summary is required.
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Age</span>
+                        </div>
+                        <input
+                            formControlName="age"
+                            type="number"
+                            class="form-control"
+                            min="0"
+                            max="100"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['age']
+                                )
+                            }"
+                            aria-label="age"
+                            aria-describedby="age"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['age'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div *ngIf="formGroup.controls['age'].errors?.['min']">
+                        Age should be greater 0
+                    </div>
+                    <div *ngIf="formGroup.controls['age'].errors?.['max']">
+                        Age should be lower 100
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Position</span>
+                        </div>
+                        <input
+                            formControlName="position"
+                            type="text"
+                            class="form-control"
+                            aria-label="position"
+                            aria-describedby="position"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="loginError" style="color: red" class="mb-4">
+                {{ loginError }}
+            </div>
+            <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="isDisabled"
+            >
+                Register
+            </button>
+        </form>
+    </div>
+</div>

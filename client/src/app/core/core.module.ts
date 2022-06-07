@@ -5,6 +5,8 @@ import { SnippetsModule } from './snippets/snippets.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastModule } from './toast/toast.module';
 import { MaskModule } from './mask';
+import { LoginModule } from './user';
+import { RegistrationModule } from './user/registration';
 
 @NgModule({
     imports: [
@@ -15,6 +17,6 @@ import { MaskModule } from './mask';
         ToastModule,
         MaskModule,
     ],
-    exports: [ToastModule, MaskModule],
+    exports: [ToastModule, MaskModule, LoginModule, RegistrationModule],
 })
 export class CoreModule {}

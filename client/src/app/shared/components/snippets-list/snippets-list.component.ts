@@ -4,12 +4,15 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
+    OnInit,
     Output,
 } from '@angular/core';
 import { Snippet } from '@core/snippets';
 import { User, UserService } from '@core/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GUID } from '@shared/models';
+import { Subscription } from 'rxjs';
 import { SnippetModalComponent } from '../snippet-modal/snippet-modal.component';
 
 @Component({
@@ -18,7 +21,10 @@ import { SnippetModalComponent } from '../snippet-modal/snippet-modal.component'
     styleUrls: ['./snippets-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SnippetsListComponent {
+export class SnippetsListComponent implements OnInit, OnDestroy {
+    private readonly _subscriptions: Subscription = new Subscription();
+    private _user: User | null = null;
+
     @Input()
     public snippets: Snippet[] = [];
 
@@ -34,13 +40,20 @@ export class SnippetsListComponent {
     @Output()
     public likeChange: EventEmitter<GUID> = new EventEmitter();
 
-    public user$ = this._userService.user$;
-
     constructor(
         private readonly _modalService: NgbModal,
         private readonly _cdr: ChangeDetectorRef,
         private readonly _userService: UserService
     ) {}
+
+    public ngOnInit(): void {
+        this._subscriptions.add(
+            this._userService.user$.subscribe((user) => {
+                this._user = user;
+                this._cdr.detectChanges();
+            })
+        );
+    }
 
     public trackByFn(index: number, snippet: Snippet) {
         return Object.entries(snippet).reduce((acc, [key, value]) => {
@@ -67,7 +80,14 @@ export class SnippetsListComponent {
         });
     }
 
-    public isLikeable(user: User, snippet: Snippet): boolean {
-        return user.id !== snippet.createdBy.id;
+    public isLikeable(snippet: Snippet): boolean {
+        if (!this._user) {
+            return false;
+        }
+        return this._user.id !== snippet.createdBy.id;
+    }
+
+    public ngOnDestroy(): void {
+        this._subscriptions.unsubscribe();
     }
 }

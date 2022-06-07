@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard, LoginComponent, RegistrationComponent } from '@core/user';
 import { NotFoundComponent } from '@shared/components';
 import { HomepageModule } from './homepage/homepage.module';
 import { HomepageComponent } from './homepage/homepage/homepage.component';
@@ -12,6 +13,7 @@ const routes: Routes = [
     },
     {
         path: 'profile',
+        canActivate: [AuthGuard],
         loadChildren: () =>
             import('./profile/profile.module').then((m) => m.ProfileModule),
     },
@@ -19,6 +21,14 @@ const routes: Routes = [
         path: 'trending',
         loadChildren: () =>
             import('./trending/trending.module').then((m) => m.TrendingModule),
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
+    },
+    {
+        path: 'register',
+        component: RegistrationComponent,
     },
     {
         path: '**',

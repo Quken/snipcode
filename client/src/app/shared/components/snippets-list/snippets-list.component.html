@@ -5,11 +5,11 @@
         [class]="classes"
         *ngFor="let snippet of snippets; trackBy: trackByFn"
     >
-        <ng-container *ngIf="user$ | async as user">
+        <ng-container>
             <app-snippet-list-item
                 [snippet]="snippet"
                 [showAuthor]="showAuthor"
-                [likeable]="isLikeable(user, snippet)"
+                [likeable]="isLikeable(snippet)"
                 (openSnippetEventEmitter)="onOpenSnippet($event)"
                 (likeChange)="likeChange.emit($event)"
             ></app-snippet-list-item>

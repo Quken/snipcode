@@ -1,0 +1,100 @@
+<div class="app-content-container login">
+    <div class="login__container container col-lg-6 col-sm-12 p-5">
+        <form
+            [formGroup]="formGroup"
+            (submit)="onSubmit()"
+            class="d-flex flex-column"
+        >
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Email</span>
+                        </div>
+                        <input
+                            formControlName="email"
+                            type="text"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['email']
+                                )
+                            }"
+                            placeholder="Type email here..."
+                            aria-label="Email"
+                            aria-describedby="Email"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['email'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['email'].errors?.['required']"
+                    >
+                        Email is required.
+                    </div>
+                    <div *ngIf="formGroup.controls['email'].errors?.['email']">
+                        Email format is incorrect
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3 flex-column">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Password</span>
+                        </div>
+                        <input
+                            formControlName="password"
+                            type="password"
+                            class="form-control"
+                            [ngClass]="{
+                                'is-invalid': isControlInvalid(
+                                    formGroup.controls['password']
+                                )
+                            }"
+                            placeholder="Type password here..."
+                            aria-label="password"
+                            aria-describedby="password"
+                        />
+                    </div>
+                </div>
+                <div
+                    *ngIf="isControlInvalid(formGroup.controls['password'])"
+                    class="alert my-0 mx-2 p-0"
+                    style="color: red"
+                >
+                    <div
+                        *ngIf="formGroup.controls['password'].errors?.['required']"
+                    >
+                        Password is required.
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="loginError" style="color: red" class="mb-4">
+                {{ loginError }}
+            </div>
+            <div
+                class="login__buttons d-flex direction-row justify-content-between"
+            >
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    (click)="onRegister()"
+                >
+                    Register
+                </button>
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    [disabled]="formGroup.invalid || logging"
+                >
+                    Log in
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

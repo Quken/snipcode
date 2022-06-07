@@ -1,6 +1,37 @@
-<header class="header">
-    <div>app-header-works</div>
-    <div class="container">
-        <div>app-header-works</div>
+<header class="header py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="header__logo">logo</div>
+        <ng-container
+            *ngIf="user; then authorized; else notAuthorized"
+        ></ng-container>
     </div>
 </header>
+
+<ng-template #authorized>
+    <h5 class="m-0">
+        Welcome
+        <span [style.fontWeight]="'bold'"
+            >{{ user?.name }} {{ user?.surname }}</span
+        >
+    </h5>
+</ng-template>
+<ng-template #notAuthorized>
+    <div>
+        <button
+            type="button"
+            class="btn btn-primary mx-3"
+            (click)="onLogin()"
+            [style.fontWeight]="'bold'"
+        >
+            Log in
+        </button>
+        <button
+            type="button"
+            class="btn btn-light"
+            (click)="onRegister()"
+            [style.fontWeight]="'bold'"
+        >
+            Register
+        </button>
+    </div>
+</ng-template>

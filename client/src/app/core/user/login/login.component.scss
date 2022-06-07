@@ -1,0 +1,18 @@
+.login {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(228, 220, 222);
+
+    &__container {
+        border: 2px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 12px 10px 1rem 0px rgb(22 22 22 / 15%);
+    }
+
+    &__buttons {
+        & > button {
+            width: 40%;
+        }
+    }
+}
