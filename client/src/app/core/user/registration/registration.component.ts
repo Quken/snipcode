@@ -135,7 +135,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                     },
                     error: (e: Error) => {
                         this.loading = false;
-                        this.loginError = e?.message;
+                        this.loginError =
+                            e?.message || 'Oops. Error during login';
                         this._maskService.hide();
                         this._cdr.detectChanges();
                         console.error(e);

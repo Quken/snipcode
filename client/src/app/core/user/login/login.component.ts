@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
             },
             error: (e) => {
                 this._maskService.hide();
-                this.loginError = e.message;
+                this.loginError = e?.message || 'Oops. Error during login';
                 this.logging = false;
                 this._cdr.detectChanges();
             },
