@@ -1,5 +1,5 @@
-import { Observable, switchMap, take } from 'rxjs';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     CreateSnippetModalComponent,
     Snippet,
@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     styleUrls: ['./profile-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileCardComponent implements OnInit {
+export class ProfileCardComponent {
     public user$: Observable<User> = this._userService.user$;
     public snippets$: Observable<Snippet[]> =
         this._snippetsService.userSnippets$;
@@ -28,22 +28,18 @@ export class ProfileCardComponent implements OnInit {
         private readonly _route: ActivatedRoute
     ) {}
 
-    public ngOnInit(): void {
-        this.user$
-            .pipe(take(1))
-            .subscribe((user) => this._snippetsService.getById(user.id));
-    }
-
     public onCreate(): void {
-        const modal = this._modalService.open(CreateSnippetModalComponent, {
-            ariaLabelledBy: 'create-snippet-modal',
-            animation: true,
-            backdrop: 'static',
-            centered: true,
-            fullscreen: true,
-            keyboard: false,
-            size: 'lg',
-        });
+        try {
+            const modal = this._modalService.open(CreateSnippetModalComponent, {
+                ariaLabelledBy: 'create-snippet-modal',
+                animation: true,
+                backdrop: 'static',
+                centered: true,
+                fullscreen: true,
+                keyboard: false,
+                size: 'lg',
+            });
+        } catch (e) {}
     }
 
     public onSettingsClick(): void {

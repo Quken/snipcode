@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
 import {
+    buffer,
     forkJoin,
     map,
     Observable,
@@ -9,6 +10,7 @@ import {
     shareReplay,
     switchMap,
     take,
+    timer,
     withLatestFrom,
 } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
@@ -130,16 +132,37 @@ export class SnippetsService {
         private readonly _userService: UserService
     ) {}
 
-    public getById(userId: GUID): void {
+    public getById(userId: GUID): Observable<Snippet[]> {
         of(snippetsMock.filter((s) => s.createdBy.id === userId)).subscribe(
             (snippets) => this._userSnippetsSubject.next(snippets)
         );
+        return this.userSnippets$.pipe(
+            buffer(timer(0)),
+            take(1),
+            switchMap((userSnippets: Snippet[][]) => {
+                if (!userSnippets.length) {
+                    const userSnippetsMock = snippetsMock.filter(
+                        (s) => s.createdBy.id === userId
+                    );
+                    this._userSnippetsSubject.next(userSnippetsMock);
+                    return of(userSnippetsMock);
+                }
+                return of(userSnippets[0]);
+            })
+        );
     }
 
-    // move to ngDoBootstrap ?
-    public getAll(): void {
-        of(snippetsMock).subscribe((snippets) =>
-            this._allSnippetsSubject.next(snippets)
+    public getAll(): Observable<Snippet[]> {
+        return this.allSnippets$.pipe(
+            buffer(timer(0)),
+            take(1),
+            switchMap((allSnippets: Snippet[][]) => {
+                if (!allSnippets.length) {
+                    this._allSnippetsSubject.next(snippetsMock);
+                    return of(snippetsMock);
+                }
+                return of(allSnippets[0]);
+            })
         );
     }
 

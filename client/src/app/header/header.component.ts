@@ -30,8 +30,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this._subscriptions.add(
             this._userService.user$
                 .pipe(
-                    // buffer(timer(0)),
-                    // take(1),
                     map((user) => {
                         if (!user) {
                             return null;
