@@ -154,14 +154,15 @@ export class SnippetsService {
                 const body = { snippet: snippetDTO, user };
                 console.log(body);
                 // TODO: return created snippet from server and use here
+                const responseSnippet: Snippet = snippetDTO as Snippet;
                 const createdSnippet = new Snippet({
                     id: '1234567',
-                    createdAt: (snippetDTO as Snippet).createdAt,
-                    createdBy: (snippetDTO as Snippet).createdBy,
-                    name: (snippetDTO as Snippet).name,
-                    srcRaw: (snippetDTO as Snippet).srcRaw,
-                    language: (snippetDTO as Snippet).language,
-                    extension: (snippetDTO as Snippet).extension,
+                    createdAt: responseSnippet.createdAt,
+                    createdBy: responseSnippet.createdBy,
+                    name: responseSnippet.name,
+                    srcRaw: responseSnippet.srcRaw,
+                    language: responseSnippet.language,
+                    extension: responseSnippet.extension,
                     likedBy: [],
                 });
                 return of(createdSnippet);
