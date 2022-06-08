@@ -1,1 +1,1 @@
-export * from './resolver.resolver';
+export * from './user-snippets.resolver';

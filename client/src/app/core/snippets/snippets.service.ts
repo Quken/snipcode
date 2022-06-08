@@ -132,13 +132,26 @@ export class SnippetsService {
         private readonly _userService: UserService
     ) {}
 
-    public getById(userId: GUID): void {
+    public getById(userId: GUID): Observable<Snippet[]> {
         of(snippetsMock.filter((s) => s.createdBy.id === userId)).subscribe(
             (snippets) => this._userSnippetsSubject.next(snippets)
         );
+        return this.userSnippets$.pipe(
+            buffer(timer(0)),
+            take(1),
+            switchMap((userSnippets: Snippet[][]) => {
+                if (!userSnippets.length) {
+                    const userSnippetsMock = snippetsMock.filter(
+                        (s) => s.createdBy.id === userId
+                    );
+                    this._userSnippetsSubject.next(userSnippetsMock);
+                    return of(userSnippetsMock);
+                }
+                return of(userSnippets[0]);
+            })
+        );
     }
 
-    // move to ngDoBootstrap ?
     public getAll(): Observable<Snippet[]> {
         return this.allSnippets$.pipe(
             buffer(timer(0)),

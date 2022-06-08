@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AllSnippetsResolver } from './resolver.resolver';
+import { UserSnippetsResolver } from './user-snippets.resolver';
 
-describe('ResolverResolver', () => {
-    let resolver: AllSnippetsResolver;
+describe('UserSnippetsResolver', () => {
+    let resolver: UserSnippetsResolver;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        resolver = TestBed.inject(AllSnippetsResolver);
+        resolver = TestBed.inject(UserSnippetsResolver);
     });
 
     it('should be created', () => {
