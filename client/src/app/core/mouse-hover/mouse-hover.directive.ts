@@ -15,7 +15,6 @@ export class MouseHoverDirective {
     constructor(private _elementRef: ElementRef) {}
 
     protected update(action: string): void {
-        console.log(this.hoverClasses);
         this.hoverClasses
             .split(' ')
             .forEach((item) =>

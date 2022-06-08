@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
 import {
+    buffer,
     forkJoin,
     map,
     Observable,
@@ -9,6 +10,7 @@ import {
     shareReplay,
     switchMap,
     take,
+    timer,
     withLatestFrom,
 } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
@@ -137,9 +139,17 @@ export class SnippetsService {
     }
 
     // move to ngDoBootstrap ?
-    public getAll(): void {
-        of(snippetsMock).subscribe((snippets) =>
-            this._allSnippetsSubject.next(snippets)
+    public getAll(): Observable<Snippet[]> {
+        return this.allSnippets$.pipe(
+            buffer(timer(0)),
+            take(1),
+            switchMap((allSnippets: Snippet[][]) => {
+                if (!allSnippets.length) {
+                    this._allSnippetsSubject.next(snippetsMock);
+                    return of(snippetsMock);
+                }
+                return of(allSnippets[0]);
+            })
         );
     }
 

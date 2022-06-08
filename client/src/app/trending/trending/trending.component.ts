@@ -37,7 +37,6 @@ export class TrendingComponent implements OnInit, OnDestroy {
     ) {}
 
     public ngOnInit(): void {
-        this._snippetsService.getAll();
         this._subscriptions.add(
             this._userService.user$.subscribe((user) => {
                 this._user = user;
