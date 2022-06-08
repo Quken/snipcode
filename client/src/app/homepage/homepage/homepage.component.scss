@@ -2,6 +2,10 @@
     background-color: lightsalmon;
     font-size: 1.2rem;
 
+    &__article {
+        width: 70%;
+    }
+
     &__benefits-list {
         margin-bottom: 0;
         & > li {

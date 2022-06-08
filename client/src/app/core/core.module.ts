@@ -7,6 +7,7 @@ import { ToastModule } from './toast/toast.module';
 import { MaskModule } from './mask';
 import { LoginModule } from './user';
 import { RegistrationModule } from './user/registration';
+import { MouseHoverModule } from './mouse-hover';
 
 @NgModule({
     imports: [
@@ -16,7 +17,14 @@ import { RegistrationModule } from './user/registration';
         HttpClientModule,
         ToastModule,
         MaskModule,
+        MouseHoverModule,
     ],
-    exports: [ToastModule, MaskModule, LoginModule, RegistrationModule],
+    exports: [
+        ToastModule,
+        MaskModule,
+        LoginModule,
+        RegistrationModule,
+        MouseHoverModule,
+    ],
 })
 export class CoreModule {}
