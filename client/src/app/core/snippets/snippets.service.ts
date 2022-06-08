@@ -6,8 +6,10 @@ import {
     Observable,
     of,
     ReplaySubject,
+    shareReplay,
     switchMap,
     take,
+    withLatestFrom,
 } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
 import { DateUTC, Snippet } from './models';
@@ -142,7 +144,7 @@ export class SnippetsService {
     }
 
     public create(snippet: Partial<Snippet>): Observable<void> {
-        return this._userService.user$.pipe(
+        const create$ = this._userService.user$.pipe(
             switchMap((user: User) => {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
@@ -151,10 +153,42 @@ export class SnippetsService {
                 };
                 const body = { snippet: snippetDTO, user };
                 console.log(body);
-                return of(null);
+                // TODO: return created snippet from server and use here
+                const createdSnippet = new Snippet({
+                    id: '1234567',
+                    createdAt: (snippetDTO as Snippet).createdAt,
+                    createdBy: (snippetDTO as Snippet).createdBy,
+                    name: (snippetDTO as Snippet).name,
+                    srcRaw: (snippetDTO as Snippet).srcRaw,
+                    language: (snippetDTO as Snippet).language,
+                    extension: (snippetDTO as Snippet).extension,
+                    likedBy: [],
+                });
+                return of(createdSnippet);
             }),
-            map(() => void 0)
+            shareReplay(1)
         );
+
+        forkJoin({
+            allSnippets: this.allSnippets$.pipe(take(1)),
+            newSnippet: create$.pipe(take(1)),
+        }).subscribe({
+            next: ({ allSnippets, newSnippet }) => {
+                allSnippets.push(newSnippet);
+                this._allSnippetsSubject.next(allSnippets);
+            },
+        });
+
+        forkJoin({
+            userSnippets: this.userSnippets$.pipe(take(1)),
+            newSnippet: create$.pipe(take(1)),
+        }).subscribe({
+            next: ({ userSnippets, newSnippet }) => {
+                userSnippets.push(newSnippet);
+                this._userSnippetsSubject.next(userSnippets);
+            },
+        });
+        return create$.pipe(map(() => void 0));
     }
 
     public update(snippet: Partial<Snippet>): Observable<void> {
@@ -170,6 +204,7 @@ export class SnippetsService {
                 // TODO: 3 times during update
                 console.log(body);
                 // http here
+                // TODO: return updated snippet from server and use here
                 return of(snippetDTO as Snippet);
             })
         );
