@@ -174,20 +174,16 @@ export class SnippetsService {
             allSnippets: this.allSnippets$.pipe(take(1)),
             newSnippet: create$.pipe(take(1)),
         }).subscribe({
-            next: ({ allSnippets, newSnippet }) => {
-                allSnippets.push(newSnippet);
-                this._allSnippetsSubject.next(allSnippets);
-            },
+            next: ({ allSnippets, newSnippet }) =>
+                this._allSnippetsSubject.next([...allSnippets, newSnippet]),
         });
 
         forkJoin({
             userSnippets: this.userSnippets$.pipe(take(1)),
             newSnippet: create$.pipe(take(1)),
         }).subscribe({
-            next: ({ userSnippets, newSnippet }) => {
-                userSnippets.push(newSnippet);
-                this._userSnippetsSubject.next(userSnippets);
-            },
+            next: ({ userSnippets, newSnippet }) =>
+                this._userSnippetsSubject.next([...userSnippets, newSnippet]),
         });
         return create$.pipe(map(() => void 0));
     }
