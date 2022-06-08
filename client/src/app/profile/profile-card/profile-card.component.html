@@ -19,8 +19,9 @@
                 <div class="profile-card__settings mb-3">
                     <button
                         type="button"
-                        class="btn btn-info"
+                        class="btn btn-light"
                         (click)="onSettingsClick()"
+                        [hover-classes]="'hover-btn-styles'"
                     >
                         Settings
                     </button>
@@ -34,8 +35,10 @@
                     <h3>Your snippets</h3>
                     <button
                         type="button"
-                        class="btn btn-success"
+                        class="btn btn-light"
+                        [style.fontWeight]="'bold'"
                         (click)="onCreate()"
+                        [hover-classes]="'hover-btn-styles'"
                     >
                         Create a new one
                     </button>

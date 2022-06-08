@@ -36,7 +36,13 @@
                 <i class="fa-solid fa-heart"></i>
                 <span>{{ snippet.likedBy.length }}</span>
             </div>
-            <button type="button" (click)="onClick()" class="btn btn-success">
+            <button
+                type="button"
+                (click)="onClick()"
+                class="btn btn-light"
+                [style.fontWeight]="'bold'"
+                [hover-classes]="'hover-btn-styles'"
+            >
                 Open
             </button>
         </div>

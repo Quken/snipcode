@@ -1,15 +1,18 @@
-$row-background-color: rgba(255, 255, 255, 0.7);
+$row-background-color: #f8f9fa;
 $warning-icon-color: #ffc14f;
 
 .settings {
+    &__form {
+        display: flex;
+        flex-direction: column;
+    }
+
     &__key {
         font-weight: bold;
     }
 
     &__row {
         padding: 0 10px;
-        background-color: #{$row-background-color};
-
         &:nth-child(odd) {
             background-color: rgba($row-background-color, 1);
         }

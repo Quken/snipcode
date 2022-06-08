@@ -1,3 +1,16 @@
+.carousel {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+        rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transition: all 0.3s ease;
+        box-shadow: rgb(0 137 255 / 40%) 5px 5px, rgb(255 0 0 / 30%) 10px 10px,
+            rgb(0 255 126 / 20%) 15px 15px, rgb(204 255 0 / 10%) 20px 20px,
+            rgb(251 0 255 / 5%) 25px 25px;
+    }
+}
+
 .image-wrapper > img {
     object-fit: fill;
     height: 500px;

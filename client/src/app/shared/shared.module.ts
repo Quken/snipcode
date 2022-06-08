@@ -7,6 +7,7 @@ import {
 } from './components';
 import { SnippetModalComponent } from './components/snippet-modal/snippet-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MouseHoverModule } from '@core/mouse-hover';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         CarouselModule,
         SnippetsListModule,
         ReactiveFormsModule,
+        MouseHoverModule,
     ],
     exports: [CarouselModule, SnippetsListModule, ReactiveFormsModule],
     declarations: [SnippetModalComponent, NotFoundComponent],

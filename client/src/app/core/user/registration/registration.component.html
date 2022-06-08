@@ -263,7 +263,8 @@
             </div>
             <button
                 type="submit"
-                class="btn btn-success"
+                class="btn btn-secondary"
+                [class.hover-btn-styles]="!isDisabled"
                 [disabled]="isDisabled"
             >
                 Register

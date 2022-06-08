@@ -3,11 +3,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(228, 220, 222);
 
     &__container {
         border: 2px solid rgba(0, 0, 0, 0.15);
         box-shadow: 12px 10px 1rem 0px rgb(22 22 22 / 15%);
+        transition: all 0.2s ease;
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+            transition: all 0.2s ease;
+        }
     }
 
     &__buttons {

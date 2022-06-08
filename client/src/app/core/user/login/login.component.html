@@ -83,15 +83,16 @@
                 <button
                     type="button"
                     class="btn btn-light"
-                    [hover-classes]="'hover-btn-success'"
+                    [hover-classes]="'hover-btn-styles'"
+                    [style.fontWeight]="'bold'"
                     (click)="onRegister()"
                 >
                     Register
                 </button>
                 <button
                     type="submit"
-                    class="btn btn-primary"
-                    [hover-classes]="'hover-btn-success'"
+                    class="btn btn-secondary"
+                    [hover-classes]="'hover-btn-styles'"
                     [disabled]="formGroup.invalid || logging"
                 >
                     Log in

@@ -1,5 +1,9 @@
 <div class="container settings">
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <form
+        [formGroup]="formGroup"
+        (ngSubmit)="onSubmit()"
+        class="settings__form"
+    >
         <div formGroupName="editor">
             <div class="settings__row d-flex align-items-center">
                 <div class="col-6 settings__key">Theme</div>
@@ -71,13 +75,18 @@
                 </div>
             </div>
         </div>
-        <h5 *ngIf="hasDiff">
+        <h5 *ngIf="hasDiff" class="text-center my-2">
             <i
                 class="settings__warning-icon fas fa-lg fa-exclamation-triangle mx-1"
             ></i>
             Changes has been made.
         </h5>
-        <button type="submit" class="btn btn-success" [disabled]="isDisabled">
+        <button
+            type="submit"
+            class="btn btn-light mt-3"
+            [disabled]="isDisabled"
+            [hover-classes]="'hover-btn-styles'"
+        >
             Save
         </button>
     </form>

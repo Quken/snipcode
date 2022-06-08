@@ -7,6 +7,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ProfileSummaryComponent } from './summary/summary.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileSettingsComponent } from './settings/settings.component';
+import { MouseHoverModule } from '@core/mouse-hover';
 
 @NgModule({
     declarations: [
@@ -16,6 +17,12 @@ import { ProfileSettingsComponent } from './settings/settings.component';
         ProfileSettingsComponent,
     ],
     exports: [ProfileComponent],
-    imports: [CommonModule, ProfileRoutingModule, NgbModule, SharedModule],
+    imports: [
+        CommonModule,
+        ProfileRoutingModule,
+        NgbModule,
+        SharedModule,
+        MouseHoverModule,
+    ],
 })
 export class ProfileModule {}

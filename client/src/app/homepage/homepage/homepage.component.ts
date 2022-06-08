@@ -8,13 +8,19 @@ import { CarouselImage } from '@shared/components';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomepageComponent {
-    public carouselImages: CarouselImage[] = [...new Array(3)].map(
-        (n, index) => ({
-            src: `../../../assets/img/slider-${index + 1}.jpg`,
-            title: `This is title of ${index + 1} image`,
-            description: `This is description of ${index + 1} image`,
-            width: 1500,
-            height: 500,
-        })
-    );
+    public carouselImages: CarouselImage[] = [
+        {
+            src: `../../../assets/img/slider-1.jpg`,
+            title: `Access your code everywhere`,
+        },
+        {
+            src: `../../../assets/img/slider-2.jpg`,
+            title: `Share code examples quickly`,
+        },
+        {
+            src: `../../../assets/img/slider-3.jpg`,
+            title: `Get free access`,
+            description: `Use Snipcode absolutely for free`,
+        },
+    ];
 }
