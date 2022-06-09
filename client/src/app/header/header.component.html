@@ -14,12 +14,23 @@
 </header>
 
 <ng-template #authorized>
-    <h5 class="m-0">
-        Welcome
-        <span [style.fontWeight]="'bold'"
-            >{{ user?.name }} {{ user?.surname }}</span
+    <div>
+        <h5 class="m-0">
+            Welcome
+            <span [style.fontWeight]="'bold'"
+                >{{ user?.name }} {{ user?.surname }}</span
+            >
+        </h5>
+        <button
+            type="button"
+            class="btn btn-light"
+            (click)="onLogout()"
+            [style.fontWeight]="'bold'"
+            [hover-classes]="'hover-btn-styles'"
         >
-    </h5>
+            Logout
+        </button>
+    </div>
 </ng-template>
 <ng-template #notAuthorized>
     <div>

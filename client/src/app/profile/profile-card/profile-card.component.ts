@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileCardComponent {
-    public user$: Observable<User> = this._userService.user$;
+    public user$: Observable<User | null> = this._userService.user$;
     public snippets$: Observable<Snippet[]> =
         this._snippetsService.userSnippets$;
 

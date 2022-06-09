@@ -28,19 +28,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this._subscriptions.add(
-            this._userService.user$
-                .pipe(
-                    map((user) => {
-                        if (!user) {
-                            return null;
-                        }
-                        return user;
-                    })
-                )
-                .subscribe((user) => {
-                    this.user = user;
-                    this._changeDetectorRef.detectChanges();
-                })
+            this._userService.user$.subscribe((user) => {
+                this.user = user;
+                this._changeDetectorRef.detectChanges();
+            })
         );
     }
 
@@ -58,5 +49,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public onLogoClick(): void {
         this._router.navigate(['/']);
+    }
+
+    public onLogout(): void {
+        this._userService.logout();
     }
 }

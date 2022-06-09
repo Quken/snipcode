@@ -28,10 +28,8 @@ export class AuthGuard implements CanActivate {
         | boolean
         | UrlTree {
         return this._userService.user$.pipe(
-            buffer(timer(0)),
-            take(1),
-            switchMap((user: User[]) => {
-                if (!user.length) {
+            switchMap((user: User | null) => {
+                if (!user) {
                     this._router.navigate(['/login'], {
                         queryParams: { returnUrl: state.url },
                     });

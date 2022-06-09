@@ -19,7 +19,7 @@ import { User, UserService } from '@core/user';
 })
 export class TrendingComponent implements OnInit, OnDestroy {
     private _subscriptions: Subscription = new Subscription();
-    private _user!: User;
+    private _user!: User | null;
 
     public snippets$ = this._snippetsService.allSnippets$.pipe(
         map((snippets: Snippet[]) => {
@@ -57,10 +57,14 @@ export class TrendingComponent implements OnInit, OnDestroy {
         ) {
             return;
         }
-        const isExists = snippet.likedBy.some(({ id }) => id === this._user.id);
+        const isExists = snippet.likedBy.some(
+            ({ id }) => id === (<User>this._user).id
+        );
         let likedBy = [];
         if (isExists) {
-            likedBy = snippet.likedBy.filter(({ id }) => id !== this._user.id);
+            likedBy = snippet.likedBy.filter(
+                ({ id }) => id !== (<User>this._user).id
+            );
         } else {
             likedBy = [
                 ...snippet.likedBy,

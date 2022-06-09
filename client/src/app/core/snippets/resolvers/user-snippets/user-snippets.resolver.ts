@@ -6,8 +6,8 @@ import {
 } from '@angular/router';
 import { Snippet } from '@core/snippets';
 import { SnippetsService } from '@core/snippets/snippets.service';
-import { UserService } from '@core/user';
-import { Observable, of, switchMap, take } from 'rxjs';
+import { User, UserService } from '@core/user';
+import { filter, Observable, switchMap, take } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -23,8 +23,9 @@ export class UserSnippetsResolver implements Resolve<Snippet[]> {
         state: RouterStateSnapshot
     ): Observable<Snippet[]> {
         return this._userService.user$.pipe(
+            filter(Boolean),
             take(1),
-            switchMap((user) => this._snippetsService.getById(user.id))
+            switchMap((user: User) => this._snippetsService.getById(user.id))
         );
     }
 }

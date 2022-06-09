@@ -1,6 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, Observable, of, ReplaySubject, shareReplay } from 'rxjs';
+import {
+    BehaviorSubject,
+    delay,
+    Observable,
+    of,
+    ReplaySubject,
+    shareReplay,
+} from 'rxjs';
 import { User } from './models';
 
 const userMock = new User({
@@ -17,8 +24,9 @@ const userMock = new User({
     providedIn: 'root',
 })
 export class UserService {
-    private _userSubject: ReplaySubject<User> = new ReplaySubject(1);
-    public user$: Observable<User> = this._userSubject.asObservable();
+    private _userSubject: BehaviorSubject<User | null> =
+        new BehaviorSubject<User | null>(null);
+    public user$: Observable<User | null> = this._userSubject.asObservable();
 
     constructor() {}
 
@@ -57,6 +65,16 @@ export class UserService {
                 observer.next();
                 observer.complete();
             }, 4000);
+        });
+    }
+
+    public logout(): Observable<void> {
+        return new Observable((observer) => {
+            setTimeout(() => {
+                this._userSubject.next(null);
+                observer.next();
+                observer.complete();
+            });
         });
     }
 }

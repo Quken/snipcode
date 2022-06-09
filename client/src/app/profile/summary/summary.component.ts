@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileSummaryComponent {
-    public user$: Observable<User> = this._userService.user$;
+    public user$: Observable<User | null> = this._userService.user$;
 
     constructor(private readonly _userService: UserService) {}
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
 import {
     buffer,
+    filter,
     forkJoin,
     map,
     Observable,
@@ -168,6 +169,7 @@ export class SnippetsService {
 
     public create(snippet: Partial<Snippet>): Observable<void> {
         const create$ = this._userService.user$.pipe(
+            filter(Boolean),
             switchMap((user: User) => {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
@@ -213,6 +215,7 @@ export class SnippetsService {
 
     public update(snippet: Partial<Snippet>): Observable<void> {
         const update$ = this._userService.user$.pipe(
+            filter(Boolean),
             switchMap((user: User) => {
                 const snippetDTO: Partial<Snippet> = {
                     ...snippet,
