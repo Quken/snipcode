@@ -6,6 +6,9 @@ import {
     OnInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { MaskService } from '@core/mask';
+import { Toast } from '@core/toast/models';
+import { ToastService } from '@core/toast/toast.service';
 import { User, UserService } from '@core/user';
 import { map, Subscription } from 'rxjs';
 
@@ -23,7 +26,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     constructor(
         private readonly _userService: UserService,
         private readonly _router: Router,
-        private readonly _changeDetectorRef: ChangeDetectorRef
+        private readonly _changeDetectorRef: ChangeDetectorRef,
+        private readonly _toastService: ToastService,
+        private readonly _maskService: MaskService
     ) {}
 
     public ngOnInit(): void {
@@ -52,6 +57,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public onLogout(): void {
-        this._userService.logout();
+        this._maskService.show();
+        this._userService.logout().subscribe({
+            next: () => {
+                this._maskService.hide();
+                const toast: Toast = {
+                    textOrTemplate: `Successfully logged out`,
+                };
+                this._toastService.showSuccess(toast);
+                this._changeDetectorRef.detectChanges();
+
+                this._router.navigate(['/']);
+            },
+            error: (e) => {
+                this._maskService.hide();
+                const toast: Toast = {
+                    textOrTemplate: `Oops.. Something went wrong during logout.`,
+                };
+                console.log(e);
+                this._toastService.showDanger(toast);
+                this._changeDetectorRef.detectChanges();
+            },
+        });
     }
 }

@@ -74,7 +74,7 @@ export class UserService {
                 this._userSubject.next(null);
                 observer.next();
                 observer.complete();
-            });
+            }, 4000);
         });
     }
 }
