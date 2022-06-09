@@ -30,6 +30,14 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         return !this.hasDiff || !this.formGroup.valid;
     }
 
+    public get maxFontSize(): number {
+        return 24;
+    }
+
+    public get minFontSize(): number {
+        return 8;
+    }
+
     public get hasDiff(): boolean {
         if (!this._userSettings) {
             return false;
@@ -79,8 +87,8 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
                     null,
                     [
                         Validators.required,
-                        Validators.min(8),
-                        Validators.max(64),
+                        Validators.min(this.minFontSize),
+                        Validators.max(this.maxFontSize),
                     ],
                 ],
                 fontFamily: [null, [Validators.required]],

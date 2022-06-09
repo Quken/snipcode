@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserSettings, UserSettingsService } from '@core/user';
 import * as ace from 'ace-builds';
-import { map, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, Subscription } from 'rxjs';
 import { AceEditorThemes } from './enum';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { AceEditorThemes } from './enum';
 export class AceService {
     private _subscriptions: Subscription = new Subscription();
     private _userSettings: UserSettings | null = null;
-    private _aceSubject = new ReplaySubject(1);
+    private _aceSubject = new BehaviorSubject<any>(null);
     private _ace$: Observable<any> = this._aceSubject.asObservable();
 
     constructor(private readonly _userSettingsService: UserSettingsService) {
@@ -39,6 +39,7 @@ export class AceService {
 
     public getAceEditor$(element: HTMLElement): Observable<ace.Ace.Editor> {
         return this._ace$.pipe(
+            filter(Boolean),
             map((ace) => {
                 const aceEditor = ace.edit(element);
                 const theme =

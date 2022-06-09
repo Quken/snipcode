@@ -1,13 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-    BehaviorSubject,
-    delay,
-    Observable,
-    of,
-    ReplaySubject,
-    shareReplay,
-} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './models';
 
 const userMock = new User({

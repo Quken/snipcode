@@ -3,14 +3,11 @@ import { AceEditorSettings } from '@core/ace/model';
 import { userSettingsMock } from '@mocks/user';
 
 import {
+    BehaviorSubject,
     distinctUntilChanged,
-    filter,
     map,
     Observable,
     of,
-    ReplaySubject,
-    Subject,
-    switchMap,
     take,
     tap,
 } from 'rxjs';
@@ -20,31 +17,40 @@ import * as _ from 'lodash';
     providedIn: 'root',
 })
 export class EditorSettingsService {
-    private readonly _editorSettingsSubject: Subject<AceEditorSettings> =
-        new ReplaySubject(1);
-    public editorSettings$ = this._editorSettingsSubject.asObservable().pipe(
-        filter((settings) => !!settings),
-        distinctUntilChanged((prev, curr) => _.isEqual(prev, curr))
-    );
+    private readonly _editorSettingsSubject: BehaviorSubject<AceEditorSettings | null> =
+        new BehaviorSubject<AceEditorSettings | null>(null);
+    public editorSettings$: Observable<AceEditorSettings | null> =
+        this._editorSettingsSubject
+            .asObservable()
+            .pipe(distinctUntilChanged((prev, curr) => _.isEqual(prev, curr)));
 
-    public loadEditorSettings(): void {
-        of(userSettingsMock.aceEditor).subscribe((settings) => {
-            this._editorSettingsSubject.next(settings);
-        });
+    public loadEditorSettings(): Observable<AceEditorSettings> {
+        return this.editorSettings$.pipe(
+            map((settings) => {
+                if (settings) {
+                    return settings;
+                }
+                this._editorSettingsSubject.next(userSettingsMock.aceEditor);
+                return userSettingsMock.aceEditor;
+            })
+        );
     }
 
     public update(newSettings: Partial<AceEditorSettings>): Observable<void> {
-        return of(void 0).pipe(
-            switchMap(() => this.editorSettings$),
+        return this.editorSettings$.pipe(
             take(1),
             tap((settings) => {
+                if (settings) {
+                    this._editorSettingsSubject.next({
+                        ...settings,
+                        ...newSettings,
+                    });
+                    return;
+                }
                 this._editorSettingsSubject.next({
-                    ...settings,
-                    ...newSettings,
+                    ...(newSettings as AceEditorSettings),
                 });
             }),
-            switchMap(() => this.editorSettings$),
-            take(1),
             map(() => void 0)
         );
     }

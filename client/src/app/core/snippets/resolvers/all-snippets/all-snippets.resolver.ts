@@ -6,7 +6,7 @@ import {
 } from '@angular/router';
 import { Snippet } from '@core/snippets';
 import { SnippetsService } from '@core/snippets/snippets.service';
-import { Observable, of } from 'rxjs';
+import { filter, firstValueFrom, Observable, take, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -18,6 +18,6 @@ export class AllSnippetsResolver implements Resolve<Snippet[]> {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<Snippet[]> {
-        return this._snippetsService.getAll();
+        return this._snippetsService.getAll().pipe(take(1));
     }
 }

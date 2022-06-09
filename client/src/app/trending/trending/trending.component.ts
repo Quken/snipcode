@@ -6,7 +6,7 @@ import {
     ChangeDetectorRef,
 } from '@angular/core';
 import { Snippet, SnippetsService } from '@core/snippets';
-import { map, Subscription } from 'rxjs';
+import { filter, map, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { GUID } from '@shared/models';
 import { User, UserService } from '@core/user';
@@ -22,6 +22,7 @@ export class TrendingComponent implements OnInit, OnDestroy {
     private _user!: User | null;
 
     public snippets$ = this._snippetsService.allSnippets$.pipe(
+        filter(Boolean),
         map((snippets: Snippet[]) => {
             return [...snippets].sort(
                 (snippetA, snippetB) =>

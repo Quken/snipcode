@@ -10,7 +10,7 @@ import { UserSettings } from '../models';
 export class UserSettingsService {
     public settings$: Observable<UserSettings> =
         this._editorSettingsService.editorSettings$.pipe(
-            filter((editorSettings) => !!editorSettings),
+            filter(Boolean),
             map((editorSettings: AceEditorSettings) => ({
                 aceEditor: editorSettings,
             }))
@@ -19,7 +19,6 @@ export class UserSettingsService {
     constructor(
         private readonly _editorSettingsService: EditorSettingsService
     ) {
-        // move to ngDoBootstrap
-        this._editorSettingsService.loadEditorSettings();
+        this._editorSettingsService.loadEditorSettings().subscribe();
     }
 }

@@ -37,8 +37,8 @@
                     <input
                         type="number"
                         class="form-control"
-                        min="8"
-                        max="64"
+                        [min]="this.minFontSize"
+                        [max]="this.maxFontSize"
                         placeholder="Font size"
                         aria-label="fontsize"
                         aria-describedby="fontsize"

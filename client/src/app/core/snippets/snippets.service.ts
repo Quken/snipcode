@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
 import { GUID } from '@shared/models';
 import {
-    buffer,
+    BehaviorSubject,
     filter,
     forkJoin,
     map,
     Observable,
     of,
-    ReplaySubject,
     shareReplay,
     switchMap,
     take,
-    timer,
-    withLatestFrom,
 } from 'rxjs';
 import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
 import { DateUTC, Snippet } from './models';
@@ -120,10 +117,10 @@ function debounce(fn, delay) {
     providedIn: 'root',
 })
 export class SnippetsService {
-    private readonly _userSnippetsSubject: ReplaySubject<Snippet[]> =
-        new ReplaySubject(1);
-    private readonly _allSnippetsSubject: ReplaySubject<Snippet[]> =
-        new ReplaySubject(1);
+    private readonly _userSnippetsSubject: BehaviorSubject<Snippet[] | null> =
+        new BehaviorSubject<Snippet[] | null>(null);
+    private readonly _allSnippetsSubject: BehaviorSubject<Snippet[] | null> =
+        new BehaviorSubject<Snippet[] | null>(null);
 
     public userSnippets$ = this._userSnippetsSubject.asObservable();
     public allSnippets$ = this._allSnippetsSubject.asObservable();
@@ -134,35 +131,28 @@ export class SnippetsService {
     ) {}
 
     public getById(userId: GUID): Observable<Snippet[]> {
-        of(snippetsMock.filter((s) => s.createdBy.id === userId)).subscribe(
-            (snippets) => this._userSnippetsSubject.next(snippets)
-        );
         return this.userSnippets$.pipe(
-            buffer(timer(0)),
-            take(1),
-            switchMap((userSnippets: Snippet[][]) => {
-                if (!userSnippets.length) {
+            map((userSnippets: Snippet[] | null) => {
+                if (!userSnippets) {
                     const userSnippetsMock = snippetsMock.filter(
                         (s) => s.createdBy.id === userId
                     );
                     this._userSnippetsSubject.next(userSnippetsMock);
-                    return of(userSnippetsMock);
+                    return userSnippetsMock;
                 }
-                return of(userSnippets[0]);
+                return userSnippets;
             })
         );
     }
 
     public getAll(): Observable<Snippet[]> {
         return this.allSnippets$.pipe(
-            buffer(timer(0)),
-            take(1),
-            switchMap((allSnippets: Snippet[][]) => {
-                if (!allSnippets.length) {
+            map((allSnippets: Snippet[] | null) => {
+                if (!allSnippets) {
                     this._allSnippetsSubject.next(snippetsMock);
-                    return of(snippetsMock);
+                    return snippetsMock;
                 }
-                return of(allSnippets[0]);
+                return allSnippets;
             })
         );
     }
@@ -196,7 +186,7 @@ export class SnippetsService {
         );
 
         forkJoin({
-            allSnippets: this.allSnippets$.pipe(take(1)),
+            allSnippets: this.allSnippets$.pipe(filter(Boolean), take(1)),
             newSnippet: create$.pipe(take(1)),
         }).subscribe({
             next: ({ allSnippets, newSnippet }) =>
@@ -204,7 +194,7 @@ export class SnippetsService {
         });
 
         forkJoin({
-            userSnippets: this.userSnippets$.pipe(take(1)),
+            userSnippets: this.userSnippets$.pipe(filter(Boolean), take(1)),
             newSnippet: create$.pipe(take(1)),
         }).subscribe({
             next: ({ userSnippets, newSnippet }) =>
@@ -233,7 +223,7 @@ export class SnippetsService {
         );
 
         forkJoin({
-            allSnippets: this.allSnippets$.pipe(take(1)),
+            allSnippets: this.allSnippets$.pipe(filter(Boolean), take(1)),
             snippetDiff: update$,
         }).subscribe({
             next: ({ allSnippets, snippetDiff }) => {
@@ -247,7 +237,7 @@ export class SnippetsService {
         });
 
         forkJoin({
-            userSnippets: this.userSnippets$.pipe(take(1)),
+            userSnippets: this.userSnippets$.pipe(filter(Boolean), take(1)),
             snippetDiff: update$,
         }).subscribe({
             next: ({ userSnippets, snippetDiff }) => {

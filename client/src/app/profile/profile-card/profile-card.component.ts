@@ -17,7 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProfileCardComponent {
     public user$: Observable<User | null> = this._userService.user$;
-    public snippets$: Observable<Snippet[]> =
+    public snippets$: Observable<Snippet[] | null> =
         this._snippetsService.userSnippets$;
 
     constructor(
