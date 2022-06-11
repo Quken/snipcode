@@ -11,7 +11,10 @@ import { AceEditorSettings } from '@core/ace/model';
 import { Toast } from '@core/toast/models';
 import { ToastService } from '@core/toast/toast.service';
 import { UserSettings, UserSettingsService } from '@core/user';
-import { EditorSettingsService } from '@core/user/editor-settings';
+import {
+    EditorSettingsService,
+    UpdateEditorSettingsDTO,
+} from '@core/user/editor-settings';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -151,21 +154,23 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     public onSubmit(): void {
         const newEditorSettings = this._getEditorUpdates();
         if (Object.keys(newEditorSettings).length) {
-            this._editorSettingsService.update(newEditorSettings).subscribe({
-                next: () => {
-                    const toast: Toast = {
-                        textOrTemplate: `Your profile settings successfully saved`,
-                    };
-                    this._toastService.showSuccess(toast);
-                },
-                error: (e) => {
-                    console.error(e);
-                    const toast: Toast = {
-                        textOrTemplate: `Oops. Error during saving profile settings. Try again later`,
-                    };
-                    this._toastService.showDanger(toast);
-                },
-            });
+            this._editorSettingsService
+                .update(newEditorSettings as UpdateEditorSettingsDTO)
+                .subscribe({
+                    next: () => {
+                        const toast: Toast = {
+                            textOrTemplate: `Your profile settings successfully saved`,
+                        };
+                        this._toastService.showSuccess(toast);
+                    },
+                    error: (e) => {
+                        console.error(e);
+                        const toast: Toast = {
+                            textOrTemplate: `Oops. Error during saving profile settings. Try again later`,
+                        };
+                        this._toastService.showDanger(toast);
+                    },
+                });
         }
     }
 

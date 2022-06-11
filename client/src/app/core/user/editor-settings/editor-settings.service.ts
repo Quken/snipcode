@@ -11,7 +11,7 @@ import {
     tap,
 } from 'rxjs';
 import * as _ from 'lodash';
-import { UpdateSnippetDTO } from '@core/snippets';
+import { UpdateEditorSettingsDTO } from './models';
 
 @Injectable({
     providedIn: 'root',
@@ -36,7 +36,7 @@ export class EditorSettingsService {
         );
     }
 
-    public update(newSettings: UpdateSnippetDTO): Observable<void> {
+    public update(newSettings: UpdateEditorSettingsDTO): Observable<void> {
         return this.editorSettings$.pipe(
             take(1),
             tap((settings) => {
