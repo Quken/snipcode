@@ -1,5 +1,4 @@
-import { Snippet } from '@core/snippets';
-import { SnippetExtensionsEnum } from '@core/snippets/enums/snippets-extensions.enum';
+import { Snippet, SnippetExtensionsEnum } from '@core/snippets';
 import { User } from '@core/user';
 
 export const snippetMock = new Snippet({
@@ -11,10 +10,11 @@ export const snippetMock = new Snippet({
         surname: 'usersurname',
         summary: 'some user summary',
         position: 'dev ops',
+        email: 'user@mock.com',
     }),
     srcRaw: 'alert(1)',
     name: 'snippet',
     language: 'javascript',
     extension: SnippetExtensionsEnum.javascript,
-    likedBy: 1,
+    likedBy: [],
 });

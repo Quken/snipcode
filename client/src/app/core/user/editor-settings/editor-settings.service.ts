@@ -7,11 +7,11 @@ import {
     distinctUntilChanged,
     map,
     Observable,
-    of,
     take,
     tap,
 } from 'rxjs';
 import * as _ from 'lodash';
+import { UpdateSnippetDTO } from '@core/snippets';
 
 @Injectable({
     providedIn: 'root',
@@ -36,7 +36,7 @@ export class EditorSettingsService {
         );
     }
 
-    public update(newSettings: Partial<AceEditorSettings>): Observable<void> {
+    public update(newSettings: UpdateSnippetDTO): Observable<void> {
         return this.editorSettings$.pipe(
             take(1),
             tap((settings) => {
@@ -48,7 +48,7 @@ export class EditorSettingsService {
                     return;
                 }
                 this._editorSettingsSubject.next({
-                    ...(newSettings as AceEditorSettings),
+                    ...(newSettings as unknown as AceEditorSettings),
                 });
             }),
             map(() => void 0)

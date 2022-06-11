@@ -11,10 +11,10 @@ import {
     switchMap,
     take,
 } from 'rxjs';
-import { SnippetExtensionsEnum } from './enums/snippets-extensions.enum';
-import { DateUTC, Snippet } from './models';
+import { CreateSnippetDTO, DateUTC, Snippet, UpdateSnippetDTO } from './models';
 import { HttpClient } from '@angular/common/http';
 import { User, UserService } from '@core/user';
+import { SnippetExtensionsEnum } from './enums';
 
 const snippetsMock: Snippet[] = [
     new Snippet({
@@ -157,11 +157,13 @@ export class SnippetsService {
         );
     }
 
-    public create(snippet: Partial<Snippet>): Observable<void> {
+    public create(
+        snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdBy'>
+    ): Observable<void> {
         const create$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {
-                const snippetDTO: Partial<Snippet> = {
+                const snippetDTO: CreateSnippetDTO = {
                     ...snippet,
                     createdAt: <DateUTC>new Date().toUTCString(),
                     createdBy: user,
@@ -203,11 +205,11 @@ export class SnippetsService {
         return create$.pipe(map(() => void 0));
     }
 
-    public update(snippet: Partial<Snippet>): Observable<void> {
+    public update(snippet: UpdateSnippetDTO): Observable<void> {
         const update$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {
-                const snippetDTO: Partial<Snippet> = {
+                const snippetDTO: UpdateSnippetDTO = {
                     ...snippet,
                 };
                 if (!snippet?.likedBy?.length) {

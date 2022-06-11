@@ -3,3 +3,4 @@ export * from './snippets.service';
 export * from './models';
 export * from './create-snippet-modal';
 export * from './resolvers';
+export * from './enums';

@@ -12,7 +12,7 @@ import { MaskService } from '@core/mask';
 import { isNumber } from 'lodash';
 import { catchError, Subscription, switchMap, throwError } from 'rxjs';
 import { isControlInvalid } from '../../form';
-import { User } from '../models';
+import { RegistrationDTO, User } from '../models';
 import { UserService } from '../user.service';
 
 @Component({
@@ -97,7 +97,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             this.formGroup.value;
 
         // TODO: DTO
-        const payload: Partial<User> & { password: string } = {
+        const payload: RegistrationDTO = {
             email,
             name,
             surname,
@@ -115,10 +115,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                 .register(payload)
                 .pipe(
                     switchMap(() =>
-                        this._userService.login(
-                            (payload as User).email,
-                            payload.password
-                        )
+                        this._userService.login({
+                            email: payload.email,
+                            password: payload.password,
+                        })
                     ),
                     catchError((e: HttpErrorResponse) => {
                         if (e.status === 409) {

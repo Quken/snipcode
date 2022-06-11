@@ -1,6 +1,6 @@
 import { User } from '@core/user/models';
 import { GUID } from '@shared/models/guid.model';
-import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
+import { SnippetExtensionsEnum } from '../enums';
 import { LikedBy } from './liked-by.model';
 import { SnippetLanguage } from './snippet-language';
 

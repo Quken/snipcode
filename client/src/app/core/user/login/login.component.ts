@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
         this._maskService.show();
         this.logging = true;
         const { email, password } = this.formGroup.value;
-        this._userService.login(email, password).subscribe({
+        this._userService.login({ email, password }).subscribe({
             next: () => {
                 this._maskService.hide();
                 this.logging = false;

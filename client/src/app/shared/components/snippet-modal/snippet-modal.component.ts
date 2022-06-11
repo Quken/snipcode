@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AceService } from '@core/ace';
 import { MaskService } from '@core/mask';
 import { isControlInvalid } from '@core/form';
-import { Snippet, SnippetsService } from '@core/snippets';
+import { Snippet, SnippetsService, UpdateSnippetDTO } from '@core/snippets';
 import { Toast } from '@core/toast/models';
 import { ToastService } from '@core/toast/toast.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -130,7 +130,7 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
             this.snippet.name !== this.formGroup.controls['name'].value;
         const isCodeChanged =
             this._aceEditor?.getValue() !== this.snippet.srcRaw;
-        const snippet: Partial<Snippet> = {
+        const snippet: UpdateSnippetDTO = {
             id: this.snippet.id,
         };
         if (isNameChanged) {

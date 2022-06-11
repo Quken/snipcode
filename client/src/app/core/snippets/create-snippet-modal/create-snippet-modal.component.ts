@@ -11,16 +11,21 @@ import {
 } from '@angular/core';
 import { AceService } from '@core/ace';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Snippet, SnippetLanguage, snippetLanguages } from '../models';
+import {
+    CreateSnippetDTO,
+    Snippet,
+    SnippetLanguage,
+    snippetLanguages,
+} from '../models';
 import { TitleCasePipe } from '@angular/common';
 import { SnippetsService } from '../snippets.service';
 import { ToastService } from '@core/toast/toast.service';
 import { Toast } from '@core/toast/models';
-import { SnippetExtensionsEnum } from '../enums/snippets-extensions.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MaskService } from '@core/mask';
 import { isControlInvalid } from '@core/form';
+import { SnippetExtensionsEnum } from '../enums';
 
 @Component({
     selector: 'app-create-snippet-modal',
@@ -133,7 +138,7 @@ export class CreateSnippetModalComponent
     public onSubmit(): void {
         this._maskService.show();
         const language = <SnippetLanguage>this.selectedLanguage;
-        const snippet: Partial<Snippet> = {
+        const snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdBy'> = {
             srcRaw: this._code,
             language,
             extension: SnippetExtensionsEnum[language],

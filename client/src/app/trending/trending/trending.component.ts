@@ -5,7 +5,7 @@ import {
     OnDestroy,
     ChangeDetectorRef,
 } from '@angular/core';
-import { Snippet, SnippetsService } from '@core/snippets';
+import { Snippet, SnippetsService, UpdateSnippetDTO } from '@core/snippets';
 import { filter, map, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { GUID } from '@shared/models';
@@ -76,7 +76,7 @@ export class TrendingComponent implements OnInit, OnDestroy {
                 },
             ];
         }
-        const updatePayload: Partial<Snippet> = {
+        const updatePayload: UpdateSnippetDTO = {
             id: snippetId,
             likedBy,
         };
