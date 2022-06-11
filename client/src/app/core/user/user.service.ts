@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AUTH_CRYPTO_KEY, CryptoService } from '@core/crypto';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './models';
 
@@ -21,12 +22,21 @@ export class UserService {
         new BehaviorSubject<User | null>(null);
     public user$: Observable<User | null> = this._userSubject.asObservable();
 
-    constructor() {}
+    constructor(private readonly _cryptoService: CryptoService) {}
 
     public login(email: string, password: string): Observable<void> {
         return new Observable((observer) => {
             setTimeout(() => {
                 if (email === userMock.email && password === 'usermock') {
+                    // http
+                    const payload = {
+                        email,
+                        password: this._cryptoService.encrypt(
+                            password,
+                            AUTH_CRYPTO_KEY
+                        ),
+                    };
+                    console.log(payload);
                     this._userSubject.next(userMock);
                     observer.next();
                     observer.complete();
@@ -42,8 +52,18 @@ export class UserService {
     }
 
     // TODO: DTO
-    public register(payload: Partial<User>): Observable<void> {
+    public register(
+        payload: Partial<User> & { password: string }
+    ): Observable<void> {
         return new Observable((observer) => {
+            const encrypted = {
+                ...payload,
+                password: this._cryptoService.encrypt(
+                    payload.password,
+                    AUTH_CRYPTO_KEY
+                ),
+            };
+            console.log(encrypted);
             setTimeout(() => {
                 if (payload.email === userMock.email + '1') {
                     const error = new HttpErrorResponse({
