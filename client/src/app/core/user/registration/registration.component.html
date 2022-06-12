@@ -77,6 +77,11 @@
                     >
                         Password length should be more than 5 characters
                     </div>
+                    <div
+                        *ngIf="formGroup.controls['password'].errors?.['maxlength']"
+                    >
+                        Password length should be less than 100 characters
+                    </div>
                 </div>
             </div>
             <div class="input-group mb-3 flex-column">
