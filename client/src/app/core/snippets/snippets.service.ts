@@ -221,7 +221,6 @@ export class SnippetsService {
                     snippetDTO.modifiedAt = <DateUTC>new Date().toUTCString();
                 }
                 const body = { snippet: snippetDTO, user };
-                // TODO: 3 times during update
                 console.log(body);
                 // http here
                 // TODO: return updated snippet from server and use here

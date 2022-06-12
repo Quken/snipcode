@@ -18,7 +18,6 @@ export class User {
     public summary: string;
     public age?: number;
     public position?: string;
-    public token?: string;
 
     constructor({
         id,

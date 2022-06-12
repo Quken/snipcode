@@ -95,8 +95,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         this.loading = true;
         const { email, name, surname, summary, age, position, password } =
             this.formGroup.value;
-
-        // TODO: DTO
         const payload: RegistrationDTO = {
             email,
             name,
@@ -111,36 +109,19 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             payload.position = position;
         }
         this._subscriptions.add(
-            this._userService
-                .register(payload)
-                .pipe(
-                    switchMap(() =>
-                        this._userService.login({
-                            email: payload.email,
-                            password: payload.password,
-                        })
-                    ),
-                    catchError((e: HttpErrorResponse) => {
-                        if (e.status === 409) {
-                            return throwError(() => e.error);
-                        }
-                        return throwError(() => e.error);
-                    })
-                )
-                .subscribe({
-                    next: () => {
-                        this.loading = false;
-                        this._maskService.hide();
-                        this._router.navigate(['/']);
-                    },
-                    error: (e: Error) => {
-                        this.loading = false;
-                        this.loginError =
-                            e?.message || 'Oops. Error during login';
-                        this._maskService.hide();
-                        this._cdr.detectChanges();
-                    },
-                })
+            this._userService.register(payload).subscribe({
+                next: () => {
+                    this.loading = false;
+                    this._maskService.hide();
+                    this._router.navigate(['/']);
+                },
+                error: (e: Error) => {
+                    this.loading = false;
+                    this.loginError = e?.message || 'Oops. Error during login';
+                    this._maskService.hide();
+                    this._cdr.detectChanges();
+                },
+            })
         );
     }
 

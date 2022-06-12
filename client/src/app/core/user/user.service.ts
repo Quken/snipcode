@@ -3,7 +3,15 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '@core/api';
 import { AUTH_CRYPTO_KEY, CryptoService } from '@core/crypto';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LoginDTO, RegistrationDTO, User } from './models';
+import {
+    LoginDTO,
+    LoginResponse,
+    LogoutResponse,
+    RefreshResponse,
+    RegistrationDTO,
+    RegistrationResponse,
+    User,
+} from './models';
 
 const userMock = new User({
     id: '1',
@@ -23,7 +31,22 @@ export class UserService {
         new BehaviorSubject<User | null>(null);
     public user$: Observable<User | null> = this._userSubject.asObservable();
 
-    constructor(private readonly _cryptoService: CryptoService) {}
+    constructor(private readonly _cryptoService: CryptoService) {
+        const token = localStorage.getItem('token');
+        if (token) {
+            this._verify(token);
+        }
+    }
+
+    private _verify(token: string): void {
+        const refreshUrl = `${ApiService.auth}/refresh`;
+        const response: RefreshResponse = {
+            user: { ...userMock },
+            accessToken: '12345',
+        };
+        localStorage.setItem('token', response.accessToken);
+        this._userSubject.next(response.user as User);
+    }
 
     public login({ email, password }: LoginDTO): Observable<void> {
         const url = `${ApiService.auth}/login`;
@@ -37,7 +60,12 @@ export class UserService {
                             AUTH_CRYPTO_KEY
                         ),
                     };
-                    this._userSubject.next(userMock);
+                    const response: LoginResponse = {
+                        user: { ...userMock },
+                        accessToken: '12345',
+                    };
+                    localStorage.setItem('token', response.accessToken);
+                    this._userSubject.next(response.user as User);
                     observer.next();
                     observer.complete();
                 }
@@ -72,6 +100,12 @@ export class UserService {
                     observer.error(error);
                     return;
                 }
+                const response: RegistrationResponse = {
+                    user: { ...userMock },
+                    accessToken: '12345',
+                };
+                localStorage.setItem('token', response.accessToken);
+                this._userSubject.next(response.user as User);
                 observer.next();
                 observer.complete();
             }, 4000);
@@ -82,7 +116,9 @@ export class UserService {
         const url = `${ApiService.auth}/logout`;
         return new Observable((observer) => {
             setTimeout(() => {
+                const response: LogoutResponse = {};
                 this._userSubject.next(null);
+                localStorage.removeItem('token');
                 observer.next();
                 observer.complete();
             }, 4000);
