@@ -226,34 +226,37 @@ export class SnippetsService {
                 // http here
                 // TODO: return updated snippet from server and use here
                 return of(snippetDTO as Snippet);
-            })
+            }),
+            shareReplay(1)
         );
 
         forkJoin({
             allSnippets: this.allSnippets$.pipe(filter(Boolean), take(1)),
-            snippetDiff: update$,
+            snippetDiff: update$.pipe(take(1)),
         }).subscribe({
             next: ({ allSnippets, snippetDiff }) => {
-                let snippet = allSnippets.find(
+                let snippet = allSnippets?.find(
                     (snippet) => snippet.id === snippetDiff.id
                 ) as Snippet;
                 if (snippet) {
                     snippet = snippet.merge(snippetDiff);
                 }
+                this._allSnippetsSubject.next([...allSnippets]);
             },
         });
 
         forkJoin({
             userSnippets: this.userSnippets$.pipe(filter(Boolean), take(1)),
-            snippetDiff: update$,
+            snippetDiff: update$.pipe(take(1)),
         }).subscribe({
             next: ({ userSnippets, snippetDiff }) => {
-                let snippet = userSnippets.find(
+                let snippet = userSnippets?.find(
                     (snippet) => snippet.id === snippetDiff.id
                 ) as Snippet;
                 if (snippet) {
                     snippet = snippet.merge(snippetDiff);
                 }
+                this._userSnippetsSubject.next([...userSnippets]);
             },
         });
         return update$.pipe(map(() => void 0));
