@@ -5,3 +5,4 @@ export * from './settings';
 export * from './login';
 export * from './guards';
 export * from './registration';
+export * from './jwt';

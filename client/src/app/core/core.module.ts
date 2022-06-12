@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserModule } from './user/user.module';
 import { SnippetsModule } from './snippets/snippets.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastModule } from './toast/toast.module';
 import { MaskModule } from './mask';
-import { LoginModule } from './user';
+import { JwtInterceptor, LoginModule } from './user';
 import { RegistrationModule } from './user/registration';
 import { MouseHoverModule } from './mouse-hover';
 
@@ -25,6 +25,13 @@ import { MouseHoverModule } from './mouse-hover';
         LoginModule,
         RegistrationModule,
         MouseHoverModule,
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            multi: true,
+            useClass: JwtInterceptor,
+        },
     ],
 })
 export class CoreModule {}
