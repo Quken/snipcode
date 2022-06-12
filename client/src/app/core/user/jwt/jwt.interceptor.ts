@@ -4,14 +4,19 @@ import {
     HttpHandler,
     HttpEvent,
     HttpInterceptor,
+    HttpClient,
 } from '@angular/common/http';
-import { map, Observable, switchMap } from 'rxjs';
+import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 import { UserService } from '../user.service';
 import { User } from '../models';
+import { ApiService } from '@core/api';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private readonly _userService: UserService) {}
+    constructor(
+        private readonly _userService: UserService,
+        private readonly _httpClient: HttpClient
+    ) {}
 
     public intercept(
         request: HttpRequest<unknown>,
@@ -28,7 +33,30 @@ export class JwtInterceptor implements HttpInterceptor {
                 }
                 return request;
             }),
-            switchMap(next.handle)
+            switchMap((request) => {
+                return next.handle(request).pipe(
+                    catchError((e) => {
+                        if (
+                            e.status === 401 &&
+                            request.headers.get('Authorization')
+                        ) {
+                            const refreshUrl = `${ApiService.auth}/refresh`;
+                            return this._httpClient
+                                .get(refreshUrl, { withCredentials: true })
+                                .pipe(
+                                    switchMap((response) => {
+                                        localStorage.setItem(
+                                            'token',
+                                            (response as any)['accessToken']
+                                        );
+                                        return next.handle(request);
+                                    })
+                                );
+                        }
+                        return throwError(() => e);
+                    })
+                );
+            })
         );
     }
 }
