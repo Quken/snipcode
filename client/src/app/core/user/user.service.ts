@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApiService } from '@core/api';
 import { AUTH_CRYPTO_KEY, CryptoService } from '@core/crypto';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LoginDTO, RegistrationDTO, User } from './models';
@@ -25,6 +26,7 @@ export class UserService {
     constructor(private readonly _cryptoService: CryptoService) {}
 
     public login({ email, password }: LoginDTO): Observable<void> {
+        const url = `${ApiService.auth}/login`;
         return new Observable((observer) => {
             setTimeout(() => {
                 if (email === userMock.email && password === 'usermock') {
@@ -50,6 +52,7 @@ export class UserService {
     }
 
     public register(payload: RegistrationDTO): Observable<void> {
+        const url = `${ApiService.auth}/register`;
         return new Observable((observer) => {
             const encrypted = {
                 ...payload,
@@ -76,6 +79,7 @@ export class UserService {
     }
 
     public logout(): Observable<void> {
+        const url = `${ApiService.auth}/logout`;
         return new Observable((observer) => {
             setTimeout(() => {
                 this._userSubject.next(null);

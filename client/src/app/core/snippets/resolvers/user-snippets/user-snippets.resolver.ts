@@ -26,7 +26,7 @@ export class UserSnippetsResolver implements Resolve<Snippet[]> {
             filter(Boolean),
             take(1),
             switchMap((user: User) =>
-                this._snippetsService.getById(user.id).pipe(take(1))
+                this._snippetsService.getByUserId(user.id).pipe(take(1))
             )
         );
     }

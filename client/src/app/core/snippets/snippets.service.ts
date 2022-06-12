@@ -15,6 +15,7 @@ import { CreateSnippetDTO, DateUTC, Snippet, UpdateSnippetDTO } from './models';
 import { HttpClient } from '@angular/common/http';
 import { User, UserService } from '@core/user';
 import { SnippetExtensionsEnum } from './enums';
+import { ApiService } from '@core/api';
 
 const snippetsMock: Snippet[] = [
     new Snippet({
@@ -130,7 +131,8 @@ export class SnippetsService {
         private readonly _userService: UserService
     ) {}
 
-    public getById(userId: GUID): Observable<Snippet[]> {
+    public getByUserId(userId: GUID): Observable<Snippet[]> {
+        const url = `${ApiService.snippets}/userid/${userId}`;
         return this.userSnippets$.pipe(
             map((userSnippets: Snippet[] | null) => {
                 if (!userSnippets) {
@@ -146,6 +148,7 @@ export class SnippetsService {
     }
 
     public getAll(): Observable<Snippet[]> {
+        const url = `${ApiService.snippets}`;
         return this.allSnippets$.pipe(
             map((allSnippets: Snippet[] | null) => {
                 if (!allSnippets) {
@@ -160,6 +163,7 @@ export class SnippetsService {
     public create(
         snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdBy'>
     ): Observable<void> {
+        const url = ApiService.snippets;
         const create$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {
@@ -206,6 +210,7 @@ export class SnippetsService {
     }
 
     public update(snippet: UpdateSnippetDTO): Observable<void> {
+        const url = `${ApiService.snippets}/${snippet.id}`;
         const update$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {

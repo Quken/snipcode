@@ -12,6 +12,7 @@ import {
 } from 'rxjs';
 import * as _ from 'lodash';
 import { UpdateEditorSettingsDTO } from './models';
+import { ApiService } from '@core/api';
 
 @Injectable({
     providedIn: 'root',
@@ -25,6 +26,7 @@ export class EditorSettingsService {
             .pipe(distinctUntilChanged((prev, curr) => _.isEqual(prev, curr)));
 
     public loadEditorSettings(): Observable<AceEditorSettings> {
+        const url = ApiService.editorSettings;
         return this.editorSettings$.pipe(
             map((settings) => {
                 if (settings) {
@@ -37,6 +39,7 @@ export class EditorSettingsService {
     }
 
     public update(newSettings: UpdateEditorSettingsDTO): Observable<void> {
+        const url = ApiService.editorSettings;
         return this.editorSettings$.pipe(
             take(1),
             tap((settings) => {
