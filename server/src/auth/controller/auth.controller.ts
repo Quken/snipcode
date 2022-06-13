@@ -1,5 +1,6 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { AuthService } from '../service';
 import { LoginDTO, RegistrationDTO } from './dto';
 import { LoginResponse, RegistrationResponse } from './response';
@@ -11,21 +12,25 @@ export class AuthController {
 
     @Post('login')
     public async login(
-        @Req() request: Request,
         @Body() dto: LoginDTO,
-        @Res() response: Response,
+        @Res({ passthrough: true }) response: Response,
     ): Promise<LoginResponse> {
         const { user, accessToken, refreshToken } =
             await this._authService.login(dto);
-        response.headers.append('Authorization', `Bearer ${accessToken}`);
-        // request.cookies['refreshToken'] = refreshToken;
-        // response.setCookie();
+        response.cookie('refreshToken', refreshToken, { httpOnly: true });
+        return { user, accessToken };
     }
 
     @Post('registration')
-    public registration(
+    public async registration(
         @Body() dto: RegistrationDTO,
+        @Res({ passthrough: true }) response: Response,
     ): Promise<RegistrationResponse> {
-        return this._authService.register(dto);
+        const { user, accessToken, refreshToken } =
+            await this._authService.register(dto);
+        response.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+        });
+        return { user, accessToken };
     }
 }

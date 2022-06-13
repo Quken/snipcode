@@ -1,6 +1,5 @@
 import * as bcrypt from 'bcryptjs';
 
-import { LoginResponse, RegistrationResponse } from '@auth/controller';
 import {
     HttpException,
     HttpStatus,
