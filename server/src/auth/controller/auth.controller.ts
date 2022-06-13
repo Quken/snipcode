@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from '../service';
 import { LoginDTO, RegistrationDTO } from './dto';
@@ -10,8 +10,16 @@ export class AuthController {
     constructor(private readonly _authService: AuthService) {}
 
     @Post('login')
-    public login(@Body() dto: LoginDTO): Promise<LoginResponse> {
-        return this._authService.login(dto);
+    public async login(
+        @Req() request: Request,
+        @Body() dto: LoginDTO,
+        @Res() response: Response,
+    ): Promise<LoginResponse> {
+        const { user, accessToken, refreshToken } =
+            await this._authService.login(dto);
+        response.headers.append('Authorization', `Bearer ${accessToken}`);
+        // request.cookies['refreshToken'] = refreshToken;
+        // response.setCookie();
     }
 
     @Post('registration')

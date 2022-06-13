@@ -43,23 +43,37 @@ export class AuthService {
         );
     }
 
-    private async _generateToken(user: User): Promise<{ token: string }> {
+    private async _generateTokens(
+        user: User,
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         const payload = { email: user.email, id: user.id };
         return {
-            token: this._jwtService.sign(payload),
+            accessToken: this._jwtService.sign(payload, {
+                secret: process.env.ACCESS_TOKEN_SECRET,
+                expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+            }),
+            refreshToken: this._jwtService.sign(payload, {
+                secret: process.env.REFRESH_TOKEN_SECRET,
+                expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+            }),
         };
     }
 
-    public async login(dto: LoginDTO): Promise<LoginResponse> {
+    public async login(
+        dto: LoginDTO,
+    ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
         const user = await this._validateUser(dto);
-        const { token: accessToken } = await this._generateToken(user);
+        const { accessToken, refreshToken } = await this._generateTokens(user);
         return {
             user,
             accessToken,
+            refreshToken,
         };
     }
 
-    public async register(dto: RegistrationDTO): Promise<RegistrationResponse> {
+    public async register(
+        dto: RegistrationDTO,
+    ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
         const candidate = await this._userService.getByEmail(dto.email);
         if (candidate) {
             throw new HttpException(
@@ -81,10 +95,13 @@ export class AuthService {
             age: user.age,
             position: user.position,
         };
-        const { token: accessToken } = await this._generateToken(castedUser);
+        const { accessToken, refreshToken } = await this._generateTokens(
+            castedUser,
+        );
         return {
             user: castedUser,
             accessToken,
+            refreshToken,
         };
     }
 }
