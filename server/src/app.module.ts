@@ -15,7 +15,6 @@ import { SharedModule } from './shared/shared.module';
             useUnifiedTopology: true,
             useNewUrlParser: true,
             ssl: true,
-            dbName: process.env.MONGO_DB_NAME,
             connectionFactory: (connection) => {
                 console.log('Mongo connection established');
                 return connection;
