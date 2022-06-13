@@ -60,7 +60,14 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             summary: ['', [Validators.required]],
             age: ['', [Validators.min(0), Validators.max(100)]],
             position: [''],
-            password: ['', [Validators.required, Validators.minLength(6)]],
+            password: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.maxLength(100),
+                ],
+            ],
             passwordConfirmation: [''],
         });
         this._subscriptions.add(
