@@ -86,9 +86,11 @@ export class AuthService {
             position: user.position,
         };
         await this._editorSettingsService.createDefaultSettings(castedUser.id);
-        const { accessToken, refreshToken } = await this._generateTokens(
-            castedUser,
-        );
+        const { accessToken, refreshToken } =
+            await this._tokenService.generateTokens({
+                email: castedUser.email,
+                id: castedUser.id,
+            });
         return {
             user: castedUser,
             accessToken,
