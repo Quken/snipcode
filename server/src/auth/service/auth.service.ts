@@ -106,15 +106,15 @@ export class AuthService {
                 message: 'User is not authorized',
             });
         }
-        const data = await this._tokenService.validateRefreshToken(
+        const data = (await this._tokenService.validateRefreshToken(
             refreshToken,
-        );
+        )) as { id: string };
         if (!data) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',
             });
         }
-        const user = await this._userService.getById(data.userId);
+        const user = await this._userService.getById(data.id);
         return await this._tokenService.generateTokens({
             email: user.email,
             id: user._id,

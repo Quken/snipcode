@@ -26,11 +26,12 @@ export class AuthController {
     public async login(
         @Body() dto: LoginDTO,
         @Res({ passthrough: true }) response: Response,
-    ): Promise<LoginResponse> {
+    ): Promise<void> {
         const { user, accessToken, refreshToken } =
             await this._authService.login(dto);
         response.cookie('refreshToken', refreshToken, { httpOnly: true });
-        return { user, accessToken };
+        response.send({ user, accessToken });
+        return;
     }
 
     @Post('registration')
@@ -43,21 +44,24 @@ export class AuthController {
         response.cookie('refreshToken', refreshToken, {
             httpOnly: true,
         });
-        return { user, accessToken };
+        response.send({ user, accessToken });
+        return;
     }
 
     @Get('refresh')
     public async refresh(
         @Req() request: Request,
         @Res() response: Response,
-    ): Promise<RefreshResponse> {
+    ): Promise<void> {
         try {
             const { refreshToken } = request.cookies;
             const tokens = await this._authService.refresh(refreshToken);
+            console.log(tokens);
             response.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
             });
-            return { accessToken: tokens.accessToken };
+            response.send({ accessToken: tokens.accessToken });
+            return;
         } catch (e) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',

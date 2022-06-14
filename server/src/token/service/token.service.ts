@@ -20,9 +20,7 @@ export class TokenService {
         };
     }
 
-    public async validateRefreshToken(
-        token: string,
-    ): Promise<{ userId: string }> {
+    public async validateRefreshToken(token: string): Promise<object> {
         try {
             const data = await this._jwtService.verify(token, {
                 secret: process.env.REFRESH_TOKEN_SECRET,
