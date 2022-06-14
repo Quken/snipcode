@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '@user/user.module';
 import { AuthController } from './controller';
 import { AuthService } from './service';
+import { SettingsModule } from '@settings/settings.module';
 
 @Module({
     providers: [AuthService],
@@ -12,6 +13,7 @@ import { AuthService } from './service';
     controllers: [AuthController],
     imports: [
         forwardRef(() => UserModule),
+        forwardRef(() => SettingsModule),
         JwtModule.register({
             secret: process.env.PRIVATE_KEY || 'AWESOME SECRET',
             signOptions: {

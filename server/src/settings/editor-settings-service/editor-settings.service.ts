@@ -4,6 +4,7 @@ import { User, UserDocument } from '@user/schemas';
 import { Model } from 'mongoose';
 import { EditEditorSettingsDTO } from '../controller';
 import { EditorSettings, EditorSettingsDocument } from '../schemas';
+import { EditorDefaultSettings } from './default-settings';
 
 @Injectable()
 export class EditorSettingsService {
@@ -13,6 +14,15 @@ export class EditorSettingsService {
         @InjectModel(User.name)
         private readonly _userRepository: Model<UserDocument>,
     ) {}
+
+    public async createDefaultSettings(
+        userId: string,
+    ): Promise<EditorSettings> {
+        return await this._editorSettingsRepository.create({
+            userId,
+            ...EditorDefaultSettings,
+        });
+    }
 
     public async update(dto: EditEditorSettingsDTO): Promise<EditorSettings> {
         const user = await this._userRepository.findById(dto.userId);

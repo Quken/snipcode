@@ -11,12 +11,14 @@ import { LoginDTO, RegistrationDTO } from '../controller/dto';
 
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@user/models';
+import { EditorSettingsService } from '@settings/editor-settings-service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly _userService: UserService,
         private readonly _jwtService: JwtService,
+        private readonly _editorSettingsService: EditorSettingsService,
     ) {}
 
     private async _validateUser(dto: LoginDTO): Promise<User> {
@@ -94,6 +96,7 @@ export class AuthService {
             age: user.age,
             position: user.position,
         };
+        await this._editorSettingsService.createDefaultSettings(castedUser.id);
         const { accessToken, refreshToken } = await this._generateTokens(
             castedUser,
         );
