@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { SharedModule } from './shared/shared.module';
         AuthModule,
         UserModule,
         SharedModule,
+        SettingsModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,9 +1,21 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    Res,
+    Req,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from '../service';
 import { LoginDTO, RegistrationDTO } from './dto';
-import { LoginResponse, RegistrationResponse } from './response';
+import {
+    LoginResponse,
+    RefreshResponse,
+    RegistrationResponse,
+} from './response';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -32,5 +44,24 @@ export class AuthController {
             httpOnly: true,
         });
         return { user, accessToken };
+    }
+
+    @Get('refresh')
+    public async refresh(
+        @Req() request: Request,
+        @Res() response: Response,
+    ): Promise<RefreshResponse> {
+        try {
+            const { refreshToken } = request.cookies;
+            const tokens = await this._authService.refresh(refreshToken);
+            response.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+            });
+            return { accessToken: tokens.accessToken };
+        } catch (e) {
+            throw new UnauthorizedException({
+                message: 'User is not authorized',
+            });
+        }
     }
 }

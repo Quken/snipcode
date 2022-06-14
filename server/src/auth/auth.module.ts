@@ -5,13 +5,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '@user/user.module';
 import { AuthController } from './controller';
 import { AuthService } from './service';
+import { SettingsModule } from '@settings/settings.module';
+import { JWTAuthGuard } from './guard';
+import { TokenService } from '@token/service';
 
 @Module({
-    providers: [AuthService],
-    exports: [AuthService, JwtModule],
+    providers: [AuthService, JWTAuthGuard, TokenService],
+    exports: [AuthService, JwtModule, JWTAuthGuard],
     controllers: [AuthController],
     imports: [
         forwardRef(() => UserModule),
+        forwardRef(() => SettingsModule),
         JwtModule.register({
             secret: process.env.PRIVATE_KEY || 'AWESOME SECRET',
             signOptions: {
