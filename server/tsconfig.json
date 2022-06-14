@@ -21,7 +21,8 @@
             "@shared/*": ["src/shared/*"],
             "@user/*": ["src/user/*"],
             "@auth/*": ["src/auth/*"],
-            "@settings/*": ["src/settings/*"]
+            "@settings/*": ["src/settings/*"],
+            "@token/*": ["src/token/*"]
         }
     }
 }

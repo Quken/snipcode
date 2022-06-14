@@ -15,6 +15,10 @@ export class UserService {
         return await this._userRepository.findOne({ email }).lean();
     }
 
+    public async getById(id: string): Promise<User> {
+        return await this._userRepository.findById(id);
+    }
+
     public async create(dto: RegistrationDTO): Promise<User> {
         const user = await this._userRepository.create(dto);
         if (user) {

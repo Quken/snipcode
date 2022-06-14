@@ -12,12 +12,13 @@ import { LoginDTO, RegistrationDTO } from '../controller/dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@user/models';
 import { EditorSettingsService } from '@settings/editor-settings-service';
+import { TokenService } from '@token/service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly _userService: UserService,
-        private readonly _jwtService: JwtService,
+        private readonly _tokenService: TokenService,
         private readonly _editorSettingsService: EditorSettingsService,
     ) {}
 
@@ -44,27 +45,15 @@ export class AuthService {
         );
     }
 
-    private async _generateTokens(
-        user: User,
-    ): Promise<{ accessToken: string; refreshToken: string }> {
-        const payload = { email: user.email, id: user.id };
-        return {
-            accessToken: this._jwtService.sign(payload, {
-                secret: process.env.ACCESS_TOKEN_SECRET,
-                expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
-            }),
-            refreshToken: this._jwtService.sign(payload, {
-                secret: process.env.REFRESH_TOKEN_SECRET,
-                expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
-            }),
-        };
-    }
-
     public async login(
         dto: LoginDTO,
     ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
         const user = await this._validateUser(dto);
-        const { accessToken, refreshToken } = await this._generateTokens(user);
+        const { accessToken, refreshToken } =
+            await this._tokenService.generateTokens({
+                email: user.email,
+                id: user.id,
+            });
         return {
             user,
             accessToken,
@@ -105,5 +94,28 @@ export class AuthService {
             accessToken,
             refreshToken,
         };
+    }
+
+    public async refresh(
+        refreshToken: string,
+    ): Promise<{ accessToken: string; refreshToken: string }> {
+        if (!refreshToken) {
+            throw new UnauthorizedException({
+                message: 'User is not authorized',
+            });
+        }
+        const data = await this._tokenService.validateRefreshToken(
+            refreshToken,
+        );
+        if (!data) {
+            throw new UnauthorizedException({
+                message: 'User is not authorized',
+            });
+        }
+        const user = await this._userService.getById(data.userId);
+        return await this._tokenService.generateTokens({
+            email: user.email,
+            id: user._id,
+        });
     }
 }

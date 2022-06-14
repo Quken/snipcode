@@ -6,10 +6,12 @@ import { UserModule } from '@user/user.module';
 import { AuthController } from './controller';
 import { AuthService } from './service';
 import { SettingsModule } from '@settings/settings.module';
+import { JWTAuthGuard } from './guard';
+import { TokenService } from '@token/service';
 
 @Module({
-    providers: [AuthService],
-    exports: [AuthService, JwtModule],
+    providers: [AuthService, JWTAuthGuard, TokenService],
+    exports: [AuthService, JwtModule, JWTAuthGuard],
     controllers: [AuthController],
     imports: [
         forwardRef(() => UserModule),

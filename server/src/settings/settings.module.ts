@@ -1,7 +1,6 @@
+import { AuthModule } from '@auth/auth.module';
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '@user/schemas';
-import { UserService } from '@user/user';
 import { UserModule } from '@user/user.module';
 import { SettingsController } from './controller';
 import { EditorSettingsService } from './editor-settings-service';
@@ -12,6 +11,7 @@ import { EditorSettings, EditorSettingsSchema } from './schemas';
     providers: [EditorSettingsService],
     exports: [EditorSettingsService, MongooseModule],
     imports: [
+        forwardRef(() => AuthModule),
         forwardRef(() => UserModule),
         MongooseModule.forFeature([
             { name: EditorSettings.name, schema: EditorSettingsSchema },
