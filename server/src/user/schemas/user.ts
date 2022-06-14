@@ -7,33 +7,42 @@ export class User {
 
     @Prop({
         required: true,
+        type: String,
     })
     email: string;
 
     @Prop({
         required: true,
+        type: String,
     })
     password: string;
 
     @Prop({
         required: true,
+        type: String,
     })
     name: string;
 
     @Prop({
         required: true,
+        type: String,
     })
     surname: string;
 
     @Prop({
         required: true,
+        type: String,
     })
     summary: string;
 
-    @Prop()
+    @Prop({
+        type: Number,
+    })
     age: number;
 
-    @Prop()
+    @Prop({
+        type: String,
+    })
     position: string;
 }
 
