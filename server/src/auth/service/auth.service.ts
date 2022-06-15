@@ -9,7 +9,6 @@ import {
 import { UserService } from '@user/user';
 import { LoginDTO, RegistrationDTO } from '../controller/dto';
 
-import { JwtService } from '@nestjs/jwt';
 import { User } from '@user/models';
 import { EditorSettingsService } from '@settings/editor-settings-service';
 import { TokenService } from '@token/service';
@@ -98,9 +97,13 @@ export class AuthService {
         };
     }
 
-    public async refresh(
-        refreshToken: string,
-    ): Promise<{ accessToken: string; refreshToken: string }> {
+    public async refresh(refreshToken: string): Promise<{
+        user: User;
+        tokens: {
+            accessToken: string;
+            refreshToken: string;
+        };
+    }> {
         if (!refreshToken) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',
@@ -115,9 +118,22 @@ export class AuthService {
             });
         }
         const user = await this._userService.getById(data.id);
-        return await this._tokenService.generateTokens({
+        const castedUser = {
+            id: data.id,
+            email: user.email,
+            name: user.name,
+            surname: user.surname,
+            summary: user.summary,
+            age: user.age,
+            position: user.position,
+        };
+        const tokens = await this._tokenService.generateTokens({
             email: user.email,
             id: user._id,
         });
+        return {
+            user: castedUser,
+            tokens,
+        };
     }
 }

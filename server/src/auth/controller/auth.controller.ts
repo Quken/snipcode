@@ -55,12 +55,13 @@ export class AuthController {
     ): Promise<void> {
         try {
             const { refreshToken } = request.cookies;
-            const tokens = await this._authService.refresh(refreshToken);
-            console.log(tokens);
+            const { user, tokens } = await this._authService.refresh(
+                refreshToken,
+            );
             response.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
             });
-            response.send({ accessToken: tokens.accessToken });
+            response.send({ user, accessToken: tokens.accessToken });
             return;
         } catch (e) {
             throw new UnauthorizedException({

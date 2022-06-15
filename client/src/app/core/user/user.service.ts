@@ -1,8 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@core/api';
 import { AUTH_CRYPTO_KEY, CryptoService } from '@core/crypto';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import {
     LoginDTO,
     LoginResponse,
@@ -31,97 +31,65 @@ export class UserService {
         new BehaviorSubject<User | null>(null);
     public user$: Observable<User | null> = this._userSubject.asObservable();
 
-    constructor(private readonly _cryptoService: CryptoService) {
+    constructor(
+        private readonly _cryptoService: CryptoService,
+        private readonly _httpClient: HttpClient
+    ) {
         const token = localStorage.getItem('token');
         if (token) {
-            this._verify(token);
+            this._verifyUser();
         }
     }
 
-    private _verify(token: string): void {
+    private _verifyUser(): void {
         const refreshUrl = `${ApiService.auth}/refresh`;
-        const response: RefreshResponse = {
-            user: { ...userMock },
-            accessToken: '12345',
-        };
-        localStorage.setItem('token', response.accessToken);
-        this._userSubject.next(response.user as User);
-    }
-
-    public login({ email, password }: LoginDTO): Observable<void> {
-        const url = `${ApiService.auth}/login`;
-        return new Observable((observer) => {
-            setTimeout(() => {
-                if (email === userMock.email && password === 'usermock') {
-                    const payload = {
-                        email,
-                        password: this._cryptoService.encrypt(
-                            password,
-                            AUTH_CRYPTO_KEY
-                        ),
-                    };
-                    const response: LoginResponse = {
-                        user: { ...userMock },
-                        accessToken: '12345',
-                    };
+        this._httpClient
+            .get<RefreshResponse>(refreshUrl, { withCredentials: true })
+            .subscribe({
+                next: (response: RefreshResponse) => {
                     localStorage.setItem('token', response.accessToken);
                     this._userSubject.next(response.user as User);
-                    observer.next();
-                    observer.complete();
-                }
-                observer.error(
-                    new Error(
-                        'Error during login. Please double-check your credentials or try again later.'
-                    )
-                );
-                observer.complete();
-            }, 4000);
-        });
+                },
+            });
+    }
+
+    public login(payload: LoginDTO): Observable<void> {
+        const url = `${ApiService.auth}/login`;
+        return this._httpClient.post<LoginResponse>(url, payload).pipe(
+            map((response: LoginResponse) => {
+                localStorage.setItem('token', response.accessToken);
+                this._userSubject.next(response.user as User);
+                return void 0;
+            })
+        );
     }
 
     public register(payload: RegistrationDTO): Observable<void> {
+        const encrypted = {
+            ...payload,
+            password: this._cryptoService.encrypt(
+                payload.password,
+                AUTH_CRYPTO_KEY
+            ),
+        };
         const url = `${ApiService.auth}/register`;
-        return new Observable((observer) => {
-            const encrypted = {
-                ...payload,
-                password: this._cryptoService.encrypt(
-                    payload.password,
-                    AUTH_CRYPTO_KEY
-                ),
-            };
-            setTimeout(() => {
-                if (payload.email === userMock.email + '1') {
-                    const error = new HttpErrorResponse({
-                        error: {
-                            message: `Oops. User with such email already exists`,
-                        },
-                        status: 409,
-                    });
-                    observer.error(error);
-                    return;
-                }
-                const response: RegistrationResponse = {
-                    user: { ...userMock },
-                    accessToken: '12345',
-                };
+        return this._httpClient.post<RegistrationResponse>(url, encrypted).pipe(
+            map((response: RegistrationResponse) => {
                 localStorage.setItem('token', response.accessToken);
                 this._userSubject.next(response.user as User);
-                observer.next();
-                observer.complete();
-            }, 4000);
-        });
+                return void 0;
+            })
+        );
     }
 
     public logout(): Observable<void> {
         const url = `${ApiService.auth}/logout`;
-        return new Observable((observer) => {
-            setTimeout(() => {
-                const response: LogoutResponse = {};
+        return this._httpClient.post<LogoutResponse>(url, null).pipe(
+            map(() => {
                 this._userSubject.next(null);
                 localStorage.removeItem('token');
-                observer.next();
-                observer.complete();
-            }, 4000);
-        });
+                return void 0;
+            })
+        );
     }
 }

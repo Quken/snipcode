@@ -2,12 +2,14 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    OnDestroy,
     OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isControlInvalid } from '@core/form';
 import { MaskService } from '@core/mask';
+import { first, pipe, Subscription, take } from 'rxjs';
 import { UserService } from '../user.service';
 
 @Component({
@@ -16,8 +18,9 @@ import { UserService } from '../user.service';
     styleUrls: ['./login.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     private _returnUrl!: string;
+    private _loginSubscription!: Subscription;
 
     public formGroup!: FormGroup;
     public isControlInvalid = isControlInvalid;
@@ -45,23 +48,30 @@ export class LoginComponent implements OnInit {
         this._maskService.show();
         this.logging = true;
         const { email, password } = this.formGroup.value;
-        this._userService.login({ email, password }).subscribe({
-            next: () => {
-                this._maskService.hide();
-                this.logging = false;
-                this._router.navigate([this._returnUrl]);
-                this._cdr.detectChanges();
-            },
-            error: (e) => {
-                this._maskService.hide();
-                this.loginError = e?.message || 'Oops. Error during login';
-                this.logging = false;
-                this._cdr.detectChanges();
-            },
-        });
+        this._loginSubscription?.unsubscribe();
+        this._loginSubscription = this._userService
+            .login({ email, password })
+            .subscribe({
+                next: () => {
+                    this._maskService.hide();
+                    this.logging = false;
+                    this._router.navigate([this._returnUrl]);
+                    this._cdr.detectChanges();
+                },
+                error: (e) => {
+                    this._maskService.hide();
+                    this.loginError = e?.message || 'Oops. Error during login';
+                    this.logging = false;
+                    this._cdr.detectChanges();
+                },
+            });
     }
 
     public onRegister(): void {
         this._router.navigate(['/register']);
+    }
+
+    public ngOnDestroy(): void {
+        this._loginSubscription.unsubscribe();
     }
 }

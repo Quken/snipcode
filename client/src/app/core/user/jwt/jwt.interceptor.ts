@@ -35,6 +35,9 @@ export class JwtInterceptor implements HttpInterceptor {
                 return request;
             }),
             switchMap((request) => {
+                if (request.url.includes('auth/login')) {
+                    return next.handle(request);
+                }
                 return next.handle(request).pipe(
                     catchError((e) => {
                         if (
@@ -48,7 +51,11 @@ export class JwtInterceptor implements HttpInterceptor {
                                     switchMap((response) => {
                                         localStorage.setItem(
                                             'token',
-                                            (response as any)['accessToken']
+                                            (
+                                                response as {
+                                                    accessToken: string;
+                                                }
+                                            ).accessToken
                                         );
                                         return next.handle(request);
                                     })
