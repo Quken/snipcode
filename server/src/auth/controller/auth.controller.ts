@@ -68,4 +68,25 @@ export class AuthController {
             });
         }
     }
+
+    @Post('logout')
+    public async logout(
+        @Req() request: Request,
+        @Res() response: Response,
+    ): Promise<void> {
+        try {
+            const { refreshToken } = request.cookies;
+            if (!refreshToken) {
+                throw new UnauthorizedException({
+                    message: 'User is not authorized',
+                });
+            }
+            response.clearCookie('refreshToken');
+            response.sendStatus(204);
+        } catch (e) {
+            throw new UnauthorizedException({
+                message: 'User is not authorized',
+            });
+        }
+    }
 }
