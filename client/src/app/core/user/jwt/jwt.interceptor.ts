@@ -22,6 +22,9 @@ export class JwtInterceptor implements HttpInterceptor {
         request: HttpRequest<unknown>,
         next: HttpHandler
     ): Observable<HttpEvent<unknown>> {
+        if (request.url.includes('auth/login')) {
+            return next.handle(request);
+        }
         return this._userService.user$.pipe(
             map((user: User | null) => {
                 const token = localStorage.getItem('token');
@@ -35,9 +38,6 @@ export class JwtInterceptor implements HttpInterceptor {
                 return request;
             }),
             switchMap((request) => {
-                if (request.url.includes('auth/login')) {
-                    return next.handle(request);
-                }
                 return next.handle(request).pipe(
                     catchError((e) => {
                         if (

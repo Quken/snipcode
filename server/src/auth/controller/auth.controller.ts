@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import {
     Body,
     Controller,
@@ -6,6 +8,9 @@ import {
     Res,
     Req,
     UnauthorizedException,
+    HttpStatus,
+    HttpCode,
+    Header,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -26,34 +31,36 @@ export class AuthController {
     public async login(
         @Body() dto: LoginDTO,
         @Res({ passthrough: true }) response: Response,
-    ): Promise<void> {
+    ): Promise<any> {
         const { user, accessToken, refreshToken } =
             await this._authService.login(dto);
-        response.cookie('refreshToken', refreshToken, { httpOnly: true });
+        response.cookie('refreshToken', refreshToken, {
+            maxAge: Date.now() + 90000,
+            httpOnly: true,
+        });
         response.send({ user, accessToken });
-        return;
     }
 
     @Post('registration')
     public async registration(
         @Body() dto: RegistrationDTO,
         @Res({ passthrough: true }) response: Response,
-    ): Promise<RegistrationResponse> {
+    ): Promise<void> {
         const { user, accessToken, refreshToken } =
             await this._authService.register(dto);
         response.cookie('refreshToken', refreshToken, {
             httpOnly: true,
         });
         response.send({ user, accessToken });
-        return;
     }
 
     @Get('refresh')
     public async refresh(
         @Req() request: Request,
-        @Res() response: Response,
+        @Res({ passthrough: true }) response: Response,
     ): Promise<void> {
         try {
+            console.log(request.cookies);
             const { refreshToken } = request.cookies;
             const { user, tokens } = await this._authService.refresh(
                 refreshToken,
@@ -62,7 +69,6 @@ export class AuthController {
                 httpOnly: true,
             });
             response.send({ user, accessToken: tokens.accessToken });
-            return;
         } catch (e) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',
@@ -71,9 +77,10 @@ export class AuthController {
     }
 
     @Post('logout')
+    @HttpCode(204)
     public async logout(
         @Req() request: Request,
-        @Res() response: Response,
+        @Res({ passthrough: true }) response: Response,
     ): Promise<void> {
         try {
             const { refreshToken } = request.cookies;
@@ -83,7 +90,6 @@ export class AuthController {
                 });
             }
             response.clearCookie('refreshToken');
-            response.sendStatus(204);
         } catch (e) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',

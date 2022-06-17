@@ -50,18 +50,23 @@ export class UserService {
                     localStorage.setItem('token', response.accessToken);
                     this._userSubject.next(response.user as User);
                 },
+                error: (e) => {
+                    console.log(e);
+                },
             });
     }
 
     public login(payload: LoginDTO): Observable<void> {
         const url = `${ApiService.auth}/login`;
-        return this._httpClient.post<LoginResponse>(url, payload).pipe(
-            map((response: LoginResponse) => {
-                localStorage.setItem('token', response.accessToken);
-                this._userSubject.next(response.user as User);
-                return void 0;
-            })
-        );
+        return this._httpClient
+            .post<LoginResponse>(url, payload, { withCredentials: true })
+            .pipe(
+                map((response: LoginResponse) => {
+                    localStorage.setItem('token', response.accessToken);
+                    this._userSubject.next(response.user as User);
+                    return void 0;
+                })
+            );
     }
 
     public register(payload: RegistrationDTO): Observable<void> {
@@ -84,12 +89,16 @@ export class UserService {
 
     public logout(): Observable<void> {
         const url = `${ApiService.auth}/logout`;
-        return this._httpClient.post<LogoutResponse>(url, null).pipe(
-            map(() => {
-                this._userSubject.next(null);
-                localStorage.removeItem('token');
-                return void 0;
+        return this._httpClient
+            .post<LogoutResponse>(url, null, {
+                withCredentials: true,
             })
-        );
+            .pipe(
+                map(() => {
+                    this._userSubject.next(null);
+                    localStorage.removeItem('token');
+                    return void 0;
+                })
+            );
     }
 }
