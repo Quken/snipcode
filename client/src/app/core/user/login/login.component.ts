@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isControlInvalid } from '@core/form';
 import { MaskService } from '@core/mask';
-import { first, pipe, Subscription, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserService } from '../user.service';
 
 @Component({
@@ -72,6 +72,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this._loginSubscription.unsubscribe();
+        this._loginSubscription?.unsubscribe();
     }
 }

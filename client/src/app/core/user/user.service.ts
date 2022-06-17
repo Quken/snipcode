@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@core/api';
-import { AUTH_CRYPTO_KEY, CryptoService } from '@core/crypto';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { CryptoService } from '@core/crypto';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import {
     LoginDTO,
     LoginResponse,
@@ -12,16 +12,6 @@ import {
     RegistrationResponse,
     User,
 } from './models';
-
-const userMock = new User({
-    id: '1',
-    email: 'login@email.com',
-    name: 'John',
-    surname: 'Doe',
-    age: 29,
-    position: 'Software Engineer',
-    summary: 'Hi Im software engineer',
-});
 
 @Injectable({
     providedIn: 'root',
@@ -58,8 +48,12 @@ export class UserService {
 
     public login(payload: LoginDTO): Observable<void> {
         const url = `${ApiService.auth}/login`;
+        const hashed = {
+            ...payload,
+            password: this._cryptoService.hash(payload.password),
+        };
         return this._httpClient
-            .post<LoginResponse>(url, payload, { withCredentials: true })
+            .post<LoginResponse>(url, hashed, { withCredentials: true })
             .pipe(
                 map((response: LoginResponse) => {
                     localStorage.setItem('token', response.accessToken);
@@ -70,21 +64,22 @@ export class UserService {
     }
 
     public register(payload: RegistrationDTO): Observable<void> {
-        const encrypted = {
+        const hashed = {
             ...payload,
-            password: this._cryptoService.encrypt(
-                payload.password,
-                AUTH_CRYPTO_KEY
-            ),
+            password: this._cryptoService.hash(payload.password),
         };
         const url = `${ApiService.auth}/register`;
-        return this._httpClient.post<RegistrationResponse>(url, encrypted).pipe(
-            map((response: RegistrationResponse) => {
-                localStorage.setItem('token', response.accessToken);
-                this._userSubject.next(response.user as User);
-                return void 0;
+        return this._httpClient
+            .post<RegistrationResponse>(url, hashed, {
+                withCredentials: true,
             })
-        );
+            .pipe(
+                map((response: RegistrationResponse) => {
+                    localStorage.setItem('token', response.accessToken);
+                    this._userSubject.next(response.user as User);
+                    return void 0;
+                })
+            );
     }
 
     public logout(): Observable<void> {

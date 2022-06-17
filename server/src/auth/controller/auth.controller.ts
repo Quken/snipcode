@@ -8,9 +8,7 @@ import {
     Res,
     Req,
     UnauthorizedException,
-    HttpStatus,
     HttpCode,
-    Header,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -38,20 +36,23 @@ export class AuthController {
             maxAge: Date.now() + 90000,
             httpOnly: true,
         });
-        response.send({ user, accessToken });
+        const payload: LoginResponse = { user, accessToken };
+        response.send(payload);
     }
 
-    @Post('registration')
-    public async registration(
+    @Post('register')
+    public async register(
         @Body() dto: RegistrationDTO,
         @Res({ passthrough: true }) response: Response,
     ): Promise<void> {
         const { user, accessToken, refreshToken } =
             await this._authService.register(dto);
         response.cookie('refreshToken', refreshToken, {
+            maxAge: Date.now() + 90000,
             httpOnly: true,
         });
-        response.send({ user, accessToken });
+        const payload: RegistrationResponse = { user, accessToken };
+        response.send(payload);
     }
 
     @Get('refresh')
@@ -60,7 +61,6 @@ export class AuthController {
         @Res({ passthrough: true }) response: Response,
     ): Promise<void> {
         try {
-            console.log(request.cookies);
             const { refreshToken } = request.cookies;
             const { user, tokens } = await this._authService.refresh(
                 refreshToken,
@@ -68,7 +68,11 @@ export class AuthController {
             response.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
             });
-            response.send({ user, accessToken: tokens.accessToken });
+            const payload: RefreshResponse = {
+                user,
+                accessToken: tokens.accessToken,
+            };
+            response.send(payload);
         } catch (e) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',

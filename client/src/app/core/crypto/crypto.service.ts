@@ -12,4 +12,8 @@ export class CryptoService {
     public decrypt(message: string, key: string): string {
         return CryptoJS.AES.decrypt(message, key).toString();
     }
+
+    public hash(message: string): string {
+        return CryptoJS.SHA1(message).toString();
+    }
 }
