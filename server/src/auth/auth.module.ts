@@ -11,7 +11,7 @@ import { TokenService } from '@token/service';
 
 @Module({
     providers: [AuthService, JWTAuthGuard, TokenService],
-    exports: [AuthService, JwtModule, JWTAuthGuard],
+    exports: [AuthService, JwtModule, JWTAuthGuard, TokenService],
     controllers: [AuthController],
     imports: [
         forwardRef(() => UserModule),

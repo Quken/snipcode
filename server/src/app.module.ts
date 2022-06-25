@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
 import { SettingsModule } from './settings/settings.module';
+import { SnippetModule } from './snippet/snippet.module';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { SettingsModule } from './settings/settings.module';
         UserModule,
         SharedModule,
         SettingsModule,
+        SnippetModule,
     ],
     controllers: [AppController],
     providers: [AppService],

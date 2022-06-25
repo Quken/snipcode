@@ -7,10 +7,6 @@ export class ApiService {
         return `${this.baseUrl}/auth`;
     }
 
-    public static get snippets(): string {
-        return `${this.baseUrl}/snippets`;
-    }
-
     public static get snippet(): string {
         return `${this.baseUrl}/snippet`;
     }

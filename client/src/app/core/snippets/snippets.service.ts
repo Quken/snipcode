@@ -9,6 +9,7 @@ import {
     of,
     shareReplay,
     switchMap,
+    tap,
     take,
 } from 'rxjs';
 import { CreateSnippetDTO, DateUTC, Snippet, UpdateSnippetDTO } from './models';
@@ -132,23 +133,29 @@ export class SnippetsService {
     ) {}
 
     public getByUserId(userId: GUID): Observable<Snippet[]> {
-        const url = `${ApiService.snippets}/userid/${userId}`;
-        return this.userSnippets$.pipe(
-            map((userSnippets: Snippet[] | null) => {
-                if (!userSnippets) {
-                    const userSnippetsMock = snippetsMock.filter(
-                        (s) => s.createdBy.id === userId
+        return this.allSnippets$.pipe(
+            switchMap((snippets) => {
+                if (snippets?.length) {
+                    return of(
+                        snippets.filter((s) => s.createdBy.id === userId)
                     );
-                    this._userSnippetsSubject.next(userSnippetsMock);
-                    return userSnippetsMock;
                 }
-                return userSnippets;
+                const url = `${ApiService.snippet}/userid/${userId}`;
+                return this._httpClient
+                    .get<Snippet[]>(url, {
+                        withCredentials: true,
+                    })
+                    .pipe(
+                        tap((snippets: Snippet[]) =>
+                            this._userSnippetsSubject.next(snippets)
+                        )
+                    );
             })
         );
     }
 
     public getAll(): Observable<Snippet[]> {
-        const url = `${ApiService.snippets}`;
+        const url = `${ApiService.snippet}`;
         return this.allSnippets$.pipe(
             map((allSnippets: Snippet[] | null) => {
                 if (!allSnippets) {
@@ -161,32 +168,31 @@ export class SnippetsService {
     }
 
     public create(
-        snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdBy'>
+        snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdByUserId'>
     ): Observable<void> {
-        const url = ApiService.snippets;
+        const url = ApiService.snippet;
         const create$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {
                 const snippetDTO: CreateSnippetDTO = {
                     ...snippet,
-                    createdAt: <DateUTC>new Date().toUTCString(),
-                    createdBy: user,
+                    createdByUserId: user.id,
                 };
-                const body = { snippet: snippetDTO, user };
-                console.log(body);
-                // TODO: return created snippet from server and use here
-                const responseSnippet: Snippet = snippetDTO as Snippet;
-                const createdSnippet = new Snippet({
-                    id: '1234567',
-                    createdAt: responseSnippet.createdAt,
-                    createdBy: responseSnippet.createdBy,
-                    name: responseSnippet.name,
-                    srcRaw: responseSnippet.srcRaw,
-                    language: responseSnippet.language,
-                    extension: responseSnippet.extension,
-                    likedBy: [],
+                return this._httpClient.post<Snippet>(url, snippetDTO, {
+                    withCredentials: true,
                 });
-                return of(createdSnippet);
+                // TODO: return created snippet from server and use here
+                // const responseSnippet: Snippet = snippetDTO as Snippet;
+                // const createdSnippet = new Snippet({
+                //     id: '1234567',
+                //     createdAt: responseSnippet.createdAt,
+                //     createdBy: responseSnippet.createdBy,
+                //     name: responseSnippet.name,
+                //     srcRaw: responseSnippet.srcRaw,
+                //     language: responseSnippet.language,
+                //     extension: responseSnippet.extension,
+                //     likedBy: [],
+                // });
             }),
             shareReplay(1)
         );
@@ -210,7 +216,7 @@ export class SnippetsService {
     }
 
     public update(snippet: UpdateSnippetDTO): Observable<void> {
-        const url = `${ApiService.snippets}/${snippet.id}`;
+        const url = `${ApiService.snippet}/${snippet.id}`;
         const update$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {

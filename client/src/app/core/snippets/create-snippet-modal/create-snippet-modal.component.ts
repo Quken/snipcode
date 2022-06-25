@@ -138,12 +138,13 @@ export class CreateSnippetModalComponent
     public onSubmit(): void {
         this._maskService.show();
         const language = <SnippetLanguage>this.selectedLanguage;
-        const snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdBy'> = {
-            srcRaw: this._code,
-            language,
-            extension: SnippetExtensionsEnum[language],
-            name: this.formGroup.controls['name'].value,
-        };
+        const snippet: Omit<CreateSnippetDTO, 'createdAt' | 'createdByUserId'> =
+            {
+                srcRaw: this._code,
+                language,
+                extension: SnippetExtensionsEnum[language],
+                name: this.formGroup.controls['name'].value,
+            };
         this._snippetsService.create(snippet).subscribe({
             next: () => {
                 this._maskService.hide();

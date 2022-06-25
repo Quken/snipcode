@@ -43,16 +43,24 @@
                         Create a new one
                     </button>
                 </div>
-                <app-snippets-list
-                    *ngIf="snippets?.length"
-                    [snippets]="snippets"
-                    [readOnlySnippets]="false"
-                    [showAuthor]="false"
-                    [classes]="
-                        'col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12'
-                    "
-                ></app-snippets-list>
+                <ng-container *ngIf="snippets.length; else emptyList">
+                    <app-snippets-list
+                        *ngIf="snippets?.length"
+                        [snippets]="snippets"
+                        [readOnlySnippets]="false"
+                        [showAuthor]="false"
+                        [classes]="
+                            'col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12'
+                        "
+                    ></app-snippets-list>
+                </ng-container>
             </ng-container>
         </div>
     </div>
 </div>
+
+<ng-template #emptyList>
+    <div class="empty-list">
+        <h2 class="container">There are no snippets</h2>
+    </div>
+</ng-template>

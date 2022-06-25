@@ -18,7 +18,6 @@ export class EditorSettings {
     @Prop({
         required: true,
         enum: EditorThemes,
-        // type: EditorThemes,
     })
     theme: EditorThemes;
 
@@ -31,7 +30,6 @@ export class EditorSettings {
     @Prop({
         required: true,
         enum: EditorFontFamilies,
-        // type: EditorFontFamilies,
     })
     fontFamily: EditorFontFamilies;
 }

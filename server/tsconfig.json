@@ -22,7 +22,8 @@
             "@user/*": ["src/user/*"],
             "@auth/*": ["src/auth/*"],
             "@settings/*": ["src/settings/*"],
-            "@token/*": ["src/token/*"]
+            "@token/*": ["src/token/*"],
+            "@snippet/*": ["src/snippet/*"]
         }
     }
 }

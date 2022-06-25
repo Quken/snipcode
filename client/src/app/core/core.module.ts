@@ -27,11 +27,11 @@ import { MouseHoverModule } from './mouse-hover';
         MouseHoverModule,
     ],
     providers: [
-        // {
-        //     provide: HTTP_INTERCEPTORS,
-        //     multi: true,
-        //     useClass: JwtInterceptor,
-        // },
+        {
+            provide: HTTP_INTERCEPTORS,
+            multi: true,
+            useClass: JwtInterceptor,
+        },
     ],
 })
 export class CoreModule {}

@@ -32,4 +32,17 @@ export class TokenService {
             return null;
         }
     }
+
+    public async validateAccessToken(token: string): Promise<object> {
+        try {
+            const data = await this._jwtService.verify(token, {
+                secret: process.env.ACCESS_TOKEN_SECRET,
+            });
+            if (data) {
+                return data;
+            }
+        } catch (e) {
+            return null;
+        }
+    }
 }
