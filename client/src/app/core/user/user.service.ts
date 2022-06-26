@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiService } from '@core/api';
 import { CryptoService } from '@core/crypto';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import {
     LoginDTO,
     LoginResponse,
@@ -24,26 +24,17 @@ export class UserService {
     constructor(
         private readonly _cryptoService: CryptoService,
         private readonly _httpClient: HttpClient
-    ) {
-        const token = localStorage.getItem('token');
-        if (token) {
-            this._verifyUser();
-        }
-    }
+    ) {}
 
-    private _verifyUser(): void {
-        const refreshUrl = `${ApiService.auth}/refresh`;
-        this._httpClient
-            .get<RefreshResponse>(refreshUrl, { withCredentials: true })
-            .subscribe({
-                next: (response: RefreshResponse) => {
-                    localStorage.setItem('token', response.accessToken);
-                    this._userSubject.next(response.user as User);
-                },
-                error: (e) => {
-                    console.log(e);
-                },
-            });
+    public verifyUser(): void {
+        this.refresh().subscribe({
+            next: (response: RefreshResponse) => {
+                this._userSubject.next(response.user as User);
+            },
+            error: (e) => {
+                console.log(e);
+            },
+        });
     }
 
     public login(payload: LoginDTO): Observable<void> {
@@ -93,6 +84,19 @@ export class UserService {
                     this._userSubject.next(null);
                     localStorage.removeItem('token');
                     return void 0;
+                })
+            );
+    }
+
+    public refresh(): Observable<RefreshResponse> {
+        const refreshUrl = `${ApiService.auth}/refresh`;
+        return this._httpClient
+            .get<RefreshResponse>(refreshUrl, {
+                withCredentials: true,
+            })
+            .pipe(
+                tap((response: RefreshResponse) => {
+                    localStorage.setItem('token', response.accessToken);
                 })
             );
     }

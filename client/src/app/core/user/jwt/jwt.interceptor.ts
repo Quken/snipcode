@@ -4,7 +4,6 @@ import {
     HttpHandler,
     HttpEvent,
     HttpInterceptor,
-    HttpClient,
 } from '@angular/common/http';
 import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 import { UserService } from '../user.service';
@@ -13,27 +12,34 @@ import { ApiService } from '@core/api';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(
-        private readonly _userService: UserService,
-        private readonly _httpClient: HttpClient
-    ) {}
+    constructor(private readonly _userService: UserService) {}
+
+    private _setToken(request: HttpRequest<unknown>): HttpRequest<unknown> {
+        const token = localStorage.getItem('token');
+        if (token) {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        }
+        return request;
+    }
 
     public intercept(
         request: HttpRequest<unknown>,
         next: HttpHandler
     ): Observable<HttpEvent<unknown>> {
-        if (request.url.includes('auth/login')) {
+        if (
+            request.url.includes('auth/login') ||
+            request.url.includes('auth/refresh')
+        ) {
             return next.handle(request);
         }
         return this._userService.user$.pipe(
             map((user: User | null) => {
-                const token = localStorage.getItem('token');
-                if (user && token) {
-                    request = request.clone({
-                        setHeaders: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
+                if (user) {
+                    return this._setToken(request);
                 }
                 return request;
             }),
@@ -44,22 +50,12 @@ export class JwtInterceptor implements HttpInterceptor {
                             e.status === 401 &&
                             request.headers.get('Authorization')
                         ) {
-                            const refreshUrl = `${ApiService.auth}/refresh`;
-                            return this._httpClient
-                                .get(refreshUrl, { withCredentials: true })
-                                .pipe(
-                                    switchMap((response) => {
-                                        localStorage.setItem(
-                                            'token',
-                                            (
-                                                response as {
-                                                    accessToken: string;
-                                                }
-                                            ).accessToken
-                                        );
-                                        return next.handle(request);
-                                    })
-                                );
+                            return this._userService.refresh().pipe(
+                                switchMap(() => {
+                                    request = this._setToken(request);
+                                    return next.handle(request);
+                                })
+                            );
                         }
                         return throwError(() => e);
                     })

@@ -59,7 +59,8 @@ export class AuthController {
     public async refresh(
         @Req() request: Request,
         @Res({ passthrough: true }) response: Response,
-    ): Promise<void> {
+    ) {
+        let payload: RefreshResponse;
         try {
             const { refreshToken } = request.cookies;
             const { user, tokens } = await this._authService.refresh(
@@ -68,11 +69,11 @@ export class AuthController {
             response.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
             });
-            const payload: RefreshResponse = {
+            payload = {
                 user,
                 accessToken: tokens.accessToken,
             };
-            response.send(payload);
+            return payload;
         } catch (e) {
             throw new UnauthorizedException({
                 message: 'User is not authorized',
