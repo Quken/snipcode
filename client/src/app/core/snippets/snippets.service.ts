@@ -153,8 +153,7 @@ export class SnippetsService {
                         }),
                         tap((snippets: Snippet[]) =>
                             this._userSnippetsSubject.next(snippets)
-                        ),
-                        tap(console.log)
+                        )
                     );
             })
         );
@@ -184,9 +183,11 @@ export class SnippetsService {
                     ...snippet,
                     createdByUserId: user.id,
                 };
-                return this._httpClient.post<Snippet>(url, snippetDTO, {
-                    withCredentials: true,
-                });
+                return this._httpClient
+                    .post<Snippet>(url, snippetDTO, {
+                        withCredentials: true,
+                    })
+                    .pipe(map((response) => new Snippet(response)));
             }),
             shareReplay(1)
         );
@@ -221,14 +222,11 @@ export class SnippetsService {
                 if (!snippet?.likedBy?.length) {
                     snippetDTO.modifiedAt = <DateUTC>new Date().toUTCString();
                 }
-                // const body = { snippet: snippetDTO, user };
-                // console.log(body);
-
-                return this._httpClient.post<Snippet>(url, snippetDTO, {
-                    withCredentials: true,
-                });
-                // http here
-                // TODO: return updated snippet from server and use here
+                return this._httpClient
+                    .post<Snippet>(url, snippetDTO, {
+                        withCredentials: true,
+                    })
+                    .pipe(map((response) => new Snippet(response)));
             }),
             shareReplay(1)
         );

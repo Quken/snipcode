@@ -16,7 +16,7 @@ import { Request, Response } from 'express';
 import { SnippetService } from '../snippet';
 import { CreateSnippetDTO, UpdateSnippetDTO } from './dto';
 import { LikedBy, Snippet } from './model';
-import { CreateSnippetResponse } from './response';
+import { CreateSnippetResponse, UpdateSnippetResponse } from './response';
 
 @Controller('snippet')
 @UseGuards(JWTAuthGuard)
@@ -81,13 +81,15 @@ export class SnippetController {
         @Res() response: Response,
     ): Promise<void> {
         const snippet = await this._snippetService.create(dto);
-        const createdBy = await this._userService.getById(dto.createdByUserId);
+        const { _id, ...createdBy } = await this._userService.getById(
+            dto.createdByUserId,
+        );
         const payload: CreateSnippetResponse = {
             id: snippet._id,
             createdAt: snippet.createdAt,
             createdBy: {
                 ...createdBy,
-                id: createdBy._id,
+                id: _id,
             },
             name: snippet.name,
             srcRaw: snippet.srcRaw,
@@ -116,13 +118,22 @@ export class SnippetController {
                 };
             }),
         );
-        const payload: UpdateSnippetDTO = {
+        const { _id, ...createdBy } = await this._userService.getById(
+            snippet.createdByUserId.toString(),
+        );
+        const payload: UpdateSnippetResponse = {
             id: snippet._id,
             likedBy,
             name: snippet.name,
             srcRaw: snippet.srcRaw,
             modifiedAt: snippet.modifiedAt,
-            userId: dto.userId,
+            createdAt: snippet.createdAt,
+            createdBy: {
+                ...createdBy,
+                id: _id,
+            },
+            language: snippet.language,
+            extension: snippet.extension,
         };
         response.send(payload);
     }
