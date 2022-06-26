@@ -41,19 +41,29 @@ export class SnippetService {
         dto: UpdateSnippetDTO,
         snippetId: GUID,
     ): Promise<Snippet> {
-        const snippet = this._snippetRepository.findOne({ _id: snippetId });
+        if (snippetId !== dto.id) {
+            throw new BadRequestException();
+        }
+        const snippet = await this._snippetRepository.findOne({
+            _id: dto.id,
+        });
         if ((await snippet).createdByUserId.toString() !== dto.userId) {
             throw new BadRequestException();
         }
         const update = {
             name: dto.name,
             srcRaw: dto.srcRaw,
-            likedByUserIds: dto.likedBy.map(({ id }) => id),
+            likedByUserIds: dto?.likedBy?.map(({ id }) => id),
             modifiedAt: dto.modifiedAt,
         };
-        await snippet.update(update);
-        (await snippet).save();
-        console.log(snippet);
-        return snippet;
+        try {
+            await snippet.update(update);
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
+        // (await snippet).save();
+        // console.log(snippet);
+        return await this._snippetRepository.findById({ _id: snippetId });
     }
 }

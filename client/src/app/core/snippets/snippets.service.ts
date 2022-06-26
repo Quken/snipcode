@@ -146,9 +146,15 @@ export class SnippetsService {
                         withCredentials: true,
                     })
                     .pipe(
+                        map((response) => {
+                            return response.map((item) => {
+                                return new Snippet(item);
+                            });
+                        }),
                         tap((snippets: Snippet[]) =>
                             this._userSnippetsSubject.next(snippets)
-                        )
+                        ),
+                        tap(console.log)
                     );
             })
         );
