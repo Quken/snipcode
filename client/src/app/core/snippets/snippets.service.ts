@@ -146,6 +146,11 @@ export class SnippetsService {
                         withCredentials: true,
                     })
                     .pipe(
+                        map((response) => {
+                            return response.map((item) => {
+                                return new Snippet(item);
+                            });
+                        }),
                         tap((snippets: Snippet[]) =>
                             this._userSnippetsSubject.next(snippets)
                         )
@@ -178,21 +183,11 @@ export class SnippetsService {
                     ...snippet,
                     createdByUserId: user.id,
                 };
-                return this._httpClient.post<Snippet>(url, snippetDTO, {
-                    withCredentials: true,
-                });
-                // TODO: return created snippet from server and use here
-                // const responseSnippet: Snippet = snippetDTO as Snippet;
-                // const createdSnippet = new Snippet({
-                //     id: '1234567',
-                //     createdAt: responseSnippet.createdAt,
-                //     createdBy: responseSnippet.createdBy,
-                //     name: responseSnippet.name,
-                //     srcRaw: responseSnippet.srcRaw,
-                //     language: responseSnippet.language,
-                //     extension: responseSnippet.extension,
-                //     likedBy: [],
-                // });
+                return this._httpClient
+                    .post<Snippet>(url, snippetDTO, {
+                        withCredentials: true,
+                    })
+                    .pipe(map((response) => new Snippet(response)));
             }),
             shareReplay(1)
         );
@@ -215,22 +210,23 @@ export class SnippetsService {
         return create$.pipe(map(() => void 0));
     }
 
-    public update(snippet: UpdateSnippetDTO): Observable<void> {
+    public update(snippet: Omit<UpdateSnippetDTO, 'userId'>): Observable<void> {
         const url = `${ApiService.snippet}/${snippet.id}`;
         const update$ = this._userService.user$.pipe(
             filter(Boolean),
             switchMap((user: User) => {
                 const snippetDTO: UpdateSnippetDTO = {
                     ...snippet,
+                    userId: user.id,
                 };
                 if (!snippet?.likedBy?.length) {
                     snippetDTO.modifiedAt = <DateUTC>new Date().toUTCString();
                 }
-                const body = { snippet: snippetDTO, user };
-                console.log(body);
-                // http here
-                // TODO: return updated snippet from server and use here
-                return of(snippetDTO as Snippet);
+                return this._httpClient
+                    .post<Snippet>(url, snippetDTO, {
+                        withCredentials: true,
+                    })
+                    .pipe(map((response) => new Snippet(response)));
             }),
             shareReplay(1)
         );

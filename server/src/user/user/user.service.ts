@@ -15,8 +15,16 @@ export class UserService {
         return await this._userRepository.findOne({ email }).lean();
     }
 
-    public async getById(id: string): Promise<User> {
-        return await this._userRepository.findById(id);
+    public async getById(
+        id: string,
+        omitPassword = true,
+    ): Promise<Omit<User, 'password'>> {
+        const user = await this._userRepository.findById(id).lean();
+        if (omitPassword) {
+            const { password, ...rest } = user;
+            return rest;
+        }
+        return user;
     }
 
     public async create(dto: RegistrationDTO): Promise<User> {

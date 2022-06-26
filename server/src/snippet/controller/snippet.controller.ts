@@ -14,9 +14,9 @@ import {
 import { UserService } from '@user/user';
 import { Request, Response } from 'express';
 import { SnippetService } from '../snippet';
-import { CreateSnippetDTO } from './dto';
+import { CreateSnippetDTO, UpdateSnippetDTO } from './dto';
 import { LikedBy, Snippet } from './model';
-import { CreateSnippetResponse } from './response';
+import { CreateSnippetResponse, UpdateSnippetResponse } from './response';
 
 @Controller('snippet')
 @UseGuards(JWTAuthGuard)
@@ -27,7 +27,10 @@ export class SnippetController {
     ) {}
 
     @Get('userid/:id')
-    public async snippetsByUserId(@Param() params, @Res() response: Response) {
+    public async snippetsByUserId(
+        @Param() params,
+        @Res() response: Response,
+    ): Promise<void> {
         const data = await this._snippetService.getByUserId(params.id);
         let body = [];
         if (data?.length) {
@@ -78,19 +81,59 @@ export class SnippetController {
         @Res() response: Response,
     ): Promise<void> {
         const snippet = await this._snippetService.create(dto);
-        const createdBy = await this._userService.getById(dto.createdByUserId);
+        const { _id, ...createdBy } = await this._userService.getById(
+            dto.createdByUserId,
+        );
         const payload: CreateSnippetResponse = {
             id: snippet._id,
             createdAt: snippet.createdAt,
             createdBy: {
                 ...createdBy,
-                id: createdBy._id,
+                id: _id,
             },
             name: snippet.name,
             srcRaw: snippet.srcRaw,
             language: snippet.language,
             extension: snippet.extension,
             likedBy: [],
+        };
+        response.send(payload);
+    }
+
+    @Post(':id')
+    @HttpCode(HttpStatus.OK)
+    public async update(
+        @Param() params,
+        @Body() dto: UpdateSnippetDTO,
+        @Res() response: Response,
+    ): Promise<void> {
+        const snippet = await this._snippetService.update(dto, params.id);
+        const likedBy = await Promise.all(
+            snippet.likedByUserIds.map(async (id): Promise<LikedBy> => {
+                const user = await this._userService.getById(id);
+                return {
+                    id: user._id,
+                    name: user.name,
+                    surname: user.surname,
+                };
+            }),
+        );
+        const { _id, ...createdBy } = await this._userService.getById(
+            snippet.createdByUserId.toString(),
+        );
+        const payload: UpdateSnippetResponse = {
+            id: snippet._id,
+            likedBy,
+            name: snippet.name,
+            srcRaw: snippet.srcRaw,
+            modifiedAt: snippet.modifiedAt,
+            createdAt: snippet.createdAt,
+            createdBy: {
+                ...createdBy,
+                id: _id,
+            },
+            language: snippet.language,
+            extension: snippet.extension,
         };
         response.send(payload);
     }

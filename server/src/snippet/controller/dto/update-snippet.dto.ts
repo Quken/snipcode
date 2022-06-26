@@ -1,5 +1,5 @@
 import { GUID } from '@shared/models';
-import { LikedBy } from '../liked-by.model';
+import { LikedBy } from '../model';
 
 export interface UpdateSnippetDTO {
     id: GUID;

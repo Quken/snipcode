@@ -79,6 +79,7 @@ export class TrendingComponent implements OnInit, OnDestroy {
         const updatePayload: UpdateSnippetDTO = {
             id: snippetId,
             likedBy,
+            userId: this._user.id,
         };
         this._subscriptions.add(
             this._snippetsService.update(updatePayload).subscribe({

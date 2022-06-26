@@ -130,7 +130,7 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
             this.snippet.name !== this.formGroup.controls['name'].value;
         const isCodeChanged =
             this._aceEditor?.getValue() !== this.snippet.srcRaw;
-        const snippet: UpdateSnippetDTO = {
+        const snippet: Omit<UpdateSnippetDTO, 'userId'> = {
             id: this.snippet.id,
         };
         if (isNameChanged) {
