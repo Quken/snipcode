@@ -14,7 +14,7 @@ import {
 import { UserService } from '@user/user';
 import { Request, Response } from 'express';
 import { SnippetService } from '../snippet';
-import { CreateSnippetDTO } from './dto';
+import { CreateSnippetDTO, UpdateSnippetDTO } from './dto';
 import { LikedBy, Snippet } from './model';
 import { CreateSnippetResponse } from './response';
 
@@ -27,7 +27,10 @@ export class SnippetController {
     ) {}
 
     @Get('userid/:id')
-    public async snippetsByUserId(@Param() params, @Res() response: Response) {
+    public async snippetsByUserId(
+        @Param() params,
+        @Res() response: Response,
+    ): Promise<void> {
         const data = await this._snippetService.getByUserId(params.id);
         let body = [];
         if (data?.length) {
@@ -91,6 +94,35 @@ export class SnippetController {
             language: snippet.language,
             extension: snippet.extension,
             likedBy: [],
+        };
+        response.send(payload);
+    }
+
+    @Post(':id')
+    @HttpCode(HttpStatus.OK)
+    public async update(
+        @Param() params,
+        @Body() dto: UpdateSnippetDTO,
+        @Res() response: Response,
+    ): Promise<void> {
+        const snippet = await this._snippetService.update(dto, params.id);
+        const likedBy = await Promise.all(
+            snippet.likedByUserIds.map(async (id): Promise<LikedBy> => {
+                const user = await this._userService.getById(id);
+                return {
+                    id: user._id,
+                    name: user.name,
+                    surname: user.surname,
+                };
+            }),
+        );
+        const payload: UpdateSnippetDTO = {
+            id: snippet._id,
+            likedBy,
+            name: snippet.name,
+            srcRaw: snippet.srcRaw,
+            modifiedAt: snippet.modifiedAt,
+            userId: dto.userId,
         };
         response.send(payload);
     }
