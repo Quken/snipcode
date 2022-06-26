@@ -10,12 +10,17 @@ import { AceEditorFontFamilies, AceEditorThemes } from '@core/ace/enum';
 import { AceEditorSettings } from '@core/ace/model';
 import { Toast } from '@core/toast/models';
 import { ToastService } from '@core/toast/toast.service';
-import { UserSettings, UserSettingsService } from '@core/user';
+import {
+    User,
+    UserService,
+    UserSettings,
+    UserSettingsService,
+} from '@core/user';
 import {
     EditorSettingsService,
     UpdateEditorSettingsDTO,
 } from '@core/user/editor-settings';
-import { Subscription } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
 
 @Component({
     selector: 'app-profile-settings',
@@ -26,6 +31,7 @@ import { Subscription } from 'rxjs';
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
     private readonly _subscriptions: Subscription = new Subscription();
     private _userSettings: UserSettings | null = null;
+    private _user!: User;
 
     public formGroup!: FormGroup;
 
@@ -76,6 +82,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     constructor(
         private readonly _userSettingsService: UserSettingsService,
+        private readonly _userService: UserService,
         private readonly _fb: FormBuilder,
         private readonly _cdr: ChangeDetectorRef,
         private readonly _editorSettingsService: EditorSettingsService,
@@ -149,13 +156,24 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
                 },
             })
         );
+        this._subscriptions.add(
+            this._userService.user$.pipe(filter(Boolean), take(1)).subscribe({
+                next: (user) => {
+                    this._user = user;
+                    this._cdr.markForCheck();
+                },
+            })
+        );
     }
 
     public onSubmit(): void {
         const newEditorSettings = this._getEditorUpdates();
         if (Object.keys(newEditorSettings).length) {
             this._editorSettingsService
-                .update(newEditorSettings as UpdateEditorSettingsDTO)
+                .update(
+                    newEditorSettings as UpdateEditorSettingsDTO,
+                    this._user.id
+                )
                 .subscribe({
                     next: () => {
                         const toast: Toast = {
