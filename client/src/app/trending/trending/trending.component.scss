@@ -1,2 +1,15 @@
 .trending {
+    &__header {
+        text-align: center;
+        font-size: 1.6rem;
+    }
+}
+
+.empty-list {
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.4rem;
 }

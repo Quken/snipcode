@@ -137,4 +137,41 @@ export class SnippetController {
         };
         response.send(payload);
     }
+
+    @Get()
+    public async getAll(@Res() response: Response) {
+        const data = await this._snippetService.getAll();
+        const payload: Snippet[] = await Promise.all(
+            data.map(async (item) => {
+                const { _id, ...createdBy } = await this._userService.getById(
+                    item.createdByUserId.toString(),
+                );
+                const likedBy = await Promise.all(
+                    item.likedByUserIds.map(async (id): Promise<LikedBy> => {
+                        const user = await this._userService.getById(id);
+                        return {
+                            id: user._id,
+                            name: user.name,
+                            surname: user.surname,
+                        };
+                    }),
+                );
+                return {
+                    id: item._id,
+                    createdAt: item.createdAt,
+                    extension: item.extension,
+                    language: item.language,
+                    modifiedAt: item.modifiedAt,
+                    name: item.name,
+                    srcRaw: item.srcRaw,
+                    likedBy,
+                    createdBy: {
+                        ...createdBy,
+                        id: _id,
+                    },
+                };
+            }),
+        );
+        response.send(payload);
+    }
 }

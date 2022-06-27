@@ -45,11 +45,9 @@ export class SnippetService {
             throw new BadRequestException();
         }
         const snippet = await this._snippetRepository.findOne({
-            _id: dto.id,
+            _id: dto.id.toString(),
         });
-        if ((await snippet).createdByUserId.toString() !== dto.userId) {
-            throw new BadRequestException();
-        }
+
         const update = {
             name: dto.name,
             srcRaw: dto.srcRaw,
@@ -62,8 +60,6 @@ export class SnippetService {
             console.log(e);
             throw e;
         }
-        // (await snippet).save();
-        // console.log(snippet);
         return await this._snippetRepository.findById({ _id: snippetId });
     }
 }

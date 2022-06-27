@@ -2,15 +2,21 @@
     class="app-content-container trending"
     *ngIf="snippets$ | async as snippets"
 >
-    <div class="container">
-        <p>trending works!</p>
+    <div class="container" *ngIf="snippets.length; else emptyList">
+        <h2 class="trending__header">Trending snippets</h2>
+        <app-snippets-list
+            *ngIf="snippets?.length"
+            [snippets]="snippets"
+            [readOnlySnippets]="true"
+            [showAuthor]="true"
+            [classes]="'col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12'"
+            (likeChange)="onLikeChange($event, snippets)"
+        ></app-snippets-list>
     </div>
-    <app-snippets-list
-        *ngIf="snippets?.length"
-        [snippets]="snippets"
-        [readOnlySnippets]="true"
-        [showAuthor]="true"
-        [classes]="'col-xl-3 col-lg-5 col-md-5 col-sm-12 col-xs-12 col-12'"
-        (likeChange)="onLikeChange($event, snippets)"
-    ></app-snippets-list>
 </div>
+
+<ng-template #emptyList>
+    <div class="empty-list">
+        <h2 class="container">Oops. There are no trending snippets</h2>
+    </div>
+</ng-template>

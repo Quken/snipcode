@@ -161,13 +161,10 @@ export class SnippetsService {
 
     public getAll(): Observable<Snippet[]> {
         const url = `${ApiService.snippet}`;
-        return this.allSnippets$.pipe(
-            map((allSnippets: Snippet[] | null) => {
-                if (!allSnippets) {
-                    this._allSnippetsSubject.next(snippetsMock);
-                    return snippetsMock;
-                }
-                return allSnippets;
+        return this._httpClient.get<Snippet[]>(url).pipe(
+            map((response) => response.map((item) => new Snippet(item))),
+            tap((snippets) => {
+                this._allSnippetsSubject.next(snippets);
             })
         );
     }
