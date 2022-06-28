@@ -8,7 +8,6 @@ import {
 import { catchError, map, Observable, switchMap, throwError } from 'rxjs';
 import { UserService } from '../user.service';
 import { User } from '../models';
-import { ApiService } from '@core/api';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -32,7 +31,8 @@ export class JwtInterceptor implements HttpInterceptor {
     ): Observable<HttpEvent<unknown>> {
         if (
             request.url.includes('auth/login') ||
-            request.url.includes('auth/refresh')
+            request.url.includes('auth/refresh') ||
+            request.url.includes('auth/logout')
         ) {
             return next.handle(request);
         }

@@ -27,12 +27,14 @@ export class UserService {
     ) {}
 
     public verifyUser(): void {
-        this.refresh().subscribe({
+        const sub = this.refresh().subscribe({
             next: (response: RefreshResponse) => {
                 this._userSubject.next(response.user as User);
+                sub.unsubscribe();
             },
             error: (e) => {
                 console.log(e);
+                sub.unsubscribe();
             },
         });
     }

@@ -27,7 +27,9 @@ export class UserSettingsService {
                 filter(Boolean),
                 take(1),
                 switchMap((user) =>
-                    this._editorSettingsService.loadEditorSettings(user.id)
+                    this._editorSettingsService
+                        .loadEditorSettings(user.id)
+                        .pipe(take(1))
                 )
             )
             .subscribe();

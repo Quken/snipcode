@@ -169,26 +169,28 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     public onSubmit(): void {
         const newEditorSettings = this._getEditorUpdates();
         if (Object.keys(newEditorSettings).length) {
-            this._editorSettingsService
-                .update(
-                    newEditorSettings as UpdateEditorSettingsDTO,
-                    this._user.id
-                )
-                .subscribe({
-                    next: () => {
-                        const toast: Toast = {
-                            textOrTemplate: `Your profile settings successfully saved`,
-                        };
-                        this._toastService.showSuccess(toast);
-                    },
-                    error: (e) => {
-                        console.error(e);
-                        const toast: Toast = {
-                            textOrTemplate: `Oops. Error during saving profile settings. Try again later`,
-                        };
-                        this._toastService.showDanger(toast);
-                    },
-                });
+            this._subscriptions.add(
+                this._editorSettingsService
+                    .update(
+                        newEditorSettings as UpdateEditorSettingsDTO,
+                        this._user.id
+                    )
+                    .subscribe({
+                        next: () => {
+                            const toast: Toast = {
+                                textOrTemplate: `Your profile settings successfully saved`,
+                            };
+                            this._toastService.showSuccess(toast);
+                        },
+                        error: (e) => {
+                            console.error(e);
+                            const toast: Toast = {
+                                textOrTemplate: `Oops. Error during saving profile settings. Try again later`,
+                            };
+                            this._toastService.showDanger(toast);
+                        },
+                    })
+            );
         }
     }
 

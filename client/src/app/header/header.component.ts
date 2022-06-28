@@ -58,26 +58,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public onLogout(): void {
         this._maskService.show();
-        this._userService.logout().subscribe({
-            next: () => {
-                this._maskService.hide();
-                const toast: Toast = {
-                    textOrTemplate: `Successfully logged out`,
-                };
-                this._toastService.showSuccess(toast);
-                this._changeDetectorRef.detectChanges();
-
-                this._router.navigate(['/']);
-            },
-            error: (e) => {
-                this._maskService.hide();
-                const toast: Toast = {
-                    textOrTemplate: `Oops.. Something went wrong during logout.`,
-                };
-                console.log(e);
-                this._toastService.showDanger(toast);
-                this._changeDetectorRef.detectChanges();
-            },
-        });
+        this._subscriptions.add(
+            this._userService.logout().subscribe({
+                next: () => {
+                    this._maskService.hide();
+                    const toast: Toast = {
+                        textOrTemplate: `Successfully logged out`,
+                    };
+                    this._toastService.showSuccess(toast);
+                    this._changeDetectorRef.detectChanges();
+                    this._subscriptions.unsubscribe();
+                    this._router.navigate(['/']);
+                },
+                error: (e) => {
+                    this._maskService.hide();
+                    const toast: Toast = {
+                        textOrTemplate: `Oops.. Something went wrong during logout.`,
+                    };
+                    this._toastService.showDanger(toast);
+                    this._changeDetectorRef.detectChanges();
+                },
+            })
+        );
     }
 }
