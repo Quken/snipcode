@@ -36,6 +36,9 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input()
     public readOnly: boolean = true;
 
+    @Input()
+    public canDelete: boolean = false;
+
     public isEdit: boolean = false;
     public formGroup!: FormGroup;
     public isControlInvalid = isControlInvalid;
@@ -117,6 +120,35 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public onClose(): void {
         this.activeModal.dismiss();
+    }
+
+    public onDelete(): void {
+        this._maskService.show();
+        const sub = this._snippetsService.delete(this.snippet.id).subscribe({
+            next: () => {
+                this._maskService.hide();
+                const toast: Toast = {
+                    textOrTemplate: `Snippet ${
+                        this.formGroup.controls['name'].value ??
+                        this.snippet.name
+                    }.${this.snippet.extension} successfully deleted`,
+                };
+                this._toastService.showSuccess(toast);
+                sub.unsubscribe();
+                this.activeModal.close();
+            },
+            error: (e) => {
+                this._maskService.hide();
+                console.error(e);
+                const toast: Toast = {
+                    textOrTemplate: `Unable to delete snippet ${
+                        this.formGroup.controls['name'].value ??
+                        this.snippet.name
+                    }.${this.snippet.extension}`,
+                };
+                this._toastService.showDanger(toast);
+            },
+        });
     }
 
     public onEdit(): void {

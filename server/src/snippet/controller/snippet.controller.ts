@@ -2,6 +2,7 @@ import { JWTAuthGuard } from '@auth/guard';
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -173,5 +174,11 @@ export class SnippetController {
             }),
         );
         response.send(payload);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async delete(@Param() params) {
+        return await this._snippetService.delete(params.id);
     }
 }

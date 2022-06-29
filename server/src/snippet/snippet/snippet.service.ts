@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { GUID } from '@shared/models';
 import { UpdateSnippetResponse } from '@snippet/controller';
@@ -61,5 +65,13 @@ export class SnippetService {
             throw e;
         }
         return await this._snippetRepository.findById({ _id: snippetId });
+    }
+
+    public async delete(id: GUID): Promise<void> {
+        const data = await this._snippetRepository.deleteOne({ _id: id });
+        if (data.deletedCount) {
+            return;
+        }
+        throw new NotFoundException();
     }
 }
