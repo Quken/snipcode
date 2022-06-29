@@ -100,13 +100,21 @@
             </div>
         </ng-template>
         <ng-template #readonlyTemplate>
-            <div class="app-modal__footer d-flex justify-content-end">
+            <div class="app-modal__footer d-flex justify-content-between">
                 <button
                     type="button"
-                    class="snippet__close btn btn-danger"
+                    class="snippet__close btn btn-primary"
                     (click)="onClose()"
                 >
                     Close
+                </button>
+                <button
+                    type="button"
+                    class="snippet__close btn btn-danger"
+                    *ngIf="canDelete"
+                    (click)="onDelete()"
+                >
+                    Delete
                 </button>
             </div>
         </ng-template>

@@ -37,6 +37,9 @@ export class SnippetsListComponent implements OnInit, OnDestroy {
     @Input()
     public showAuthor: boolean = true;
 
+    @Input()
+    public canDelete: boolean = false;
+
     @Output()
     public likeChange: EventEmitter<GUID> = new EventEmitter();
 
@@ -75,12 +78,15 @@ export class SnippetsListComponent implements OnInit, OnDestroy {
         const snippet = this.snippets.find(({ id }) => id === snippetId);
         snippetModal.componentInstance.snippet = snippet;
         snippetModal.componentInstance.readOnly = this.readOnlySnippets;
+        snippetModal.componentInstance.canDelete = this.canDelete;
         snippetModal.result
             .then(() => {
                 this._cdr.detectChanges();
             })
             .catch((e) => {
-                console.warn(e);
+                if (e) {
+                    console.warn(e);
+                }
             });
     }
 

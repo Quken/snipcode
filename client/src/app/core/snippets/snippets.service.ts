@@ -162,4 +162,28 @@ export class SnippetsService {
         });
         return update$.pipe(map(() => void 0));
     }
+
+    public delete(id: GUID): Observable<void> {
+        const url = `${ApiService.snippet}/${id}`;
+        return this._httpClient.delete<void>(url).pipe(
+            tap(() => {
+                this.allSnippets$.pipe(filter(Boolean), take(1)).subscribe({
+                    next: (allSnippets: Snippet[]) => {
+                        const updated = allSnippets.filter(
+                            (snippet) => snippet.id !== id
+                        );
+                        this._allSnippetsSubject.next([...updated]);
+                    },
+                });
+                this.userSnippets$.pipe(filter(Boolean), take(1)).subscribe({
+                    next: (userSnippets) => {
+                        const updated = userSnippets.filter(
+                            (snippet) => snippet.id !== id
+                        );
+                        this._userSnippetsSubject.next([...updated]);
+                    },
+                });
+            })
+        );
+    }
 }
