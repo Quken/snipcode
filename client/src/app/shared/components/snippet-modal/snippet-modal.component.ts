@@ -139,31 +139,29 @@ export class SnippetModalComponent implements OnInit, AfterViewInit, OnDestroy {
         if (isCodeChanged) {
             snippet.srcRaw = this._aceEditor?.getValue();
         }
-        this._snippetsService
-            .update(snippet)
-            .pipe(delay(2000))
-            .subscribe({
-                next: () => {
-                    this.activeModal.close();
-                    this._maskService.hide();
-                    const toast: Toast = {
-                        textOrTemplate: `Snippet ${
-                            snippet.name ?? this.snippet.name
-                        }.${this.snippet.extension} successfully updated`,
-                    };
-                    this._toastService.showSuccess(toast);
-                },
-                error: (e) => {
-                    this._maskService.hide();
-                    console.error(e);
-                    const toast: Toast = {
-                        textOrTemplate: `Unable to update snippet ${
-                            snippet.name ?? this.snippet.name
-                        }.${this.snippet.extension}`,
-                    };
-                    this._toastService.showDanger(toast);
-                },
-            });
+        const sub = this._snippetsService.update(snippet).subscribe({
+            next: () => {
+                this._maskService.hide();
+                const toast: Toast = {
+                    textOrTemplate: `Snippet ${
+                        snippet.name ?? this.snippet.name
+                    }.${this.snippet.extension} successfully updated`,
+                };
+                this._toastService.showSuccess(toast);
+                sub.unsubscribe();
+                this.activeModal.close();
+            },
+            error: (e) => {
+                this._maskService.hide();
+                console.error(e);
+                const toast: Toast = {
+                    textOrTemplate: `Unable to update snippet ${
+                        snippet.name ?? this.snippet.name
+                    }.${this.snippet.extension}`,
+                };
+                this._toastService.showDanger(toast);
+            },
+        });
     }
 
     public ngOnDestroy(): void {

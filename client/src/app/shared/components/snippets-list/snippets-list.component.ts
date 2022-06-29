@@ -75,9 +75,13 @@ export class SnippetsListComponent implements OnInit, OnDestroy {
         const snippet = this.snippets.find(({ id }) => id === snippetId);
         snippetModal.componentInstance.snippet = snippet;
         snippetModal.componentInstance.readOnly = this.readOnlySnippets;
-        snippetModal.result.then(() => {
-            this._cdr.detectChanges();
-        });
+        snippetModal.result
+            .then(() => {
+                this._cdr.detectChanges();
+            })
+            .catch((e) => {
+                console.warn(e);
+            });
     }
 
     public isLikeable(snippet: Snippet): boolean {

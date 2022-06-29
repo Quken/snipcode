@@ -145,24 +145,26 @@ export class CreateSnippetModalComponent
                 extension: SnippetExtensionsEnum[language],
                 name: this.formGroup.controls['name'].value,
             };
-        this._snippetsService.create(snippet).subscribe({
-            next: () => {
-                this._maskService.hide();
-                this.activeModal.close('Success');
-                const toast: Toast = {
-                    textOrTemplate: `Snippet ${snippet.name}.${snippet.extension} successfully saved`,
-                };
-                this._toastService.showSuccess(toast);
-            },
-            error: (e) => {
-                this._maskService.hide();
-                console.error(e);
-                const toast: Toast = {
-                    textOrTemplate: `Unable to save snippet ${snippet.name}.${snippet.extension}`,
-                };
-                this._toastService.showDanger(toast);
-            },
-        });
+        this._subscriptions.add(
+            this._snippetsService.create(snippet).subscribe({
+                next: () => {
+                    this._maskService.hide();
+                    this.activeModal.close('Success');
+                    const toast: Toast = {
+                        textOrTemplate: `Snippet ${snippet.name}.${snippet.extension} successfully saved`,
+                    };
+                    this._toastService.showSuccess(toast);
+                },
+                error: (e) => {
+                    this._maskService.hide();
+                    console.error(e);
+                    const toast: Toast = {
+                        textOrTemplate: `Unable to save snippet ${snippet.name}.${snippet.extension}`,
+                    };
+                    this._toastService.showDanger(toast);
+                },
+            })
+        );
     }
 
     public onLanguageSelect(language: string): void {

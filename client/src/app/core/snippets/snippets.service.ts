@@ -8,6 +8,7 @@ import {
     Observable,
     of,
     shareReplay,
+    share,
     switchMap,
     tap,
     take,
@@ -88,7 +89,7 @@ export class SnippetsService {
                     })
                     .pipe(map((response) => new Snippet(response)));
             }),
-            shareReplay(1)
+            share()
         );
 
         forkJoin({
@@ -127,7 +128,7 @@ export class SnippetsService {
                     })
                     .pipe(map((response) => new Snippet(response)));
             }),
-            shareReplay(1)
+            share()
         );
 
         forkJoin({

@@ -81,12 +81,11 @@ export class TrendingComponent implements OnInit, OnDestroy {
             likedBy,
             userId: this._user.id,
         };
-        this._subscriptions.add(
-            this._snippetsService.update(updatePayload).subscribe({
-                next: () => {
-                    this._cdr.detectChanges();
-                },
-            })
-        );
+        const sub = this._snippetsService.update(updatePayload).subscribe({
+            next: () => {
+                this._cdr.detectChanges();
+                sub.unsubscribe();
+            },
+        });
     }
 }
