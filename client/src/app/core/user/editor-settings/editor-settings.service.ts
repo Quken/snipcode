@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AceEditorSettings } from '@core/ace/model';
-import { userSettingsMock } from '@mocks/user';
 
 import {
     BehaviorSubject,
     distinctUntilChanged,
     map,
     Observable,
-    of,
-    switchMap,
-    take,
     tap,
 } from 'rxjs';
 import * as _ from 'lodash';

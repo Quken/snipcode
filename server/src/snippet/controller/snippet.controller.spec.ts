@@ -2,17 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SnippetController } from './snippet.controller';
 
 describe('SnippetController', () => {
-  let controller: SnippetController;
+    let controller: SnippetController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [SnippetController],
-    }).compile();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [SnippetController],
+        }).compile();
 
-    controller = module.get<SnippetController>(SnippetController);
-  });
+        controller = module.get<SnippetController>(SnippetController);
+    });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    it('should be defined', () => {
+        expect(controller).toBeDefined();
+    });
 });

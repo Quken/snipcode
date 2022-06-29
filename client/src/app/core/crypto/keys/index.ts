@@ -1,1 +1,1 @@
-export * from './auth-key'
+export * from './auth-key';

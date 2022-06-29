@@ -17,7 +17,6 @@ import { HttpClient } from '@angular/common/http';
 import { User, UserService } from '@core/user';
 import { ApiService } from '@core/api';
 
-
 @Injectable({
     providedIn: 'root',
 })
