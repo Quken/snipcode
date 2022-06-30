@@ -8,6 +8,7 @@ import { MaskModule } from './mask';
 import { JwtInterceptor, LoginModule } from './user';
 import { RegistrationModule } from './user/registration';
 import { MouseHoverModule } from './mouse-hover';
+import { PendingChangesGuard } from './pending-changes';
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import { MouseHoverModule } from './mouse-hover';
             multi: true,
             useClass: JwtInterceptor,
         },
+        PendingChangesGuard,
     ],
 })
 export class CoreModule {}

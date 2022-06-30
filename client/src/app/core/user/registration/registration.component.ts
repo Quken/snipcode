@@ -7,10 +7,20 @@ import {
     OnInit,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, UrlTree } from '@angular/router';
 import { MaskService } from '@core/mask';
+import { CanComponentDeactivate } from '@core/pending-changes';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationModalComponent } from '@shared/components';
+import { ConfirmationModalConfig } from '@shared/models';
 import { isNumber } from 'lodash';
-import { catchError, Subscription, switchMap, throwError } from 'rxjs';
+import {
+    catchError,
+    Observable,
+    Subscription,
+    switchMap,
+    throwError,
+} from 'rxjs';
 import { isControlInvalid } from '../../form';
 import { RegistrationDTO, User } from '../models';
 import { UserService } from '../user.service';
@@ -21,7 +31,9 @@ import { UserService } from '../user.service';
     styleUrls: ['./registration.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegistrationComponent implements OnInit, OnDestroy {
+export class RegistrationComponent
+    implements OnInit, OnDestroy, CanComponentDeactivate
+{
     private readonly _subscriptions: Subscription = new Subscription();
 
     public formGroup!: FormGroup;
@@ -49,7 +61,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         private readonly _fb: FormBuilder,
         private readonly _cdr: ChangeDetectorRef,
         private readonly _router: Router,
-        private readonly _maskService: MaskService
+        private readonly _maskService: MaskService,
+        private readonly _modalService: NgbModal
     ) {}
 
     private initForm(): void {
@@ -130,6 +143,51 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                 },
             })
         );
+    }
+
+    public async canDeactivate(): Promise<boolean> {
+        const dirty = this.formGroup.dirty;
+        if (!dirty) {
+            return true;
+        }
+        try {
+            const confirmationModal = this._modalService.open(
+                ConfirmationModalComponent,
+                {
+                    ariaLabelledBy: 'confirmation-modal',
+                    animation: true,
+                    backdrop: 'static',
+                    keyboard: false,
+                    centered: true,
+                    size: 'md',
+                }
+            );
+            const config: ConfirmationModalConfig = {
+                message:
+                    'You have pending changes. Are you sure you want to leave?',
+                header: 'Pending changes detected',
+                primaryButton: {
+                    value: 'Leave',
+                    message: 'Confirm',
+                },
+                secondaryButton: {
+                    value: 'Stay',
+                    message: 'Close',
+                },
+            };
+            confirmationModal.componentInstance.config = config;
+            const value = await confirmationModal.result;
+            this._cdr.detectChanges();
+            if (value === config.primaryButton.value) {
+                return true;
+            }
+            if (value === config.secondaryButton.value) {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
     public ngOnDestroy(): void {

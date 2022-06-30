@@ -20,7 +20,6 @@ import { LikedBy, Snippet } from './model';
 import { CreateSnippetResponse, UpdateSnippetResponse } from './response';
 
 @Controller('snippet')
-@UseGuards(JWTAuthGuard)
 export class SnippetController {
     constructor(
         private readonly _snippetService: SnippetService,
@@ -28,6 +27,7 @@ export class SnippetController {
     ) {}
 
     @Get('userid/:id')
+    @UseGuards(JWTAuthGuard)
     public async snippetsByUserId(
         @Param() params,
         @Res() response: Response,
@@ -77,6 +77,7 @@ export class SnippetController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
+    @UseGuards(JWTAuthGuard)
     public async create(
         @Body() dto: CreateSnippetDTO,
         @Res() response: Response,
@@ -102,6 +103,7 @@ export class SnippetController {
     }
 
     @Post(':id')
+    @UseGuards(JWTAuthGuard)
     @HttpCode(HttpStatus.OK)
     public async update(
         @Param() params,
@@ -177,6 +179,7 @@ export class SnippetController {
     }
 
     @Delete(':id')
+    @UseGuards(JWTAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     public async delete(@Param() params) {
         return await this._snippetService.delete(params.id);

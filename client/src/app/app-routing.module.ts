@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PendingChangesGuard } from '@core/pending-changes';
 import { AuthGuard, LoginComponent, RegistrationComponent } from '@core/user';
 import { NotFoundComponent } from '@shared/components';
 import { HomepageModule } from './homepage/homepage.module';
@@ -29,6 +30,7 @@ const routes: Routes = [
     {
         path: 'register',
         component: RegistrationComponent,
+        canDeactivate: [PendingChangesGuard],
     },
     {
         path: '**',

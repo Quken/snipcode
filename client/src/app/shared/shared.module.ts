@@ -8,6 +8,7 @@ import {
 import { SnippetModalComponent } from './components/snippet-modal/snippet-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MouseHoverModule } from '@core/mouse-hover';
+import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
 
 @NgModule({
     imports: [
@@ -18,6 +19,6 @@ import { MouseHoverModule } from '@core/mouse-hover';
         MouseHoverModule,
     ],
     exports: [CarouselModule, SnippetsListModule, ReactiveFormsModule],
-    declarations: [SnippetModalComponent, NotFoundComponent],
+    declarations: [SnippetModalComponent, NotFoundComponent, ConfirmationModalComponent],
 })
 export class SharedModule {}

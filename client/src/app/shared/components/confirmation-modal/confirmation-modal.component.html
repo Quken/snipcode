@@ -1,0 +1,30 @@
+<div class="app-modal">
+    <div class="app-modal__header">
+        <div class="snippet__title d-flex justify-content-between">
+            <h3>{{ config.header }}</h3>
+            <button
+                type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="onClose()"
+            ></button>
+        </div>
+    </div>
+    <div class="app-modal__content">{{ config.message }}</div>
+    <div class="app-modal__footer d-flex justify-content-between">
+        <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSecondaryButtonClick()"
+        >
+            {{ config.secondaryButton.message }}
+        </button>
+        <button
+            type="button"
+            class="btn btn-danger"
+            (click)="onPrimaryButtonClick()"
+        >
+            {{ config.primaryButton.message }}
+        </button>
+    </div>
+</div>
