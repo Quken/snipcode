@@ -8,12 +8,11 @@ import {
     HttpStatus,
     Param,
     Post,
-    Req,
     Res,
     UseGuards,
 } from '@nestjs/common';
 import { UserService } from '@user/user';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { SnippetService } from '../snippet';
 import { CreateSnippetDTO, UpdateSnippetDTO } from './dto';
 import { LikedBy, Snippet } from './model';

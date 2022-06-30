@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { GUID } from '@shared/models';
-import { UpdateSnippetResponse } from '@snippet/controller';
 import { Model } from 'mongoose';
 import { CreateSnippetDTO, UpdateSnippetDTO } from '../controller/dto';
 import { Snippet, SnippetDocument } from '../schemas';

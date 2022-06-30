@@ -19,6 +19,10 @@ import { ConfirmationModalComponent } from './components/confirmation-modal/conf
         MouseHoverModule,
     ],
     exports: [CarouselModule, SnippetsListModule, ReactiveFormsModule],
-    declarations: [SnippetModalComponent, NotFoundComponent, ConfirmationModalComponent],
+    declarations: [
+        SnippetModalComponent,
+        NotFoundComponent,
+        ConfirmationModalComponent,
+    ],
 })
 export class SharedModule {}
