@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -7,22 +6,16 @@ import {
     OnInit,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, UrlTree } from '@angular/router';
+import { Router } from '@angular/router';
 import { MaskService } from '@core/mask';
 import { CanComponentDeactivate } from '@core/pending-changes';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '@shared/components';
 import { ConfirmationModalConfig } from '@shared/models';
 import { isNumber } from 'lodash';
-import {
-    catchError,
-    Observable,
-    Subscription,
-    switchMap,
-    throwError,
-} from 'rxjs';
+import { Subscription } from 'rxjs';
 import { isControlInvalid } from '../../form';
-import { RegistrationDTO, User } from '../models';
+import { RegistrationDTO } from '../models';
 import { UserService } from '../user.service';
 
 @Component({
