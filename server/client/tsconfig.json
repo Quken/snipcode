@@ -20,9 +20,9 @@
         "module": "es2020",
         "lib": ["es2020", "dom"],
         "paths": {
-            "@core/*": ["src/app/core/*"],
-            "@mocks/*": ["src/app/mocks/*"],
-            "@shared/*": ["src/app/shared/*"]
+            "@core/*": ["./src/app/core/*"],
+            "@mocks/*": ["./src/app/mocks/*"],
+            "@shared/*": ["./src/app/shared/*"]
         }
     },
     "angularCompilerOptions": {

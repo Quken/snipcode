@@ -14,7 +14,7 @@ import { join } from 'path';
 @Module({
     imports: [
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'front'),
+            rootPath: join(__dirname, '..', 'front-dist'),
         }),
         MongooseModule.forRoot(process.env.MONGO_URL, {
             retryAttempts: 2,
@@ -23,7 +23,7 @@ import { join } from 'path';
             ssl: true,
             connectionFactory: (connection) => {
                 console.log('Mongo connection established');
-                console.log(join(__dirname, '..', 'front'));
+                console.log(join(__dirname, '..', 'front-dist'));
                 return connection;
             },
         }),

@@ -19,8 +19,8 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "build:front:application": "cd ../client && npm run build:production",
-        "copy:front:dist": "cp -rf ../client/dist ./front",
+        "build:front:application": "cd client && npm run build:production",
+        "copy:front:dist": "cp -rf client/dist ./front-dist",
         "prepare:front": "npm run build:front:application &&  npm run copy:front:dist",
         "run:app": "npm run prepare:front && npm run start"
     },

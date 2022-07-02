@@ -6,7 +6,7 @@ import { join } from 'path';
 export class AppController {
     @Get()
     getPage(@Res() response: Response) {
-        const indexPath = join(__dirname, '..', 'front', 'index.html');
+        const indexPath = join(__dirname, '..', 'front-dist', 'index.html');
         console.log(indexPath);
         response.sendFile(indexPath);
     }

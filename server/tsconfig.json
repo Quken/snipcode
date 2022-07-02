@@ -1,4 +1,12 @@
 {
+    "exclude": [
+        "node_modules",
+        "test",
+        "dist",
+        "client",
+        "front-dist",
+        "**/*spec.ts"
+    ],
     "compilerOptions": {
         "module": "commonjs",
         "declaration": true,
@@ -18,12 +26,12 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "paths": {
-            "@shared/*": ["src/shared/*"],
-            "@user/*": ["src/user/*"],
-            "@auth/*": ["src/auth/*"],
-            "@settings/*": ["src/settings/*"],
-            "@token/*": ["src/token/*"],
-            "@snippet/*": ["src/snippet/*"]
+            "@shared/*": ["./src/shared/*"],
+            "@user/*": ["./src/user/*"],
+            "@auth/*": ["./src/auth/*"],
+            "@settings/*": ["./src/settings/*"],
+            "@token/*": ["./src/token/*"],
+            "@snippet/*": ["./src/snippet/*"]
         }
     }
 }
