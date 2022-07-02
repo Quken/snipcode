@@ -23,7 +23,6 @@ import { join } from 'path';
             ssl: true,
             connectionFactory: (connection) => {
                 console.log('Mongo connection established');
-                console.log(join(__dirname, '..', 'front-dist'));
                 return connection;
             },
         }),
