@@ -4,7 +4,8 @@ import * as cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-const APPLICATION_PORT = Number(process.env.APPLICATION_PORT) || 3000;
+const APPLICATION_PORT =
+    process.env.PORT || process.env.APPLICATION_PORT || 3000;
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);

@@ -6,10 +6,12 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "prebuild": "rimraf dist",
-        "build": "nest build",
+        "prebuild": "rm -rf dist && npm i -g @nestjs/cli && npm i",
+        "nest:build": "nest build",
+        "nest:start": "nest start",
+        "build": "npm run run:app",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "start": "nest start",
+        "start": "npm run run:app",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
@@ -19,12 +21,14 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
+        "front:install": "cd client && rm -rf node_modules && npm i",
         "build:front:application": "cd client && npm run build:production",
         "copy:front:dist": "cp -rf client/dist ./front-dist",
-        "prepare:front": "npm run build:front:application &&  npm run copy:front:dist",
-        "run:app": "npm run prepare:front && npm run start"
+        "prepare:front": "npm run front:install && npm run build:front:application && npm run copy:front:dist",
+        "run:app": "npm run prepare:front && ls && npm run nest:start"
     },
     "dependencies": {
+        "@heroku/buildpack-registry": "^1.0.1",
         "@nestjs/common": "^8.0.0",
         "@nestjs/core": "^8.0.0",
         "@nestjs/jwt": "^8.0.1",
@@ -81,5 +85,9 @@
         ],
         "coverageDirectory": "../coverage",
         "testEnvironment": "node"
+    },
+    "engines": {
+        "node": "14.18.0",
+        "npm": "7.6.3"
     }
 }

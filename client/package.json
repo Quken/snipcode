@@ -5,12 +5,14 @@
         "ng": "ng",
         "start": "ng serve",
         "build": "ng build",
-        "build:production": "ng build --configuration production",
+        "build:production": "npm run ng build -- --configuration production",
         "watch": "ng build --watch --configuration development",
         "test": "ng test"
     },
     "private": true,
     "dependencies": {
+        "@angular/cli": "~13.3.6",
+        "@angular/compiler-cli": "~13.3.0",
         "@angular/animations": "~13.3.0",
         "@angular/common": "~13.3.0",
         "@angular/compiler": "~13.3.0",
@@ -32,8 +34,6 @@
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~13.3.6",
-        "@angular/cli": "~13.3.6",
-        "@angular/compiler-cli": "~13.3.0",
         "@types/crypto-js": "^4.1.1",
         "@types/jasmine": "~3.10.0",
         "@types/lodash": "^4.14.182",
